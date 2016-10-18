@@ -1,2 +1,1 @@
-# machete
-FIRST Team #1425 "Error Code Xero" slide drive code repository for the 2016 BunnyBots game "Round-a-BOUT"
+This repositoty is for the code that interfaces to the robot through data structures that list the possibly inputs and outputs rather than through the normal WPIlib methods, and also code for a robot which is written to that interface.
