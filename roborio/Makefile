@@ -1,6 +1,7 @@
 CXX = arm-frc-linux-gnueabi-g++
 CXXFLAGS = -std=c++14 -I$(WPILIB)/cpp/current/include
 LDFLAGS = -L$(WPILIB)/cpp/current/lib
+TARGET = machete
 
 MYLIBS = \
 	../executive/executive.a\
@@ -17,5 +18,5 @@ SRC = \
 
 OBJS = $(SRC:.cpp=.o)
 
-sabre: $(OBJS)
+$(TARGET): $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(MYLIBS) $(LDFLAGS) -lwpi

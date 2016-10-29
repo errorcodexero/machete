@@ -7,4 +7,5 @@ tobj/
 *.tmp
 t.mk
 *.swp
+*.a
 FRCUserProgram
