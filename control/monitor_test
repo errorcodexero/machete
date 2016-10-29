@@ -1,0 +1,57 @@
+g++ -Wall -Werror -std=c++0x -DMONITOR_TEST \
+	../util/type.cpp\
+	../executive/executive.cpp\
+	../executive/teleop.cpp \
+	../executive/delay.cpp \
+	../executive/auto_null.cpp \
+	../executive/auto_reach.cpp \
+	../executive/auto_statictwo.cpp \
+	../executive/auto_static.cpp \
+	../executive/auto_stop.cpp \
+	../executive/portcullis.cpp \
+	../executive/cheval.cpp \
+	../executive/low_bar_low_score.cpp \
+	../executive/low_bar_wall_low_score.cpp \
+	../executive/low_bar_wall_high_score.cpp \
+	../executive/barrelracer.cpp \
+	tilt_presets.cpp \
+	shooter_constants.cpp \
+	monitor.cpp \
+	front.cpp \
+	nop.cpp \
+	../util/fixVictor.cpp \
+	../util/interface.cpp \
+	../util/jag_interface.cpp \
+	pump.cpp \
+	sides.cpp \
+	climb_release.cpp \
+	shooter.cpp\
+	tilt.cpp \
+	winch.cpp\
+	../util/posedge_toggle.cpp \
+	force_interface.cpp \
+	drivebase.cpp \
+	../util/driver_station_interface.cpp \
+	../util/util.cpp \
+	../util/countup_timer.cpp \
+	force.cpp \
+	../util/posedge_trigger.cpp \
+	../util/point.cpp \
+	../util/negedge_trigger.cpp \
+	../util/countdown_timer.cpp\
+	motor_check.cpp\
+	tote_sensors.cpp\
+	main.cpp\
+	../util/perf_tracker.cpp\
+	../input/util.cpp\
+	../input/panel.cpp\
+	../util/nav.cpp\
+	../util/nav2.cpp\
+	log.cpp\
+	../util/motion_profile.cpp \
+	collector.cpp\
+	toplevel.cpp \
+	../util/debounce.cpp\
+	../util/posedge_trigger_debounce.cpp\
+	../util/pwm.cpp\
+	-o monitor 2>&1 && ./monitor
