@@ -155,11 +155,6 @@ Toplevel::Status::Status():
 		{0.0,0.0}
 	),
 	pump(Pump::Status::NOT_FULL),
-	/*tilt(0),
-	sides(Sides::Status{}),
-	front(Front::Status{0}),*/
-	collector(),
-	climb_release(Climb_release::Status::UNKNOWN)
 {}
 
 bool operator==(Toplevel::Status a,Toplevel::Status b){
@@ -335,10 +330,6 @@ set<Toplevel::Status_detail> examples(Toplevel::Status_detail*){
 	return {Toplevel::Status_detail{
 		*examples((Drivebase::Status_detail*)0).begin(),
 		Pump::Status_detail{Pump::Status::FULL},
-		example((Collector::Status_detail*)0),
-		*examples((Climb_release::Status_detail*)0).begin(),
-		*examples((Winch::Status_detail*)0).begin(),
-		*examples((Shooter::Status_detail*)0).begin()
 	}};
 }
 
@@ -355,9 +346,6 @@ set<Toplevel::Input> examples(Toplevel::Input*){
 		*examples((Drivebase::Input*)0).begin(),
 		Pump::Input{},
 		example((Collector::Input*)0),
-		example((Climb_release::Input*)0),
-		Winch::Input{},
-		example((Shooter::Input*)0)
 	};
 	return {a};
 }

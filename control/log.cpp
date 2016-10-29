@@ -149,11 +149,6 @@ void visit(Func f,Robot_outputs const& r){
 }
 
 template<typename Func>
-void visit(Func f,Collector::Status_detail const& r){
-	COLLECTOR_ITEMS(VISIT_2ND)
-}
-
-template<typename Func>
 void visit(Func f,Toplevel::Status_detail const& a){
 	#define X(A,B,C) f(""#B,a.B);
 	TOPLEVEL_ITEMS
@@ -206,38 +201,6 @@ void visit(Func f,Drivebase::Status const& r){
 
 template<typename Func>
 void visit(Func f,Pump::Status const& a){
-	f.terminal(a);
-}
-
-template<typename Func>
-void visit(Func f,Tilt::Status_detail const& r){
-	#define TILT_STATUS_DETAIL(X) X(top) X(angle)
-	TILT_STATUS_DETAIL(VISIT)
-}
-
-template<typename Func>
-void visit(Func f,Front::Status_detail const& a){
-	f.terminal(a);
-}
-
-template<typename Func>
-void visit(Func f,Climb_release::Status_detail const& a){
-	f.terminal(a);
-}
-
-template<typename Func>
-void visit(Func f,Winch::Status_detail const& r){
-	#define WINCH_STATUS_DETAIL(X) X(deployed)
-	WINCH_STATUS_DETAIL(VISIT)
-}
-
-template<typename Func>
-void visit(Func f,Sides::Input const& a){
-	f.terminal(a);
-}
-
-template<typename Func>
-void visit(Func f,Shooter::Status_detail const& a){
 	f.terminal(a);
 }
 

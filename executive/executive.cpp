@@ -88,10 +88,6 @@ Joystick_data rand(Joystick_data*){
 	return driver_station_input_rand();
 }
 
-Tilt::Goal rand(Tilt::Goal *a){
-	return choose_random(examples(a));
-}
-
 Run_info rand(Run_info*){
 	return Run_info{
 		#define X(A,B) rand((A*)0),

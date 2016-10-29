@@ -351,14 +351,14 @@ cc_library(
 	name="meta",
 	srcs=["util/meta.cpp"],
 	hdrs=["util/meta.h"],
-	deps=[":interface",":tilt"]
+	deps=[":interface"]
 )
 
 cc_test(
 	name="meta_test",
 	srcs=["util/meta.cpp","util/meta.h"],
 	copts=["-DMETA_TEST"],
-	deps=[":interface",":tilt",":front"],
+	deps=[":interface"],
 	timeout="short"
 )
 
@@ -396,14 +396,14 @@ cc_library(
 	name="main",
 	srcs=["control/main.cpp"],
 	hdrs=["control/main.h"],
-	deps=[":force_interface",":posedge_toggle",":perf_tracker",":countdown_timer",":countup_timer",":toplevel",":panel",":nav",":nav2",":log",":posedge_trigger_debounce",":motion_profile",":tilt_presets",":shooter_constants",":executive_impl"]
+	deps=[":force_interface",":posedge_toggle",":perf_tracker",":countdown_timer",":countup_timer",":toplevel",":panel",":nav",":nav2",":log",":posedge_trigger_debounce",":motion_profile",":executive_impl"]
 )
 
 cc_test(
 	name="main_test",
 	srcs=["control/main.cpp","control/main.h"],
 	copts=["-DMAIN_TEST"],
-	deps=[":force_interface",":toplevel",":posedge_toggle",":perf_tracker",":countup_timer",":panel",":nav2",":log",":posedge_trigger_debounce",":motion_profile",":tilt_presets",":monitor",":shooter_constants"],
+	deps=[":force_interface",":toplevel",":posedge_toggle",":perf_tracker",":countup_timer",":panel",":nav2",":log",":posedge_trigger_debounce",":motion_profile",":monitor"],
 	timeout="short"
 )
 
@@ -438,21 +438,6 @@ cc_test(
 )
 
 cc_library(
-	name="climb_release",
-	srcs=["control/climb_release.cpp"],
-	hdrs=["control/climb_release.h"],
-	deps=[":countdown_timer"]
-)
-
-cc_test(
-	name="climb_release_test",
-	srcs=["control/climb_release.cpp","control/climb_release.h","control/formal.h"],
-	copts=["-DCLIMB_RELEASE_TEST"],
-	deps=[":countdown_timer",":interface"],
-	timeout="short"
-)
-
-cc_library(
 	name="force",
 	srcs=["control/force.cpp"],
 	hdrs=["control/force.h"],
@@ -478,88 +463,29 @@ cc_library(
 	name="toplevel",
 	srcs=["control/toplevel.cpp"],
 	hdrs=["control/toplevel.h"],
-	deps=[":pump",":drivebase",":climb_release",":winch",":collector",":shooter",":input"]
+	deps=[":pump",":drivebase",":input"]
 )
 
 cc_test(
 	name="toplevel_test",
 	srcs=["control/toplevel.cpp","control/toplevel.h","control/formal.h"],
 	copts=["-DTOPLEVEL_TEST"],
-	deps=[":pump",":drivebase",":climb_release",":winch",":collector",":shooter",":input",":output"],
-	timeout="short"
-)
-
-cc_library(
-	name="tilt",
-	srcs=["control/tilt.cpp"],
-	hdrs=["control/tilt.h","util/quick.h"],
-	deps=[":util",":countdown_timer"]
-)
-
-cc_test(
-	name="tilt_test",
-	srcs=["control/tilt.cpp","control/tilt.h","util/quick.h","control/formal.h"],
-	copts=["-DTILT_TEST"],
-	deps=[":util",":countdown_timer",":interface"],
-	timeout="short"
-)
-
-cc_library(
-	name="tilt_presets",
-	srcs=["control/tilt_presets.cpp"],
-	hdrs=["control/tilt_presets.h"],
-	deps=[]
-)
-
-cc_test(
-	name="tilt_presets_test",
-	srcs=["control/tilt_presets.cpp","control/tilt_presets.h"],
-	copts=["-DTILT_PRESETS_TEST"],
-	deps=[],
+	deps=[":pump",":drivebase",":input",":output"],
 	timeout="short"
 )
 
 cc_library(
 	name="sim",
 	srcs=["control/sim.cpp"],
-	deps=[]
+	hdrs=["control/nop.h"],
+	deps=[":nop"]
 )
 
 cc_test(
 	name="sim_test",
 	srcs=["control/sim.cpp"],
 	copts=["-DSIM_TEST"],
-	deps=[":toplevel",":type"],
-	timeout="short"
-)
-
-cc_library(
-	name="sides",
-	srcs=["control/sides.cpp"],
-	hdrs=["control/sides.h"],
-	deps=[":interface",":nop"]
-)
-
-cc_test(
-	name="sides_test",
-	srcs=["control/sides.cpp","control/sides.h","control/formal.h"],
-	copts=["-DSIDES_TEST"],
-	deps=[":interface",":nop"],
-	timeout="short"
-)
-
-cc_library(
-	name="front",
-	srcs=["control/front.cpp"],
-	hdrs=["control/front.h"],
-	deps=[":interface"]
-)
-
-cc_test(
-	name="front_test",
-	srcs=["control/front.cpp","control/front.h","control/formal.h"],
-	copts=["-DFRONT_TEST"],
-	deps=[":interface"],
+	deps=[":toplevel",":type",":nop"],
 	timeout="short"
 )
 
@@ -609,52 +535,6 @@ cc_test(
 )
 
 cc_library(
-	name="collector",
-	srcs=["control/collector.cpp"],
-	hdrs=["control/collector.h"],
-	deps=[":front",":sides",":tilt"]
-)
-
-cc_test(
-	name="collector_test",
-	srcs=["control/collector.cpp","control/collector.h","control/formal.h"],
-	copts=["-DCOLLECTOR_TEST"],
-	deps=[":front",":sides",":tilt"],
-	timeout="short"
-)
-
-cc_library(
-	name="shooter",
-	srcs=["control/shooter.cpp"],
-	hdrs=["control/shooter.h","util/quick.h"],
-	deps=[":interface",":countdown_timer"]
-)
-
-cc_test(
-	name="shooter_test",
-	srcs=["control/shooter.cpp","control/shooter.h","control/formal.h","util/quick.h"],
-	copts=["-DSHOOTER_TEST"],
-	deps=[":countdown_timer",":interface"],
-	timeout="short"
-
-)
-
-cc_library(
-	name="winch",
-	srcs=["control/winch.cpp"],
-	hdrs=["control/winch.h"],
-	deps=[":interface",":countdown_timer"]
-)
-
-cc_test(
-	name="winch_test",
-	srcs=["control/winch.cpp","control/winch.h","control/formal.h"],
-	copts=["-DWINCH_TEST"],
-	deps=[":interface",":countdown_timer"],
-	timeout="short"
-)
-
-cc_library(
 	name="input_util",
 	srcs=["input/util.cpp"],
 	hdrs=["input/util.h"],
@@ -668,95 +548,29 @@ cc_library(
 	deps=[":interface",":input_util"]
 )
 
-cc_test(
-	name="portcullis_test",
-	srcs=["executive/portcullis.cpp","executive/portcullis.h"],
-	copts=["-DPORTCULLIS_TEST"],
-	deps=[":executive",":executive_impl",":tilt_presets",":test"],
-	timeout="short"
-)
-
 cc_library(
 	name="executive_impl",
 	srcs=[
 		"executive/delay.cpp",
 		"executive/auto_stop.cpp",
-		"executive/low_bar_low_score.cpp",
-		"executive/low_bar_wall_high_score.cpp",
-		"executive/low_bar_wall_low_score.cpp",
-		"executive/cheval.cpp",
-		"executive/portcullis.cpp",
-		"executive/auto_static.cpp",
-		"executive/auto_statictwo.cpp",
-		"executive/auto_reach.cpp",
 		"executive/auto_null.cpp",
-		"executive/teleop.cpp",
-		"executive/barrelracer.cpp"
+		"executive/teleop.cpp"
 	],
 	hdrs=[
 		"executive/delay.h",
 		"executive/auto_stop.h",
-		"executive/low_bar_low_score.h",
-		"executive/low_bar_wall_high_score.h",
-		"executive/low_bar_wall_low_score.h",
-		"executive/cheval.h",
-		"executive/portcullis.h",
-		"executive/auto_static.h",
-		"executive/auto_statictwo.h",
-		"executive/auto_reach.h",
 		"executive/auto_null.h",
-		"executive/teleop.h",
-		"executive/barrelracer.h"
+		"executive/teleop.h"
 	],
-	deps=[":executive",":posedge_trigger_debounce",":posedge_toggle",":tilt_presets",":shooter_constants",":motion_profile"]
-)
-
-cc_test(
-	name="auto_reach_test",
-	srcs=["executive/auto_reach.cpp","executive/auto_reach.h"],
-	copts=["-DAUTO_REACH_TEST"],
-	deps=[":executive",":executive_impl",":test"],
-	timeout="short"
-)
-
-cc_test(
-	name="cheval_test",
-	srcs=["executive/cheval.cpp","executive/cheval.h"],
-	copts=["-DCHEVAL_TEST"],
-	deps=[":executive",":test"],
-	timeout="short"
-)
-
-cc_test(
-	name="low_bar_wall_high_score_test",
-	srcs=["executive/low_bar_wall_high_score.cpp","executive/low_bar_wall_high_score.h"],
-	copts=["-DLOW_BAR_WALL_HIGH_SCORE_TEST"],
-	deps=[":executive",":test"],
-	timeout="moderate"
+	deps=[":executive",":posedge_trigger_debounce",":posedge_toggle",":motion_profile"]
 )
 
 cc_test(
 	name="teleop_test",
 	srcs=["executive/teleop.cpp","executive/teleop.h"],
 	copts=["-DTELEOP_TEST"],
-	deps=[":executive",":posedge_trigger_debounce",":posedge_toggle",":tilt_presets",":shooter_constants",":test"],
+	deps=[":executive",":posedge_trigger_debounce",":posedge_toggle",":test"],
 	size="medium"
-)
-
-cc_test(
-	name="low_bar_wall_low_score_test",
-	srcs=["executive/low_bar_wall_low_score.cpp","executive/low_bar_wall_low_score.h"],
-	copts=["-DLOW_BAR_WALL_LOW_SCORE_TEST"],
-	deps=[":executive",":test"],
-	size="medium"
-)
-
-cc_test(
-	name="barrelracer_test",
-	srcs=["executive/barrelracer.cpp","executive/barrelracer.h"],
-	copts=["-DBARRELRACER_TEST"],
-	deps=[":executive",":motion_profile",":test"],
-	timeout="short"
 )
 
 cc_test(
@@ -767,14 +581,6 @@ cc_test(
 		":executive",":executive_impl",
 		":test"
 	],
-	timeout="short"
-)
-
-cc_test(
-	name="low_bar_low_score_test",
-	srcs=["executive/low_bar_low_score.cpp","executive/low_bar_low_score.h"],
-	copts=["-DLOW_BAR_LOW_SCORE_TEST"],
-	deps=[":test"],
 	timeout="short"
 )
 
@@ -794,25 +600,9 @@ cc_test(
 )
 
 cc_test(
-	name="auto_statictwo_test",
-	srcs=["executive/auto_statictwo.cpp","executive/auto_statictwo.h"],
-	copts=["-DAUTO_STATICTWO_TEST"],
-	deps=[":test"],
-	timeout="short"
-)
-
-cc_test(
 	name="auto_stop_test",
 	srcs=["executive/auto_stop.cpp","executive/auto_stop.h"],
 	copts=["-DAUTO_STOP_TEST"],
-	deps=[":test"],
-	timeout="short"
-)
-
-cc_test(
-	name="auto_static_test",
-	srcs=["executive/auto_static.cpp","executive/auto_static.h"],
-	copts=["-DAUTO_STATIC_TEST"],
 	deps=[":test"],
 	timeout="short"
 )
@@ -837,20 +627,5 @@ cc_test(
 	srcs=["executive/step.cpp","executive/step.h"],
 	copts=["-DSTEP_TEST"],
 	deps=[":executive_impl"],
-	timeout="short"
-)
-
-cc_library(
-	name="shooter_constants",
-	srcs=["control/shooter_constants.cpp"],
-	hdrs=["control/shooter_constants.h"],
-	deps=[":interface",":shooter"]
-)
-
-cc_test(
-	name="shooter_constants_test",
-	srcs=["control/shooter_constants.cpp","control/shooter_constants.h"],
-	copts=["-DSHOOTER_CONSTANTS_TEST"],
-	deps=[":interface",":shooter"],
 	timeout="short"
 )

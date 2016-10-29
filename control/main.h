@@ -13,8 +13,6 @@
 #include "log.h"
 #include "../util/posedge_trigger_debounce.h"
 #include "../util/motion_profile.h"
-#include "tilt_presets.h"
-#include "shooter_constants.h"
 #include "../executive/executive.h"
 
 struct Main{
@@ -106,21 +104,9 @@ struct Main{
 
 	Posedge_toggle controller_closed_loop;
 	
-	Tilt_presets tilt_presets;
-	Shooter_constants shooter_constants;
 	Log log;
 
-	Shooter::Goal shoot_action(Panel::Shooter_mode,double,bool)const;
-	void shooter_protocol(Toplevel::Status_detail const&,const bool,const Time,Toplevel::Goal&,bool,Panel::Shooter_mode,double);
-	void cal(Time,double,double,Panel const&);
-
-	Toplevel::Goal teleop(Robot_inputs const&,Joystick_data const&,Joystick_data const&,Panel const&,Toplevel::Status_detail const&,
-		Tilt::Goal,
-		Tilt::Goal,
-		Tilt::Goal,
-		Tilt::Goal,
-		Tilt::Goal
-	);
+	Toplevel::Goal teleop(Robot_inputs const&,Joystick_data const&,Joystick_data const&,Panel const&,Toplevel::Status_detail const&);
 
 	Main();
 	Robot_outputs operator()(Robot_inputs,std::ostream& = std::cerr);

@@ -5,9 +5,9 @@
 
 WPILIB=/usr/local/wpilib
 
-all: machete
+all: sabre
 
-machete::
+sabre::
 	(cd util ; make)
 	(cd input ; make)
 	(cd control ; make)

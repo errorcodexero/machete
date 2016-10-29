@@ -239,8 +239,8 @@ bool operator<(IO const& a,IO const& b){
 }
 
 #ifdef META_TEST
-#include "../control/tilt.h"
-#include "../control/front.h"
+//#include "../control/tilt.h"
+//#include "../control/front.h"
 
 template<typename T>
 set<IO> find_ios(T const& t){
@@ -284,7 +284,7 @@ int main(){
 	IO io{Robot_output{Pwm{0}}};
 	cout<<io<<"\n";
 	#define X(NAME) { NAME x; cout<<""#NAME<<" ios:"<<find_ios(x)<<"\n"; }
-	X(Front) X(Tilt)
+	//X(Front) X(Tilt)
 	#undef X
 }
 #endif

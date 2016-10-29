@@ -2,22 +2,13 @@
 
 #include "teleop.h" 
 #include "auto_null.h"
-#include "auto_reach.h"
-#include "auto_statictwo.h"
-#include "auto_static.h"
-#include "portcullis.h"
-#include "cheval.h"
-#include "low_bar_low_score.h"
-#include "low_bar_wall_low_score.h"
-#include "low_bar_wall_high_score.h"
-#include "barrelracer.h"
 
 using namespace std;
 
 using Mode=Executive;
 
-Executive get_auto1(Next_mode_info info){
-	if (info.panel.in_use) {
+Executive get_auto1(Next_mode_info /*info*/){
+	/*if (info.panel.in_use) {
 		switch(info.panel.auto_mode){ 
 			case Panel::Auto_mode::NOTHING:
 				return Executive{Auto_null()};
@@ -44,7 +35,7 @@ Executive get_auto1(Next_mode_info info){
 				return Mode{Auto_br_straightaway(0, info.status.drive.ticks)};
 			default: assert(0);
 		}
-	}
+	}*/
 	return Mode{Delay()};
 }
 
