@@ -18,7 +18,7 @@ struct Drivebase{
 		X(SINGLE_ARG(std::array<double,MOTORS>),current)\
 		X(Encoder_info,left)\
 		X(Encoder_info,right) \
-		X(Encoder_info,center \
+		X(Encoder_info,center) \
 		X(Encoder_ticks,ticks)// first is left, seconds is right
 	DECLARE_STRUCT(Input,DRIVEBASE_INPUT)
 

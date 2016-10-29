@@ -1,4 +1,4 @@
-g++ -Wall -Werror -std=c++0x -DTOPLEVEL_TEST \
+g++ -Wall -Werror -std=c++14 -DTOPLEVEL_TEST \
 	nop.cpp \
 	toplevel.cpp \
 	../util/fixVictor.cpp \

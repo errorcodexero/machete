@@ -97,7 +97,7 @@ ostream& operator<<(ostream& o,Toplevel::Output_applicator const&){
 }
 
 Toplevel::Output::Output():
-	drive(0,0),
+	drive(0.0,0.0,0.0,false),
 	pump(Pump::Output::AUTO)
 {}
 
@@ -149,7 +149,8 @@ ostream& operator<<(ostream& o,Toplevel::Goal g){
 Toplevel::Status::Status():
 	drive(
 		{Motor_check::Status::OK_,Motor_check::Status::OK_},
-		0,
+		false,
+		Drivebase::Piston::FULL,
 		{0.0,0.0},
 		{0.0,0.0}
 	),

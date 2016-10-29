@@ -35,6 +35,7 @@ double ticks_to_inches(const int ticks){
 
 #define L_ENCODER_PORTS 0,1
 #define R_ENCODER_PORTS 2,3//2016 mounted backwards
+#define C_ENCODER_PORTS 4,5//doesn't exist?
 #define L_ENCODER_LOC 0
 #define R_ENCODER_LOC 1
 
@@ -51,6 +52,7 @@ Robot_inputs Drivebase::Input_reader::operator()(Robot_inputs all,Input in)const
 	};
 	encoder(L_ENCODER_PORTS,in.left);
 	encoder(R_ENCODER_PORTS,in.right);
+	encoder(C_ENCODER_PORTS,in.center);
 	all.digital_io.encoder[L_ENCODER_LOC] = in.ticks.first;
 	all.digital_io.encoder[R_ENCODER_LOC] = in.ticks.second;
 	return all;
@@ -71,6 +73,7 @@ Drivebase::Input Drivebase::Input_reader::operator()(Robot_inputs const& in)cons
 		}(),
 		encoder_info(L_ENCODER_PORTS),
 		encoder_info(R_ENCODER_PORTS),
+		encoder_info(C_ENCODER_PORTS),
 		{encoderconv(in.digital_io.encoder[L_ENCODER_LOC]),encoderconv(in.digital_io.encoder[R_ENCODER_LOC])}
 	};
 }
@@ -159,6 +162,13 @@ Drivebase::Status_detail Drivebase::Estimator::get()const{
 	return Status{a,stall,piston,speeds,last_ticks};
 }
 
+ostream& operator<<(ostream& o,Drivebase::Piston a){
+	#define X(NAME) if(a==Drivebase::Piston::NAME) return o<<""#NAME;
+	X(FULL) X(EMPTY) X(FILLING) X(EMPTYING)
+	#undef X
+	assert(0);
+}
+
 ostream& operator<<(ostream& o,Drivebase::Output_applicator){
 	return o<<"output_applicator";
 }
@@ -230,7 +240,7 @@ void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output
 Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drivebase::Output b)const{
 	robot.pwm[0]=-pwm_convert(b.l);
 	robot.pwm[1]=pwm_convert(b.r);
-	robot.pwn[2] = pwm_convert(b.c);
+	robot.pwm[6]=pwm_convert(b.c);
 
 	robot.solenoid[1] = b.piston;
 
@@ -245,7 +255,7 @@ Drivebase::Output Drivebase::Output_applicator::operator()(Robot_outputs robot)c
 	return Drivebase::Output{
 		-from_pwm(robot.pwm[0]),
 		from_pwm(robot.pwm[1]),
-		from_pwm(robot.pwm[2]),
+		from_pwm(robot.pwm[6]),
 		robot.solenoid[1]
 	};
 }
@@ -273,7 +283,7 @@ bool operator!=(Drivebase const& a,Drivebase const& b){
 	return !(a==b);
 }
 
-Drivebase::Output control(Drivebase::Status /*status*/,Drivebase::Goal goal){
+Drivebase::Output control(Drivebase::Status status,Drivebase::Goal goal){
 
 	double l=goal.y+goal.theta;
 	double r=goal.y-goal.theta;
