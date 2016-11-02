@@ -1,4 +1,4 @@
-g++ -Wall -std=c++11 -DLOG_TEST \
+g++ -Wall -std=c++14 -DLOG_TEST \
 	nop.cpp \
 	log.cpp \
 	../util/interface.cpp \
@@ -6,15 +6,8 @@ g++ -Wall -std=c++11 -DLOG_TEST \
 	../util/util.cpp\
 	toplevel.cpp\
 	drivebase.cpp\
-	shooter.cpp\
-	sides.cpp\
 	pump.cpp\
-	tilt.cpp\
-	climb_release.cpp\
-	winch.cpp\
-	front.cpp\
 	motor_check.cpp\
 	../util/countdown_timer.cpp\
-	collector.cpp\
 	../util/pwm.cpp\
 	-o log 2>&1 && time ./log

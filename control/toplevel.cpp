@@ -150,11 +150,11 @@ Toplevel::Status::Status():
 	drive(
 		{Motor_check::Status::OK_,Motor_check::Status::OK_},
 		false,
-		Drivebase::Piston::FULL,
-		{0.0,0.0},
-		{0.0,0.0}
+		Drivebase::Piston::FULL//,
+		/*{0.0,0.0},
+		{0.0,0.0}*/
 	),
-	pump(Pump::Status::NOT_FULL),
+	pump(Pump::Status::NOT_FULL)
 {}
 
 bool operator==(Toplevel::Status a,Toplevel::Status b){
@@ -345,7 +345,6 @@ set<Toplevel::Input> examples(Toplevel::Input*){
 	Toplevel::Input a{
 		*examples((Drivebase::Input*)0).begin(),
 		Pump::Input{},
-		example((Collector::Input*)0),
 	};
 	return {a};
 }

@@ -52,7 +52,7 @@ Toplevel::Goal Teleop::run(Run_info info) {
 	bool enabled = info.in.robot_mode.enabled;
 
 	{//Set drive goals
-		bool spin=fabs(info.main_joystick.axis[Gamepad_axis::RIGHTX])>.01;//drive turning button
+		//bool spin=fabs(info.main_joystick.axis[Gamepad_axis::RIGHTX])>.01;//drive turning button
 		double boost=info.main_joystick.axis[Gamepad_axis::LTRIGGER],slow=info.main_joystick.axis[Gamepad_axis::RTRIGGER];//turbo and slow buttons	
 	
 		for(int i=0;i<NUDGES;i++){
@@ -60,27 +60,23 @@ Toplevel::Goal Teleop::run(Run_info info) {
 			if(nudges[i].trigger(boost<.25 && info.main_joystick.button[nudge_buttons[i]])) nudges[i].timer.set(.1);
 			nudges[i].timer.update(info.in.now,enabled);
 		}
-		const double NUDGE_POWER=.4,NUDGE_CW_POWER=.4,NUDGE_CCW_POWER=-.4; 
-		goals.drive.left=clip([&]{
-			if(!nudges[Nudges::FORWARD].timer.done()) return -NUDGE_POWER;
-			if(!nudges[Nudges::BACKWARD].timer.done()) return NUDGE_POWER;
-			if(!nudges[Nudges::CLOCKWISE].timer.done()) return -NUDGE_CW_POWER;
-			if(!nudges[Nudges::COUNTERCLOCKWISE].timer.done()) return -NUDGE_CCW_POWER;
-			double power=set_drive_speed(info.main_joystick.axis[Gamepad_axis::LEFTY],boost,slow);
-			if(spin) power+=set_drive_speed(-info.main_joystick.axis[Gamepad_axis::RIGHTX],boost,slow);
-			return power;
+		const double X_NUDGE_POWER=.45,Y_NUDGE_POWER=.2,ROTATE_NUDGE_POWER=.5;
+		goals.drive.y=([&]{
+			if(!nudges[Nudges::FORWARD].timer.done()) return -Y_NUDGE_POWER;
+			if(!nudges[Nudges::BACKWARD].timer.done()) return Y_NUDGE_POWER;
+			return set_drive_speed(info.main_joystick.axis[Gamepad_axis::LEFTY],boost,slow);
 		}());
-		goals.drive.right=clip([&]{
-			if(!nudges[Nudges::FORWARD].timer.done()) return -NUDGE_POWER;
-			else if(!nudges[Nudges::BACKWARD].timer.done()) return NUDGE_POWER;
-			else if(!nudges[Nudges::CLOCKWISE].timer.done()) return NUDGE_CW_POWER;
-			else if(!nudges[Nudges::COUNTERCLOCKWISE].timer.done()) return NUDGE_CCW_POWER;
-			double power=set_drive_speed(info.main_joystick.axis[Gamepad_axis::LEFTY],boost,slow);
-			if(spin) power+=set_drive_speed(info.main_joystick.axis[Gamepad_axis::RIGHTX],boost,slow);
-			return power;
+		goals.drive.x=clip([&]{
+			if(!nudges[Nudges::LEFT].timer.done()) return -X_NUDGE_POWER;
+			else if(!nudges[Nudges::RIGHT].timer.done()) return X_NUDGE_POWER;
+			return set_drive_speed(info.main_joystick.axis[Gamepad_axis::LEFTX],boost,slow);
+		}());
+		goals.drive.theta=clip([&]{
+			if(!nudges[Nudges::CLOCKWISE].timer.done()) return ROTATE_NUDGE_POWER;
+			else if (!nudges[Nudges::COUNTERCLOCKWISE].timer.done()) return -ROTATE_NUDGE_POWER;
+			return -set_drive_speed(info.main_joystick.axis[Gamepad_axis::RIGHTX],boost,slow);
 		}());
 	}
-	
 	return goals;
 }
 

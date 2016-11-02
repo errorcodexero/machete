@@ -195,6 +195,11 @@ void visit(Func f,int i){
 }
 
 template<typename Func>
+void visit(Func f,Drivebase::Piston const& a){
+	f.terminal(a);
+}
+
+template<typename Func>
 void visit(Func f,Drivebase::Status const& r){
 	DRIVEBASE_STATUS(VISIT_2ND)
 }

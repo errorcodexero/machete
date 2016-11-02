@@ -15,11 +15,11 @@ struct Drivebase{
 	typedef std::pair<int,int> Encoder_ticks;
 
 	#define DRIVEBASE_INPUT(X) \
-		X(SINGLE_ARG(std::array<double,MOTORS>),current)\
-		X(Encoder_info,left)\
-		X(Encoder_info,right) \
-		X(Encoder_info,center) \
-		X(Encoder_ticks,ticks)// first is left, seconds is right
+		X(SINGLE_ARG(std::array<double,MOTORS>),current)
+		//X(Encoder_info,left)
+		//X(Encoder_info,right)
+		//X(Encoder_info,center)
+		//X(Encoder_ticks,ticks)// first is left, seconds is right
 	DECLARE_STRUCT(Input,DRIVEBASE_INPUT)
 
 	struct Input_reader{
@@ -48,9 +48,9 @@ struct Drivebase{
 	#define DRIVEBASE_STATUS(X) \
 		X(SINGLE_ARG(std::array<Motor_check::Status,MOTORS>),motor)\
 		X(bool,stall) \
-		X(Piston,piston) \
-		X(Speeds,speeds) \
-		X(Encoder_ticks,ticks)  //first is left, second is right
+		X(Piston,piston)
+		//X(Speeds,speeds) 
+		//X(Encoder_ticks,ticks)  //first is left, second is right
 	DECLARE_STRUCT(Status,DRIVEBASE_STATUS)
 
 	typedef Status Status_detail;
@@ -62,8 +62,8 @@ struct Drivebase{
 		Countdown_timer timer;
 		Countdown_timer piston_timer;
 		Piston piston;
-		std::pair<int,int> last_ticks;
-		std::pair<double,double> speeds;//inches per second
+		//std::pair<int,int> last_ticks;
+		//std::pair<double,double> speeds;//inches per second
 		void update(Time,Input,Output);
 		Status_detail get()const;
 		Estimator();

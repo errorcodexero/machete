@@ -7,7 +7,7 @@
 #include "../util/quick.h"
 
 struct Teleop : Executive_impl<Teleop> {
-	enum Nudges{FORWARD,BACKWARD,CLOCKWISE,COUNTERCLOCKWISE,NUDGES};
+	enum Nudges{FORWARD,BACKWARD,LEFT,RIGHT,CLOCKWISE,COUNTERCLOCKWISE,NUDGES};
 	#define NUDGE_ITEMS(X) X(Posedge_trigger,trigger) X(Countdown_timer,timer)
 	struct Nudge{
 		Posedge_trigger trigger;

@@ -6,9 +6,6 @@ g++ -Wall -Werror -std=c++14 -DTOPLEVEL_TEST \
 	../util/negedge_trigger.cpp \
 	../util/countup_timer.cpp \
 	pump.cpp \
-	sides.cpp \
-	front.cpp \
-	climb_release.cpp \
 	../util/point.cpp \
 	drivebase.cpp \
 	../util/interface.cpp \
@@ -20,9 +17,5 @@ g++ -Wall -Werror -std=c++14 -DTOPLEVEL_TEST \
 	../util/input.cpp\
 	../util/output.cpp\
 	tote_sensors.cpp\
-	tilt.cpp\
-	winch.cpp\
-	shooter.cpp\
-	collector.cpp\
 	../util/pwm.cpp\
 	-o toplevel 2>&1 && ./toplevel 2>&1
