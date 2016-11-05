@@ -112,7 +112,7 @@ Talon_srx_controls::Talon_srx_controls():init_(false){}
 void Talon_srx_controls::init(){
 	if(!init_){
 		for(unsigned int i=0; i<talons.size(); i++){
-			talons[i].init(i+2);//2016 h-drive bunnybot, talons start at can 2
+			talons[i].init(i+1);//2016 h-drive bunnybot, talons start at device ID 1
 		}
 		init_=true;
 	}

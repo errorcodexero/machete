@@ -8,11 +8,14 @@ using namespace std;
 
 
 
-// all locations are -2
-#define R_MOTOR_LOC_1 2
-#define R_MOTOR_LOC_2 3
-#define L_MOTOR_LOC_1 0
-#define L_MOTOR_LOC_2 1
+// talon locations are -1
+#define R_MOTOR_LOC_1 0
+#define R_MOTOR_LOC_2 1
+#define L_MOTOR_LOC_1 2
+#define L_MOTOR_LOC_2 3
+
+#define C_MOTOR_LOC 0
+#define PISTON_LOC 0
 
 unsigned pdb_location(Drivebase::Motor m){
 	#define X(NAME,INDEX) if(m==Drivebase::NAME) return INDEX;
@@ -140,7 +143,7 @@ CMP_OPS(Drivebase::Output,DRIVEBASE_OUTPUT)
 set<Drivebase::Output> examples(Drivebase::Output*){
 	return {
 		Drivebase::Output{0,0,0,1},
-		Drivebase::Output{1,1,0,0}
+		Drivebase::Output{-1,1,0,0}
 	};
 }
 
@@ -246,13 +249,14 @@ void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output
 }
 
 Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drivebase::Output b)const{
+	//cout<<"\nOutputs: "<<b<<"\n";
 	robot.talon_srx[R_MOTOR_LOC_1].power_level = b.r;
 	robot.talon_srx[R_MOTOR_LOC_2].power_level = b.r;
 	robot.talon_srx[L_MOTOR_LOC_1].power_level = b.l;
 	robot.talon_srx[L_MOTOR_LOC_2].power_level = b.l;
-	robot.pwm[6]=pwm_convert(b.c);
+	robot.pwm[C_MOTOR_LOC]=pwm_convert(b.c);
 
-	robot.solenoid[0] = b.piston;
+	robot.solenoid[PISTON_LOC] = b.piston;
 
 	/*robot.digital_io[0]=Digital_out::encoder(0,1);
 	robot.digital_io[1]=Digital_out::encoder(0,0);
@@ -266,8 +270,8 @@ Drivebase::Output Drivebase::Output_applicator::operator()(Robot_outputs robot)c
 	return Drivebase::Output{	
 		robot.talon_srx[L_MOTOR_LOC_1].power_level,
 		robot.talon_srx[R_MOTOR_LOC_1].power_level,
-		from_pwm(robot.pwm[6]),
-		robot.solenoid[0]
+		from_pwm(robot.pwm[C_MOTOR_LOC]),
+		robot.solenoid[PISTON_LOC]
 	};
 }
 
@@ -295,8 +299,7 @@ bool operator!=(Drivebase const& a,Drivebase const& b){
 }
 
 Drivebase::Output control(Drivebase::Status status,Drivebase::Goal goal){
-
-	double l=goal.y+goal.theta;
+	double l=-(goal.y+goal.theta);
 	double r=goal.y-goal.theta;
 	auto m=max(1.0,max(fabs(l),fabs(r)));
 
@@ -317,7 +320,6 @@ Drivebase::Output control(Drivebase::Status status,Drivebase::Goal goal){
 		}
 		return strafe_portion>=main_wheel_portion/2;
 	}();
-
 	return Drivebase::Output{l/m,r/m,goal.x,piston};
 }
 
