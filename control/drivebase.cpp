@@ -7,10 +7,12 @@
 using namespace std;
 
 
-#define R_MOTOR_LOC_1 4
-#define R_MOTOR_LOC_2 5
-#define L_MOTOR_LOC_1 2
-#define L_MOTOR_LOC_2 3
+
+// all locations are -2
+#define R_MOTOR_LOC_1 2
+#define R_MOTOR_LOC_2 3
+#define L_MOTOR_LOC_1 0
+#define L_MOTOR_LOC_2 1
 
 unsigned pdb_location(Drivebase::Motor m){
 	#define X(NAME,INDEX) if(m==Drivebase::NAME) return INDEX;

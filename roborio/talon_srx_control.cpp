@@ -111,8 +111,8 @@ Talon_srx_controls::Talon_srx_controls():init_(false){}
 
 void Talon_srx_controls::init(){
 	if(!init_){
-		for(unsigned int i=0; i<Robot_outputs::TALON_SRX_OUTPUTS; i++){
-			talons[i].init(i);
+		for(unsigned int i=0; i<talons.size(); i++){
+			talons[i].init(i+2);//2016 h-drive bunnybot, talons start at can 2
 		}
 		init_=true;
 	}
@@ -120,7 +120,7 @@ void Talon_srx_controls::init(){
 
 void Talon_srx_controls::set(Checked_array<Talon_srx_output,Robot_outputs::TALON_SRX_OUTPUTS> const& a,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const& enable){
 	init();
-	for(unsigned int i=0; i<Robot_outputs::TALON_SRX_OUTPUTS; i++){
+	for(unsigned int i=0; i<talons.size(); i++){
 		talons[i].set(a[i],enable[i]);
 	}
 }

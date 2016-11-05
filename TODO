@@ -1,20 +1,12 @@
-HIGH PRIORITY for Offseason:
-	- High goal shooter code
-		- Make high goal rpm more consistent (and change pid values to be ones we actually want)
-		- Get printing talon_srx_controls to work
-		- Fix climbed shooting
-	- Autonomous 
-		- Drive Encoders
-		- Testing on carpet field with measurements
-		- Vision run autonomous
-	- Logging
-	- Fix ability to tell if partly climbed in winch estimator
+HIGH PRIORITY for Season:
+	- Drivebase
+	- Gun
+	- Bunny manipulator
 
 
-NOT AS HIGH PRIORITY for Offseason:
+NOT AS HIGH PRIORITY for Season:
+	- Fix talon srx initialization: separate address for cans and access for them in the talon_srx_controls array
 	- Log Analysis - Nick
-	- Add auto-shut off for climber with the hall effect sensor	
-	- Prevent climber release when collector is at top
 	- Laptop configuration
 		-ssh config:
 			-Fix the "rm ~/.ssh/known_hosts" problem
@@ -22,8 +14,6 @@ NOT AS HIGH PRIORITY for Offseason:
 
 
 NICE THINGS TO HAVE:
-	- Expand testing in main.cpp
-	- PWM outputs for blinky lights (DIO 9)
 	- Clean-up stuff:
 		- Use enum class more places
 		- Use std::array in place of C arrays in several places

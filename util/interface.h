@@ -108,7 +108,7 @@ struct Robot_outputs{
 	static const unsigned DIGITAL_IOS=10;//there are really 14 on the cRIO and the roboRIO headers say 26.
 	Checked_array<Digital_out,DIGITAL_IOS> digital_io;
 	
-	static const unsigned TALON_SRX_OUTPUTS=6;//real number?
+	static const unsigned TALON_SRX_OUTPUTS=4;//FIXME: talon initializaitons
 	Checked_array<Talon_srx_output, TALON_SRX_OUTPUTS> talon_srx;
 	
 	static const unsigned CAN_JAGUARS=0;
