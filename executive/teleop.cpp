@@ -56,7 +56,8 @@ Toplevel::Goal Teleop::run(Run_info info) {
 		double boost=info.main_joystick.axis[Gamepad_axis::LTRIGGER],slow=info.main_joystick.axis[Gamepad_axis::RTRIGGER];//turbo and slow buttons	
 	
 		for(int i=0;i<NUDGES;i++){
-			const array<unsigned int,NUDGES> nudge_buttons={Gamepad_button::Y,Gamepad_button::A,Gamepad_button::X,Gamepad_button::B,Gamepad_button::LB,Gamepad_button::RB};//Forward, backward, clockwise, counter-clockwise
+			const array<unsigned int,NUDGES> nudge_buttons={Gamepad_button::Y,Gamepad_button::A,Gamepad_button::X,Gamepad_button::B,Gamepad_button::LB,Gamepad_button::RB};
+			//Forward, backward, left, right, clockwise, counter-clockwise
 			if(nudges[i].trigger(boost<.25 && info.main_joystick.button[nudge_buttons[i]])) nudges[i].timer.set(.1);
 			nudges[i].timer.update(info.in.now,enabled);
 		}
