@@ -48,5 +48,9 @@ struct Gun {
 	Estimator estimator;
 };
 
+std::ostream& operator<<(std::ostream&,Gun::Goal);
+
+
 
 #endif
+
