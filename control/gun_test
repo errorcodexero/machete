@@ -1,0 +1,6 @@
+g++ --std=c++14 -Wall -Werror -DGUN_TEST \
+	gun.cpp \
+	../util/interface.cpp \
+	../util/driver_station_interface.cpp \
+	../util/util.cpp \
+	-o gun 2>&1 && ./gun

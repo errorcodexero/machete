@@ -1,4 +1,4 @@
-#ifdef GUN_H
+#ifndef GUN_H
 #define GUN_H
 
 #include <set>
@@ -19,18 +19,18 @@ struct Gun {
 		Status_detail();
 		Status_detail(bool,bool);	
 
-	}
+	};
 
 	typedef Status_detail Status;
 
 	struct Input_reader {
 		Input operator()(Robot_inputs const&)const;
-		Robot_inputs operator()(Robot_inputs, Inputs)const;
+		Robot_inputs operator()(Robot_inputs, Input)const;
 	};
 	
 	struct Output_applicator{
 		Robot_outputs operator()(Robot_outputs,Output)const;
-		Output operator()(Robot_output const&)const;
+		Output operator()(Robot_outputs const&)const;
 	};
 	
 	struct Estimator{
@@ -44,25 +44,9 @@ struct Gun {
 	};
 	
 	Input_reader input_reader;
-	Output_applicator output_applicatorl
+	Output_applicator output_applicator;
 	Estimator estimator;
-
-
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
 
 #endif
