@@ -1,0 +1,7 @@
+g++ --std=c++14 -Wall -Werror -DGRABBER_TEST \
+	grabber.cpp \
+	../util/interface.cpp \
+	../util/driver_station_interface.cpp \
+	../util/util.cpp \
+	../util/countdown_timer.cpp \
+	-o grabber 2>&1 && ./grabber

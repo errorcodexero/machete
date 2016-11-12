@@ -97,7 +97,7 @@ Winch::Goal Winch::Output_applicator::operator()(Robot_outputs const& r)const{
 	return Winch::Goal::STOP;
 }
 
-void Winch::Estimator::update(Time time,Winch::Input input,Winch::Goal goal){
+void Winch::Estimator::update(Time /*time*/,Winch::Input input,Winch::Goal goal){
 	switch(goal){
 		case Winch::Goal::UP:
 			last = Status::GOING_UP;
