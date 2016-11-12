@@ -4,11 +4,15 @@
 #include<vector>
 #include "pump.h"
 #include "drivebase.h"
+#include "winch.h"
+#include "grabber.h"
 
 #define TOPLEVEL_ITEMS \
 	X(Drivebase,drive,)\
 	X(Pump,pump,Pump::Goal::AUTO)\
-
+	X(Winch,winch,Winch::Goal::STOP) \
+	X(Grabber,grabber,Grabber::Goal::OPEN) 
+	
 class Toplevel{
 	public:
 

@@ -3,7 +3,7 @@
 using namespace std;
 
 #define HALL_EFFECT_LOC 7 //not a real value
-#define PISTON_LOC 0 //not a real value
+#define PISTON_LOC 1 //not a real value
 
 Grabber::Input::Input():closed(false),enabled(false){}
 Grabber::Input::Input(bool a,bool b):closed(a),enabled(b){}
@@ -27,6 +27,14 @@ bool operator<(const Grabber::Input a,const Grabber::Input b){
 	return !a.enabled && b.enabled;
 }
 
+bool operator==(const Grabber::Estimator a,const Grabber::Estimator b){
+	if(a.last != b.last) return false;
+	return a.open_timer == b.open_timer;
+}
+
+bool operator!=(const Grabber::Estimator a,const Grabber::Estimator b){
+	return !(a==b);
+}
 
 ostream& operator<<(ostream& o,const Grabber::Input a){
 	return o<<" Input( closed:"<<a.closed<<" enabled:"<<a.enabled<<")";

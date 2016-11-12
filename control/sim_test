@@ -1,6 +1,5 @@
 g++ -std=c++14 -Wall -Wextra -DSIM_TEST \
 	sim.cpp \
-	shooter.cpp \
 	../util/interface.cpp \
 	../util/driver_station_interface.cpp \
 	../util/countdown_timer.cpp \
@@ -9,12 +8,8 @@ g++ -std=c++14 -Wall -Wextra -DSIM_TEST \
 	../control/toplevel.cpp \
 	../control/drivebase.cpp \
 	../control/pump.cpp \
-	../control/collector.cpp \
 	../control/winch.cpp \
-	../control/climb_release.cpp \
+	grabber.cpp \
 	../control/motor_check.cpp \
-	../control/tilt.cpp \
-	../control/front.cpp \
-	../control/sides.cpp \
 	../control/nop.cpp \
 	-o sim 2>&1 && ./sim

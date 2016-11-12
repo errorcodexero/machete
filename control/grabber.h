@@ -58,6 +58,10 @@ std::ostream& operator<<(std::ostream&,const Grabber::Status_detail);
 
 bool operator==(const Grabber::Input,const Grabber::Input);
 bool operator!=(const Grabber::Input,const Grabber::Input);
+bool operator<(const Grabber::Input,const Grabber::Input);
+
+bool operator==(const Grabber::Estimator,const Grabber::Estimator);
+bool operator!=(const Grabber::Estimator,const Grabber::Estimator);
 
 Grabber::Output control(Grabber::Status,Grabber::Goal);
 Grabber::Status status(Grabber::Status_detail);
