@@ -370,7 +370,7 @@ public:
 			if(out==Relay_output::_01) return Relay::kReverse;
 			if(out==Relay_output::_10) return Relay::kForward;
 			//Assuming RELAY_11
-			return Relay::kReverse;
+			return Relay::kOn;
 		}());
 		return 0;
 	}

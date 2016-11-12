@@ -460,17 +460,32 @@ cc_test(
 )
 
 cc_library(
+	name="gun",
+	srcs=["control/gun.cpp"],
+	hdrs=["control/gun.h"],
+	deps=[":interface",":countdown_timer"]
+)
+
+cc_test(
+	name="gun_test",
+	srcs=["control/gun.cpp","control/gun.h","control/formal.h"],
+	copts=["-DGUN_TEST"],
+	deps=[":interface",":countdown_timer"],
+	timeout="short"
+)
+
+cc_library(
 	name="toplevel",
 	srcs=["control/toplevel.cpp"],
 	hdrs=["control/toplevel.h"],
-	deps=[":pump",":drivebase",":input"]
+	deps=[":gun",":pump",":drivebase",":input"]
 )
 
 cc_test(
 	name="toplevel_test",
 	srcs=["control/toplevel.cpp","control/toplevel.h","control/formal.h"],
 	copts=["-DTOPLEVEL_TEST"],
-	deps=[":pump",":drivebase",":input",":output"],
+	deps=[":gun",":pump",":drivebase",":input",":output"],
 	timeout="short"
 )
 

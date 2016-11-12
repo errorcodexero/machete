@@ -1,13 +1,15 @@
 #ifndef TOPLEVEL_H
 #define TOPLEVEL_H
 
-#include<vector>
+#include <vector>
 #include "pump.h"
 #include "drivebase.h"
+#include "gun.h"
 
 #define TOPLEVEL_ITEMS \
 	X(Drivebase,drive,)\
 	X(Pump,pump,Pump::Goal::AUTO)\
+	X(Gun,gun,Gun::Goal::OFF)
 
 class Toplevel{
 	public:
