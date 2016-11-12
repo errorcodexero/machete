@@ -6,17 +6,17 @@
 #include "../util/countdown_timer.h"
 
 struct Winch{
-	enum class Goal{IN,OUT,STOP};
+	enum class Goal{DOWN,STOP,UP};
 	
 	typedef Goal Output;
 
 	struct Input{
-		bool in;//limit switch
+		bool down, up;//hall-effects
 		Input();
-		Input(bool);
+		Input(bool,bool);
 	};
 
-	enum class Status_detail{IN,GOING_IN,STOPPED,GOING_OUT,OUT};
+	enum class Status_detail{ERROR,DOWN,GOING_DOWN,STOPPED,GOING_UP,UP};
 	
 	typedef Status_detail Status;
 	
@@ -31,7 +31,6 @@ struct Winch{
 	};
 
 	struct Estimator{
-		Countdown_timer out_timer;
 		Status_detail last;
 		
 		void update(Time,Input,Output);
