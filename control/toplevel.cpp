@@ -99,7 +99,9 @@ ostream& operator<<(ostream& o,Toplevel::Output_applicator const&){
 Toplevel::Output::Output():
 	drive(0.0,0.0,0.0,false),
 	pump(Pump::Output::AUTO),
-	gun(Gun::Output::OFF)
+	gun(Gun::Output::OFF),
+	winch(Winch::Output::STOP),
+	grabber(Grabber::Output::OPEN)
 {}
 
 bool operator<(Toplevel::Output const& a,Toplevel::Output const& b){
@@ -156,7 +158,9 @@ Toplevel::Status::Status():
 		{0.0,0.0}*/
 	),
 	pump(Pump::Status::NOT_FULL),
-	gun(Gun::Status::OFF)
+	gun(Gun::Status::OFF),
+	winch(Winch::Status::DOWN),
+	grabber(Grabber::Status::OPEN)
 {}
 
 bool operator==(Toplevel::Status a,Toplevel::Status b){
@@ -332,7 +336,9 @@ set<Toplevel::Status_detail> examples(Toplevel::Status_detail*){
 	return {Toplevel::Status_detail{
 		*examples((Drivebase::Status_detail*)0).begin(),
 		Pump::Status_detail{Pump::Status::FULL},
-		*examples((Gun::Status_detail*)0).begin()
+		*examples((Gun::Status_detail*)0).begin(),
+		*examples((Winch::Status_detail*)0).begin(),
+		*examples((Grabber::Status_detail*)0).begin()
 	}};
 }
 
@@ -348,7 +354,9 @@ set<Toplevel::Input> examples(Toplevel::Input*){
 	Toplevel::Input a{
 		*examples((Drivebase::Input*)0).begin(),
 		Pump::Input{},
-		*examples((Gun::Input*)0).begin()
+		*examples((Gun::Input*)0).begin(),
+		*examples((Winch::Input*)0).begin(),
+		*examples((Grabber::Input*)0).begin()
 	};
 	return {a};
 }
@@ -607,7 +615,7 @@ int main(){
 			case 1: return *found.begin();
 			default:
 				//return "----CONFLICT!----"+as_string(found);
-				assert(0);
+				assert(0);//check io's. probably assigning more than one thing to the same one
 		}
 	};
 	for(auto a:outputs()){

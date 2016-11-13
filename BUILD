@@ -438,6 +438,36 @@ cc_test(
 )
 
 cc_library(
+	name="winch",
+	srcs=["control/winch.cpp"],
+	hdrs=["control/winch.h"],
+	deps=[":interface"]
+)
+
+cc_test(
+	name="winch_test",
+	srcs=["control/winch.cpp","control/winch.h","control/formal.h"],
+	copts=["-DWINCH_TEST"],
+	deps=[":interface"],
+	timeout="short"
+)
+
+cc_library(
+	name="grabber",
+	srcs=["control/grabber.cpp"],
+	hdrs=["control/grabber.h"],
+	deps=[":interface",":countdown_timer"]
+)
+
+cc_test(
+	name="grabber_test",
+	srcs=["control/grabber.cpp","control/grabber.h","control/formal.h"],
+	copts=["-DGRABBER_TEST"],
+	deps=[":interface",":countdown_timer"],
+	timeout="short"
+)
+
+cc_library(
 	name="force",
 	srcs=["control/force.cpp"],
 	hdrs=["control/force.h"],
@@ -478,14 +508,14 @@ cc_library(
 	name="toplevel",
 	srcs=["control/toplevel.cpp"],
 	hdrs=["control/toplevel.h"],
-	deps=[":gun",":pump",":drivebase",":input"]
+	deps=[":gun",":pump",":drivebase",":winch",":grabber",":input"]
 )
 
 cc_test(
 	name="toplevel_test",
 	srcs=["control/toplevel.cpp","control/toplevel.h","control/formal.h"],
 	copts=["-DTOPLEVEL_TEST"],
-	deps=[":gun",":pump",":drivebase",":input",":output"],
+	deps=[":gun",":pump",":drivebase",":grabber",":winch",":input",":output"],
 	timeout="short"
 )
 

@@ -195,6 +195,16 @@ void visit(Func f,int i){
 }
 
 template<typename Func>
+void visit(Func f,Winch::Status const& a){
+	f.terminal(a);
+}
+
+template<typename Func>
+void visit(Func f,Grabber::Status const& a){
+	f.terminal(a);
+}
+
+template<typename Func>
 void visit(Func f,Drivebase::Piston const& a){
 	f.terminal(a);
 }

@@ -6,6 +6,8 @@ g++ -Wall -std=c++14 -DLOG_TEST \
 	../util/util.cpp\
 	toplevel.cpp\
 	drivebase.cpp\
+	winch.cpp \
+	grabber.cpp \
 	pump.cpp\
 	motor_check.cpp\
 	../util/countdown_timer.cpp\

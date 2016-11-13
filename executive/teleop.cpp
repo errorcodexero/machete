@@ -79,7 +79,7 @@ Toplevel::Goal Teleop::run(Run_info info) {
 		}());
 		//cout<<"\nDrive goals: "<<goals.drive<<"\n";
 	}
-	
+
 	goals.gun=[&]{
 		if(info.gunner_joystick.axis[Gamepad_axis::LTRIGGER]>.9){
 			if(info.gunner_joystick.axis[Gamepad_axis::RTRIGGER]>.9) return Gun::Goal::SHOOT;
@@ -88,6 +88,13 @@ Toplevel::Goal Teleop::run(Run_info info) {
 		else return Gun::Goal::OFF;
 	}();
 
+	{
+		const double PADDING = 0.01;
+		if(info.gunner_joystick.axis[Gamepad_axis::LEFTY] > PADDING) goals.winch = Winch::Goal::UP;
+		else if(info.gunner_joystick.axis[Gamepad_axis::LEFTY] < -PADDING) goals.winch = Winch::Goal::DOWN;
+		else goals.winch = Winch::Goal::STOP;
+		//TODO add all the way up and all the way down commands
+	}
 	return goals;
 }
 
