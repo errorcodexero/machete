@@ -15,7 +15,7 @@ struct Winch{
 		Input(bool,bool);
 	};
 
-	enum class Status_detail{ERROR,DOWN,GOING_DOWN,STOPPED,GOING_UP,UP};
+	enum class Status_detail{ERROR_,DOWN,GOING_DOWN,STOPPED,GOING_UP,UP};
 	
 	typedef Status_detail Status;
 	

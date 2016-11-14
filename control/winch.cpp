@@ -27,7 +27,7 @@ std::set<Winch::Input> examples(Winch::Input*){
 }
 
 std::set<Winch::Status_detail> examples(Winch::Status_detail*){
-	return {Winch::Status_detail::ERROR,Winch::Status_detail::DOWN,Winch::Status_detail::GOING_DOWN,Winch::Status_detail::STOPPED,Winch::Status_detail::GOING_UP,Winch::Status_detail::UP};
+	return {Winch::Status_detail::ERROR_,Winch::Status_detail::DOWN,Winch::Status_detail::GOING_DOWN,Winch::Status_detail::STOPPED,Winch::Status_detail::GOING_UP,Winch::Status_detail::UP};
 }
 
 std::ostream& operator<<(std::ostream& o,Winch::Goal g){
@@ -48,7 +48,7 @@ std::ostream& operator<<(std::ostream& o,Winch::Status_detail a){
 	X(STOPPED)
 	X(GOING_UP)
 	X(UP)
-	X(ERROR)
+	X(ERROR_)
 	#undef X
 	assert(0);
 }
@@ -113,7 +113,7 @@ void Winch::Estimator::update(Time /*time*/,Winch::Input input,Winch::Goal goal)
 	}
 	if(input.down) last = Status::DOWN;
 	if(input.up) last = Status::UP;
-	if(input.down && input.up) last = Status::ERROR;
+	if(input.down && input.up) last = Status::ERROR_;
 }
 
 Winch::Status Winch::Estimator::get()const{
