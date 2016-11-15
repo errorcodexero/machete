@@ -42,7 +42,9 @@ Executive Teleop::next_mode(Next_mode_info info) {
 	return Executive{t};
 }
 
-Teleop::Teleop(){}
+Teleop::Teleop(){
+	winch_mode = Winch_mode::MANUAL;
+}
 
 IMPL_STRUCT(Teleop::Teleop,TELEOP_ITEMS)
 
@@ -88,13 +90,31 @@ Toplevel::Goal Teleop::run(Run_info info) {
 		else return Gun::Goal::OFF;
 	}();
 
-	{
+	goals.winch=[&]{
 		const double PADDING = 0.01;
-		if(info.gunner_joystick.axis[Gamepad_axis::LEFTY] > PADDING) goals.winch = Winch::Goal::UP;
-		else if(info.gunner_joystick.axis[Gamepad_axis::LEFTY] < -PADDING) goals.winch = Winch::Goal::DOWN;
-		else goals.winch = Winch::Goal::STOP;
+		winch_mode = [&]{
+			if(info.gunner_joystick.button[Gamepad_button::Y]) return Winch_mode::AUTO_UP;
+			if(info.gunner_joystick.button[Gamepad_button::A]) return Winch_mode::AUTO_DOWN;
+			if(winch_mode != Winch_mode::MANUAL){
+				if(ready(info.toplevel_status.winch,goals.winch)) return Winch_mode::MANUAL;
+			}
+			return winch_mode;
+		}();
+		switch(winch_mode){
+			case Winch_mode::MANUAL:
+				if(info.gunner_joystick.axis[Gamepad_axis::LEFTY] > PADDING) return Winch::Goal::UP;
+				else if(info.gunner_joystick.axis[Gamepad_axis::LEFTY] < -PADDING) return Winch::Goal::DOWN;
+				break;
+			case Winch_mode::AUTO_DOWN:
+				return Winch::Goal::AUTO_DOWN;
+			case Winch_mode::AUTO_UP:
+				return Winch::Goal::AUTO_UP;
+			default:
+				assert(0);		
+		}
+		return Winch::Goal::STOP;
 		//TODO add all the way up and all the way down commands
-	}
+	}();
 	return goals;
 }
 

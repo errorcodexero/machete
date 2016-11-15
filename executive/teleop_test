@@ -1,6 +1,9 @@
 g++ -Wall -Werror -std=c++14 -DTELEOP_TEST \
 	test.cpp\
 	teleop.cpp \
+	../control/gun.cpp \
+	../control/winch.cpp \
+	../control/grabber.cpp \
 	executive.cpp\
 	delay.cpp \
 	auto_null.cpp \

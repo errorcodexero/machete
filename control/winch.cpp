@@ -14,7 +14,11 @@ Winch::Estimator::Estimator(){
 }
 
 std::set<Winch::Goal> examples(Winch::Goal*){
-	return {Winch::Goal::DOWN, Winch::Goal::UP, Winch::Goal::STOP};
+	return {Winch::Goal::AUTO_DOWN, Winch::Goal::DOWN, Winch::Goal::UP, Winch::Goal::STOP, Winch::Goal::AUTO_UP};
+}
+
+std::set<Winch::Output> examples(Winch::Output*){
+	return {Winch::Output::DOWN, Winch::Output::STOP, Winch::Output::UP};
 }
 
 std::set<Winch::Input> examples(Winch::Input*){
@@ -32,7 +36,7 @@ std::set<Winch::Status_detail> examples(Winch::Status_detail*){
 
 std::ostream& operator<<(std::ostream& o,Winch::Goal g){
 	#define X(name) if(g==Winch::Goal::name) return o<<"Winch::Goal("#name")";
-	X(DOWN) X(UP) X(STOP)
+	X(AUTO_DOWN) X(DOWN) X(UP) X(STOP) X(AUTO_UP)
 	#undef X
 	assert(0);
 }
@@ -49,6 +53,15 @@ std::ostream& operator<<(std::ostream& o,Winch::Status_detail a){
 	X(GOING_UP)
 	X(UP)
 	X(ERROR_)
+	#undef X
+	assert(0);
+}
+
+std::ostream& operator<<(std::ostream& o, Winch::Output a){
+	#define X(OUT) if(a==Winch::Output::OUT) return o<<""#OUT;
+	X(DOWN)
+	X(STOP)
+	X(UP)
 	#undef X
 	assert(0);
 }
@@ -85,27 +98,27 @@ Robot_inputs Winch::Input_reader::operator()(Robot_inputs r, Winch::Input in) co
 }
 
 Robot_outputs Winch::Output_applicator::operator()(Robot_outputs r, Winch::Output o)const{
-	if(o==Winch::Goal::UP) r.pwm[WINCH_PWM] = WINCH_POWER;
-	else if(o==Winch::Goal::DOWN) r.pwm[WINCH_PWM] = -WINCH_POWER;
+	if(o==Winch::Output::UP) r.pwm[WINCH_PWM] = WINCH_POWER;
+	else if(o==Winch::Output::DOWN) r.pwm[WINCH_PWM] = -WINCH_POWER;
 	else r.pwm[WINCH_PWM] = 0;
 	return r;
 }
 
-Winch::Goal Winch::Output_applicator::operator()(Robot_outputs const& r)const{
-	if(r.pwm[WINCH_PWM] > 0) return Winch::Goal::UP;
-	if(r.pwm[WINCH_PWM] < 0) return Winch::Goal::DOWN;
-	return Winch::Goal::STOP;
+Winch::Output Winch::Output_applicator::operator()(Robot_outputs const& r)const{
+	if(r.pwm[WINCH_PWM] > 0) return Winch::Output::UP;
+	if(r.pwm[WINCH_PWM] < 0) return Winch::Output::DOWN;
+	return Winch::Output::STOP;
 }
 
-void Winch::Estimator::update(Time /*time*/,Winch::Input input,Winch::Goal goal){
-	switch(goal){
-		case Winch::Goal::UP:
+void Winch::Estimator::update(Time /*time*/,Winch::Input input,Winch::Output output){
+	switch(output){
+		case Winch::Output::UP:
 			last = Status::GOING_UP;
 			break;
-		case Winch::Goal::DOWN:
+		case Winch::Output::DOWN:
 			last = Status::GOING_DOWN;
 			break;
-		case Winch::Goal::STOP:
+		case Winch::Output::STOP:
 			last = Status::STOPPED;
 			break;
 		default:
@@ -120,8 +133,23 @@ Winch::Status Winch::Estimator::get()const{
 	return last;
 }
 
-Winch::Output control(Winch::Status,Winch::Goal goal){
-	return goal;
+Winch::Output control(Winch::Status status,Winch::Goal goal){
+	switch(goal){
+		case Winch::Goal::AUTO_DOWN:
+			if(ready(status,goal)) return Winch::Output::STOP;
+			return Winch::Output::DOWN;
+		case Winch::Goal::DOWN:
+			return Winch::Output::DOWN;
+		case Winch::Goal::STOP:
+			return Winch::Output::STOP;
+		case Winch::Goal::UP:
+			return Winch::Output::UP;
+		case Winch::Goal::AUTO_UP:
+			if(ready(status, goal)) return Winch::Output::STOP;
+			return Winch::Output::UP;
+		default:
+			assert(0);
+	}
 }
 
 Winch::Status status(Winch::Status s){
@@ -130,11 +158,15 @@ Winch::Status status(Winch::Status s){
 
 bool ready(Winch::Status status,Winch::Goal goal){
 	switch(goal){
+		case Winch::Goal::AUTO_DOWN:
+			return true;
 		case Winch::Goal::DOWN:
 			return status == Winch::Status::DOWN;
 		case Winch::Goal::STOP:
 			return status == Winch::Status::STOPPED;
 		case Winch::Goal::UP:
+			return true;
+		case Winch::Goal::AUTO_UP:
 			return status == Winch::Status::UP;
 		default:
 			assert(0);

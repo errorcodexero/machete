@@ -13,9 +13,13 @@ struct Teleop : Executive_impl<Teleop> {
 		Posedge_trigger trigger;
 		Countdown_timer timer;
 	};
+
+	enum class Winch_mode{AUTO_DOWN,MANUAL,AUTO_UP};
 	
 	#define TELEOP_ITEMS(X)\
-		X(SINGLE_ARG(std::array<Nudge,NUDGES>),nudges)
+		X(SINGLE_ARG(std::array<Nudge,NUDGES>),nudges) \
+		X(Winch_mode, winch_mode) 
+
 	STRUCT_MEMBERS(TELEOP_ITEMS)
 
 	Executive next_mode(Next_mode_info);

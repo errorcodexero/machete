@@ -5,9 +5,9 @@
 #include "../util/interface.h"
 
 struct Winch{
-	enum class Goal{DOWN,STOP,UP};
+	enum class Goal{AUTO_DOWN,DOWN,STOP,UP,AUTO_UP};
 	
-	typedef Goal Output;
+	enum class Output{DOWN,STOP,UP};
 
 	struct Input{
 		bool down, up;//hall-effects
@@ -45,10 +45,12 @@ struct Winch{
 std::set<Winch::Goal> examples(Winch::Goal*);
 std::set<Winch::Input> examples(Winch::Input*);
 std::set<Winch::Status_detail> examples(Winch::Status_detail*);
+std::set<Winch::Output> examples(Winch::Output*);
 
 std::ostream& operator<<(std::ostream&,Winch::Goal);
 std::ostream& operator<<(std::ostream&,Winch::Input);
 std::ostream& operator<<(std::ostream&,Winch::Status_detail);
+std::ostream& operator<<(std::ostream&,Winch::Output);
 std::ostream& operator<<(std::ostream&,Winch const&);
 
 bool operator<(Winch::Input,Winch::Input);
