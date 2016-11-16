@@ -101,7 +101,8 @@ Toplevel::Output::Output():
 	pump(Pump::Output::AUTO),
 	gun(Gun::Output::OFF),
 	winch(Winch::Output::STOP),
-	grabber(Grabber::Output::OPEN)
+	grabber(Grabber::Output::OPEN),
+	arm(Arm::Output::DOWN)
 {}
 
 bool operator<(Toplevel::Output const& a,Toplevel::Output const& b){
@@ -160,7 +161,8 @@ Toplevel::Status::Status():
 	pump(Pump::Status::NOT_FULL),
 	gun(Gun::Status::OFF),
 	winch(Winch::Status::DOWN),
-	grabber(Grabber::Status::OPEN)
+	grabber(Grabber::Status::OPEN),
+	arm(Arm::Status::DOWN)
 {}
 
 bool operator==(Toplevel::Status a,Toplevel::Status b){
@@ -338,7 +340,8 @@ set<Toplevel::Status_detail> examples(Toplevel::Status_detail*){
 		Pump::Status_detail{Pump::Status::FULL},
 		*examples((Gun::Status_detail*)0).begin(),
 		*examples((Winch::Status_detail*)0).begin(),
-		*examples((Grabber::Status_detail*)0).begin()
+		*examples((Grabber::Status_detail*)0).begin(),
+		*examples((Arm::Status_detail*)0).begin()
 	}};
 }
 
@@ -356,7 +359,8 @@ set<Toplevel::Input> examples(Toplevel::Input*){
 		Pump::Input{},
 		*examples((Gun::Input*)0).begin(),
 		*examples((Winch::Input*)0).begin(),
-		*examples((Grabber::Input*)0).begin()
+		*examples((Grabber::Input*)0).begin(),
+		*examples((Arm::Input*)0).begin()
 	};
 	return {a};
 }

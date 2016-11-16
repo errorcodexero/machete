@@ -7,14 +7,16 @@
 #include "gun.h"
 #include "winch.h"
 #include "grabber.h"
+#include "arm.h"
 
 #define TOPLEVEL_ITEMS \
 	X(Drivebase,drive,)\
 	X(Pump,pump,Pump::Goal::AUTO)\
 	X(Gun,gun,Gun::Goal::OFF)\
 	X(Winch,winch,Winch::Goal::STOP) \
-	X(Grabber,grabber,Grabber::Goal::OPEN) 
-	
+	X(Grabber,grabber,Grabber::Goal::OPEN)  \
+	X(Arm,arm,Arm::Goal::DOWN)
+
 class Toplevel{
 	public:
 
