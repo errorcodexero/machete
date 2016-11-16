@@ -9,83 +9,38 @@ using namespace std;
 
 Panel::Panel():
 	in_use(0),
-	learn(0),
-	cheval(0),
-	drawbridge(0),
-	shoot_prep(0),
-	shoot_low(0),
-	collect(0),
-	shoot_high(0),
-	collector_up(0),
-	collector_down(0),
-	lock_climber(0),
-	tilt_auto(0),
-	front_auto(0),
-	sides_auto(0),
-	collector_pos(Collector_pos::DEFAULT),
-	front(Collector::OFF),
-	sides(Collector::OFF),
-	winch(Winch::STOP),
-	shooter_mode(Shooter_mode::CLOSED_AUTO),
-	auto_mode(Auto_mode::NOTHING),
-	auto_switch(0),
-	speed_dial(0)
+	manual_up(false),
+	manual_down(false),
+	grabber_open(false),
+	grabber_close(false),
+	rev_gun(false),
+	shoot(false),
+	arm_mode(false),
+	arm_position(Arm_position::STAY),	
+	auto_switch(0)
 {}
 
-ostream& operator<<(ostream& o,Panel::Collector_pos a){
-	o<<"Panel::Collector_pos(";
-	#define X(name) if(a==Panel::Collector_pos::name)o<<""#name;
-	X(STOW) X(DEFAULT) X(LOW)
-	#undef X
-	return o<<")";
-}
-
-ostream& operator<<(ostream& o,Panel::Collector a){
-	o<<"Panel::Collector(";
-	#define X(name) if(a==Panel::Collector::name)o<<""#name;
-	X(IN) X(OUT) X(OFF)	
-	#undef X
-	return o<<")";
-}
-
-ostream& operator<<(ostream& o,Panel::Winch a){
-	o<<"Panel::Winch(";
-	#define X(name) if(a==Panel::Winch::name)o<<""#name;
-	X(UP) X(STOP) X(DOWN)
-	#undef X
-	return o<<")";
-}
-
-ostream& operator<<(ostream& o,Panel::Shooter_mode a){
-	o<<"Panel::Shooter_mode(";
-	#define X(name) if (a==Panel::Shooter_mode::name)o<<""#name;
-	X(OPEN) X(CLOSED_MANUAL) X(CLOSED_AUTO)
-	#undef X
-	return o<<")";
-}
-
-ostream& operator<<(ostream& o,Panel::Auto_mode a){
-	o<<"Panel::Auto_mode(";
-	#define X(name) if(a==Panel::Auto_mode::name)return o<<""#name")";
-	X(NOTHING) X(REACH) X(STATICS) X(STATICF) X(PORTCULLIS) X(CHEVAL) X(LBLS) X(LBWLS) X(LBWHS) X(S) X(BR)
+ostream& operator<<(ostream& o,Panel::Arm_position a){
+	o<<"Panel::Arm_position(";
+	#define X(name) if(a==Panel::Arm_position::name) return o<<""#name")";
+	X(AUTO_DOWN) X(STAY) X(AUTO_UP)
 	#undef X
 	assert(0);
 }
 
 #define BUTTONS \
-	X(learn) X(cheval) X(drawbridge) X(shoot_prep) X(shoot_low) X(collect) X(shoot_high) X(collector_up) X(collector_down) 
+	X(manual_up) X(manual_down) X(grabber_open) X(grabber_close) X(rev_gun) X(shoot)
 
 #define TWO_POS_SWITCHES \
-	X(lock_climber) X(tilt_auto) X(front_auto) X(sides_auto)
+	X(arm_mode)
 
 #define THREE_POS_SWITCHES \
-	X(collector_pos) X(front) X(sides) X(winch) X(shooter_mode)
+	X(arm_position)
 
 #define TEN_POS_SWITCHES \
-	X(auto_mode)\
 	X(auto_switch)
 
-#define DIALS X(speed_dial)
+#define DIALS 
 
 #define PANEL_ITEMS \
 	BUTTONS \
@@ -115,34 +70,6 @@ bool operator!=(Panel const& a,Panel const& b){
 	return !(a==b);
 }
 
-Panel::Auto_mode auto_mode_convert(int potin){
-	switch(potin) {
-		case 0:
-			return Panel::Auto_mode::NOTHING;
-		case 1:
-			return Panel::Auto_mode::REACH;
-		case 2:
-			return Panel::Auto_mode::STATICS;
-		case 3:
-			return Panel::Auto_mode::STATICF;
-		case 4:
-			return Panel::Auto_mode::PORTCULLIS;
-		case 5: 
-			return Panel::Auto_mode::CHEVAL;
-		case 6:
-			return Panel::Auto_mode::LBLS;
-		case 7:
-			return Panel::Auto_mode::LBWLS;
-		case 8:
-			return Panel::Auto_mode::LBWHS;	
-		case 9: 
-			return Panel::Auto_mode::BR;
-			//return Panel::Auto_mode::S;
-		default:
-			return Panel::Auto_mode::NOTHING;
-	}
-}
-
 float axis_to_percent(double a){
 	return .5-(a/2);
 }
@@ -164,9 +91,8 @@ Panel interpret(Joystick_data d){
 	{
 		Volt auto_mode=d.axis[0];
 		p.auto_switch=interpret_10_turn_pot(auto_mode);
-		p.auto_mode=auto_mode_convert(p.auto_switch);
 	}
-	p.lock_climber = d.button[0];
+	/*p.lock_climber = d.button[0];
 	p.tilt_auto = d.button[1];
 	p.sides_auto = d.button[2];
 	p.front_auto = d.button[3];
@@ -221,7 +147,7 @@ Panel interpret(Joystick_data d){
 		if (d.button[5]) p.shooter_mode = Panel::Shooter_mode::CLOSED_AUTO;
 		if (d.button[6]) p.shooter_mode = Panel::Shooter_mode::OPEN;
 	}
-	p.speed_dial = -d.axis[1];//axis_to_percent(d.axis[1]);
+	p.speed_dial = -d.axis[1];//axis_to_percent(d.axis[1]);*/
 	#undef AXIS_RANGE
 	return p;
 }
