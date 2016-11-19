@@ -9,33 +9,21 @@ using namespace std;
 
 Panel::Panel():
 	in_use(0),
-	manual_up(false),
-	manual_down(false),
 	grabber_open(false),
 	grabber_close(false),
 	rev_gun(false),
 	shoot(false),
-	arm_mode(false),
-	arm_position(Arm_position::STAY),	
+	arm_pos(false),
 	auto_switch(0)
 {}
 
-ostream& operator<<(ostream& o,Panel::Arm_position a){
-	o<<"Panel::Arm_position(";
-	#define X(name) if(a==Panel::Arm_position::name) return o<<""#name")";
-	X(AUTO_DOWN) X(STAY) X(AUTO_UP)
-	#undef X
-	assert(0);
-}
-
 #define BUTTONS \
-	X(manual_up) X(manual_down) X(grabber_open) X(grabber_close) X(rev_gun) X(shoot)
+	X(grabber_open) X(grabber_close) X(rev_gun) X(shoot)
 
 #define TWO_POS_SWITCHES \
-	X(arm_mode)
+	X(arm_pos)
 
 #define THREE_POS_SWITCHES \
-	X(arm_position)
 
 #define TEN_POS_SWITCHES \
 	X(auto_switch)
@@ -113,41 +101,7 @@ Panel interpret(Joystick_data d){
 		else AXIS_RANGE(op, DRAWBRIDGE, CHEVAL, LEARN, p.cheval, 1)
 		else AXIS_RANGE(op, CHEVAL, LEARN, 1.38, p.learn, 1)
 	}
-	{
-		float collector_pos = d.axis[5];
-		static const float LOW=-1, DEFAULT=0, STOW=1;
-		p.collector_pos = Panel::Collector_pos::LOW;
-		AXIS_RANGE(collector_pos, LOW, DEFAULT, STOW, p.collector_pos, Panel::Collector_pos::DEFAULT)
-		else AXIS_RANGE(collector_pos, DEFAULT, STOW, 1.5, p.collector_pos, Panel::Collector_pos::STOW)
-	}
-	{
-		float front = d.axis[4];
-		static const float OUT=-1, OFF=.48, IN=1;
-		p.front = Panel::Collector::OUT;
-		AXIS_RANGE(front, OUT, OFF, IN, p.front, Panel::Collector::OFF)
-		else AXIS_RANGE(front, OFF, IN, 1.5, p.front, Panel::Collector::IN)
-	}
-	{
-		float sides = d.axis[6];
-		static const float OUT=-1, OFF=0, IN=1;
-		p.sides = Panel::Collector::OUT;
-		AXIS_RANGE(sides, OUT, OFF, IN, p.sides, Panel::Collector::OFF)
-		else AXIS_RANGE(sides, OFF, IN, 1.5, p.sides, Panel::Collector::IN)
-	}
-	{
-		float winch = d.axis[3];
-		static const float UP=-1, STOP=0, DOWN=1;
-		p.winch = Panel::Winch::UP;
-		AXIS_RANGE(winch, UP, STOP, DOWN, p.winch, Panel::Winch::STOP)
-		else AXIS_RANGE(winch, STOP, DOWN, 1.5, p.winch, Panel::Winch::DOWN)
-	}
-	{
-		//A three position switch connected to two digital inputs
-		p.shooter_mode = Panel::Shooter_mode::CLOSED_MANUAL;
-		if (d.button[5]) p.shooter_mode = Panel::Shooter_mode::CLOSED_AUTO;
-		if (d.button[6]) p.shooter_mode = Panel::Shooter_mode::OPEN;
-	}
-	p.speed_dial = -d.axis[1];//axis_to_percent(d.axis[1]);*/
+	*/
 	#undef AXIS_RANGE
 	return p;
 }

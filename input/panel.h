@@ -7,25 +7,21 @@
 struct Panel{
 	bool in_use;
 	//Buttons:
-	bool manual_up;
-	bool manual_down;
 	bool grabber_open;
 	bool grabber_close;
 	bool rev_gun;
 	bool shoot;
 	//2 position swicthes:
-	bool arm_mode;	
+	bool arm_pos;
 	//3 position switches: 
-	enum class Arm_position{AUTO_DOWN,STAY,AUTO_UP};//momentary
-	Arm_position arm_position;
 	//10 position switches:
 	int auto_switch;//0-9
+	//dials
 	
 	Panel();
 };
 
 bool operator!=(Panel const&,Panel const&);
-std::ostream& operator<<(std::ostream&,Panel::Arm_position);
 std::ostream& operator<<(std::ostream&,Panel);
 
 Panel interpret(Joystick_data);
