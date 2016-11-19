@@ -468,6 +468,21 @@ cc_test(
 )
 
 cc_library(
+	name="arm",
+	srcs=["control/arm.cpp"],
+	hdrs=["control/arm.h"],
+	deps=[":interface",":countdown_timer"]
+)
+
+cc_test(
+	name="arm_test",
+	srcs=["control/arm.cpp","control/arm.h","control/formal.h"],
+	copts=["-DARM_TEST"],
+	deps=[":interface",":countdown_timer"],
+	timeout="short"
+)
+
+cc_library(
 	name="force",
 	srcs=["control/force.cpp"],
 	hdrs=["control/force.h"],
@@ -508,14 +523,14 @@ cc_library(
 	name="toplevel",
 	srcs=["control/toplevel.cpp"],
 	hdrs=["control/toplevel.h"],
-	deps=[":gun",":pump",":drivebase",":winch",":grabber",":input"]
+	deps=[":arm",":gun",":pump",":drivebase",":winch",":grabber",":input"]
 )
 
 cc_test(
 	name="toplevel_test",
 	srcs=["control/toplevel.cpp","control/toplevel.h","control/formal.h"],
 	copts=["-DTOPLEVEL_TEST"],
-	deps=[":gun",":pump",":drivebase",":grabber",":winch",":input",":output"],
+	deps=[":arm",":gun",":pump",":drivebase",":grabber",":winch",":input",":output"],
 	timeout="short"
 )
 

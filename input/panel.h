@@ -7,45 +7,21 @@
 struct Panel{
 	bool in_use;
 	//Buttons:
-	bool learn;
-	bool cheval;
-	bool drawbridge;
-	bool shoot_prep;
-	bool shoot_low;
-	bool collect;
-	bool shoot_high;
-	bool collector_up;
-	bool collector_down;
+	bool grabber_open;
+	bool grabber_close;
+	bool prep;
+	bool shoot;
 	//2 position swicthes:
-	bool lock_climber;
-	bool tilt_auto;
-	bool front_auto;
-	bool sides_auto;	
+	bool arm_pos;
 	//3 position switches: 
-	enum class Collector_pos{STOW,DEFAULT,LOW};
-	Collector_pos collector_pos;
-	enum class Collector{IN,OFF,OUT};
-	Collector front, sides;
-	enum class Winch{UP,STOP,DOWN};
-	Winch winch;
-	enum class Shooter_mode{OPEN,CLOSED_MANUAL,CLOSED_AUTO};
-	Shooter_mode shooter_mode;
-	//todo: remove this & put in main
-	enum class Auto_mode{NOTHING,REACH,STATICF,STATICS,PORTCULLIS,CHEVAL,LBLS,LBWLS,LBWHS,S,BR};
-	Auto_mode auto_mode;
 	//10 position switches:
-	int auto_switch;//0-9
-	//Dials:
-	float speed_dial;
+	int auto_select;//0-9
+	//dials
+	
 	Panel();
 };
 
 bool operator!=(Panel const&,Panel const&);
-std::ostream& operator<<(std::ostream&,Panel::Collector_pos);
-std::ostream& operator<<(std::ostream&,Panel::Collector);
-std::ostream& operator<<(std::ostream&,Panel::Winch);
-std::ostream& operator<<(std::ostream&,Panel::Shooter_mode);
-std::ostream& operator<<(std::ostream&,Panel::Auto_mode);
 std::ostream& operator<<(std::ostream&,Panel);
 
 Panel interpret(Joystick_data);

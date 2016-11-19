@@ -59,6 +59,7 @@ using Pump_sim=Nop_sim<Pump::Input>;
 using Gun_sim=Nop_sim<Gun::Input>;
 using Winch_sim=Nop_sim<Winch::Input>;
 using Grabber_sim=Nop_sim<Grabber::Input>;
+using Arm_sim=Nop_sim<Arm::Input>;
 
 struct Toplevel_sim{
 	using Input=Toplevel::Input;

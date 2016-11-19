@@ -92,6 +92,7 @@ void Grabber::Estimator::update(Time time,Input input,Output output){
 			} else {
 				const Time OPEN_TIME = .2;//assumed
 				open_timer.set(OPEN_TIME);
+				last = Status_detail::OPENING;
 			}
 			break;
 		case Grabber::Output::CLOSE:

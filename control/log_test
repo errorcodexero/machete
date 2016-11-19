@@ -1,6 +1,8 @@
 g++ -Wall -std=c++14 -DLOG_TEST \
 	nop.cpp \
 	log.cpp \
+	gun.cpp \
+	arm.cpp \
 	../util/interface.cpp \
 	../util/driver_station_interface.cpp \
 	../util/util.cpp\

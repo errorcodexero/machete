@@ -195,6 +195,11 @@ void visit(Func f,int i){
 }
 
 template<typename Func>
+void visit(Func f,Arm::Status const& a){
+	f.terminal(a);
+}
+
+template<typename Func>
 void visit(Func f,Winch::Status const& a){
 	f.terminal(a);
 }

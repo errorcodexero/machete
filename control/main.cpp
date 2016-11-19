@@ -83,37 +83,6 @@ double ticks_to_degrees(int ticks){
 	return ticks * DEGREES_PER_TICK;//Degrees clockwise
 }
 
-Main::Mode get_auto(Panel const& panel){
-	if (panel.in_use) {
-		switch(panel.auto_mode){ 
-			case Panel::Auto_mode::NOTHING:
-				return Main::Mode::AUTO_NULL;
-			case Panel::Auto_mode::REACH:
-				return Main::Mode::AUTO_REACH;
-			case Panel::Auto_mode::STATICS:
-				return Main::Mode::AUTO_STATICTWO;
-			case Panel::Auto_mode::STATICF:
-				return Main::Mode::AUTO_STATIC;
-			case Panel::Auto_mode::PORTCULLIS:
-				return Main::Mode::AUTO_PORTCULLIS;
-			case Panel::Auto_mode::CHEVAL:
-				return Main::Mode::AUTO_CHEVALPOS;
-			case Panel::Auto_mode::LBLS:
-				return Main::Mode::AUTO_LBLS_CROSS_LB;
-			case Panel::Auto_mode::LBWLS:	
-				return Main::Mode::AUTO_LBWLS_WALL;
-			case Panel::Auto_mode::LBWHS:
-				return Main::Mode::AUTO_LBWHS_WALL;
-			case Panel::Auto_mode::S:
-				return Main::Mode::AUTO_LBWHS_PREP;
-			case Panel::Auto_mode::BR:
-				return Main::Mode::AUTO_BR_STRAIGHTAWAY;
-			default: assert(0);
-		}
-	}
-	return Main::Mode::TELEOP;
-}
-
 /*Main::Mode next_mode(Main::Mode m,bool autonomous,bool autonomous_start,Toplevel::Status_detail const& status,Time since_switch, Panel panel,bool const& topready,Robot_inputs const& in,pair<int,int> initial_encoders, unsigned int& br_step,bool& set_initial_encoders, Motion_profile& motion_profile,Countdown_timer& in_br_range){
 	pair<int,int> current_encoders=status.drive.ticks;//{encoderconv(in.digital_io.encoder[0]),encoderconv(in.digital_io.encoder[1])};//first is left, second is right
 	pair<int,int> encoder_differences=make_pair(current_encoders.first-initial_encoders.first,current_encoders.second-initial_encoders.second);

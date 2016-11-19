@@ -21,10 +21,10 @@ Driver:
 
 
 Gunner:
- A          - All the way down
+ A          - Arm all the way down
  B          - Open grabber
  X          - Close grabber
- Y          - All the way up
+ Y          - Arm all the way up
  Start      - 
  Back       - 
  RB         - 
@@ -32,8 +32,8 @@ Gunner:
  RT         - Shoot
  LT         - Rev
  L_Joy:
-  Up        - Manipulator up manual
-  Down      - Manipulator down manual
+  Up        - 
+  Down      - 
   Left      -
   Right     -
   Pushed in - 
