@@ -17,6 +17,28 @@ using namespace std;
 #define C_MOTOR_LOC 0
 #define PISTON_LOC 0
 
+Drivebase::Encoder_ticks::Encoder_ticks():left(0),right(0),center(0){}
+Drivebase::Encoder_ticks::Encoder_ticks(int a,int b,int c):left(a),right(b),center(c){}
+
+bool operator==(Drivebase::Encoder_ticks const& a,Drivebase::Encoder_ticks const& b){
+	if(a.left != b.left) return false;
+	if(a.right != b.right) return false;
+	return (a.center == b.center);
+}
+
+bool operator!=(Drivebase::Encoder_ticks const& a,Drivebase::Encoder_ticks const& b){
+	return !(a==b);
+}
+
+bool operator<(Drivebase::Encoder_ticks const& a,Drivebase::Encoder_ticks const& b){
+	if(a.left >= b.left) return false;
+	if(a.right >= b.right) return false;
+	return a.center < b.center;
+}
+ostream& operator<<(ostream& o,Drivebase::Encoder_ticks const& a){
+	return o<<"Encoder_ticks(left:"<<a.left<<" right:"<<a.right<<" center:"<<a.center<<")";
+}
+
 unsigned pdb_location(Drivebase::Motor m){
 	#define X(NAME,INDEX) if(m==Drivebase::NAME) return INDEX;
 	//WILL NEED CORRECT VALUES
@@ -44,11 +66,12 @@ double ticks_to_inches(const int ticks){
 	return ticks*INCHES_PER_TICK;
 }
 
-#define L_ENCODER_PORTS 0,1
-#define R_ENCODER_PORTS 2,3
-#define C_ENCODER_PORTS 4,5//doesn't exist?
-#define L_ENCODER_LOC 0
-#define R_ENCODER_LOC 1
+#define L_ENCODER_PORTS 0,1//not real
+#define R_ENCODER_PORTS 2,3//not real
+#define C_ENCODER_PORTS 4,5 //not real
+#define L_ENCODER_LOC 0 //not real
+#define R_ENCODER_LOC 1 //not real
+#define C_ENCODER_LOC 2 //not real
 
 Robot_inputs Drivebase::Input_reader::operator()(Robot_inputs all,Input in)const{
 	for(unsigned i=0;i<MOTORS;i++){
@@ -63,9 +86,10 @@ Robot_inputs Drivebase::Input_reader::operator()(Robot_inputs all,Input in)const
 	};
 	encoder(L_ENCODER_PORTS,in.left);
 	encoder(R_ENCODER_PORTS,in.right);
-	encoder(C_ENCODER_PORTS,in.center);
-	all.digital_io.encoder[L_ENCODER_LOC] = in.ticks.first;
-	all.digital_io.encoder[R_ENCODER_LOC] = in.ticks.second;*/
+	encoder(C_ENCODER_PORTS,in.center);*/
+	all.digital_io.encoder[L_ENCODER_LOC] = in.ticks.left;	
+	all.digital_io.encoder[R_ENCODER_LOC] = in.ticks.right;
+	all.digital_io.encoder[C_ENCODER_LOC] = in.ticks.center;
 	return all;
 }
 
@@ -82,10 +106,10 @@ Drivebase::Input Drivebase::Input_reader::operator()(Robot_inputs const& in)cons
 			}
 			return r;
 		}(),
+		{encoderconv(in.digital_io.encoder[L_ENCODER_LOC]),encoderconv(in.digital_io.encoder[R_ENCODER_LOC]),encoderconv(in.digital_io.encoder[C_ENCODER_LOC])}
 		/*encoder_info(L_ENCODER_PORTS),
 		encoder_info(R_ENCODER_PORTS),
-		encoder_info(C_ENCODER_PORTS),
-		{encoderconv(in.digital_io.encoder[L_ENCODER_LOC]),encoderconv(in.digital_io.encoder[R_ENCODER_LOC])}*/
+		encoder_info(C_ENCODER_PORTS),*/
 	};
 }
 
@@ -112,8 +136,8 @@ set<Drivebase::Status> examples(Drivebase::Status*){
 		}
 		,
 		false,
-		Drivebase::Piston::FULL//,
-		//{0.0,0.0},
+		Drivebase::Piston::FULL,
+		{0,0,0}
 		//{0.0,0.0}
 	}};
 }
@@ -151,26 +175,22 @@ set<Drivebase::Input> examples(Drivebase::Input*){
 	/*auto d=Digital_in::_0;
 	auto p=make_pair(d,d);*/
 	return {Drivebase::Input{
-		{0,0,0}//,p,p,p,{0,0}
+		{0,0,0},{0,0,0}
 	}};
 }
-Drivebase::Estimator::Estimator(){
-	stall = false;
-	piston_last = false;
-	piston = Drivebase::Piston::EMPTYING;
+Drivebase::Estimator::Estimator():last( {{{}},false,Drivebase::Piston::EMPTY,{0,0,0}}){
 	timer.set(.05);
 	piston_timer.set(0);
-	//last_ticks = {0,0};
 	//speeds = {0.0,0.0};
 }
 
 Drivebase::Status_detail Drivebase::Estimator::get()const{
-	array<Motor_check::Status,MOTORS> a;
+	/*array<Motor_check::Status,MOTORS> a;
 	for(unsigned i=0;i<a.size();i++){
 		a[i]=motor_check[i].get();
-	}
+	}*/
 	
-	return Status{a,stall,piston/*,speeds,last_ticks*/};
+	return last;//Status{a,stall,piston/*,speeds,last_ticks*/};
 }
 
 ostream& operator<<(ostream& o,Drivebase::Piston a){
@@ -227,25 +247,26 @@ void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output
 		motor_check[i].update(now,current,set_power_level);
 		
 	}*/
+	bool piston_last = last.piston == Drivebase::Piston::FILLING;
 	if(out.piston==piston_last){
 		piston_timer.update(now,true);//use enabled?
 		if(piston_timer.done()){
 			if(piston_last){
-				piston=Piston::FULL;
+				last.piston=Piston::FULL;
 			}else{
-				piston=Piston::EMPTY;
+				last.piston=Piston::EMPTY;
 			}
 		}
 	}else{
 		if(out.piston){
-			piston=Piston::FILLING;
+			last.piston=Piston::FILLING;
 		}else{
-			piston=Piston::EMPTYING;
+			last.piston=Piston::EMPTYING;
 		}
 		piston_last=out.piston;
 		piston_timer.set(.2);//total guess
 	}
-	stall = mean(in.current) > 5;
+	last.stall = mean(in.current) > 5;
 }
 
 Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drivebase::Output b)const{
@@ -280,9 +301,12 @@ bool operator==(Drivebase::Output_applicator const&,Drivebase::Output_applicator
 }
 
 bool operator==(Drivebase::Estimator const& a,Drivebase::Estimator const& b){
-	for(unsigned i=0; i<Drivebase::MOTORS; i++){
+	if(a.last != b.last) return false;
+	if(a.piston_timer != b.piston_timer) return false;
+	if(a.timer != b.timer) return false;
+	/*for(unsigned i=0; i<Drivebase::MOTORS; i++){
 		if(a.motor_check[i]!=b.motor_check[i])return false;
-	}
+	}*/
 	return true;
 }
 

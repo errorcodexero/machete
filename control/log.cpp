@@ -205,6 +205,13 @@ void visit(Func f,Winch::Status const& a){
 }
 
 template<typename Func>
+void visit(Func f,Drivebase::Encoder_ticks const& a){
+	visit(f,a.left);
+	visit(f,a.right);
+	visit(f,a.center);
+}
+
+template<typename Func>
 void visit(Func f,Grabber::Status const& a){
 	f.terminal(a);
 }

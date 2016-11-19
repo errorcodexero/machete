@@ -2,6 +2,7 @@
 
 #include "teleop.h" 
 #include "auto_null.h"
+#include "auto_distance.h"
 
 using namespace std;
 
@@ -11,6 +12,7 @@ Executive auto_mode_convert(Next_mode_info info){
 	if (info.panel.in_use) {
 		switch(info.panel.auto_select){ 
 			case 1: 
+				return Executive{Auto_distance{{0,0,0}}};
 			case 2:
 			case 3:
 			case 4:

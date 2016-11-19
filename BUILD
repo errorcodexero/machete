@@ -614,13 +614,17 @@ cc_library(
 		"executive/delay.cpp",
 		"executive/auto_stop.cpp",
 		"executive/auto_null.cpp",
-		"executive/teleop.cpp"
+		"executive/teleop.cpp",
+		"executive/auto_forward.cpp",
+		"executive/auto_distance.cpp"
 	],
 	hdrs=[
 		"executive/delay.h",
 		"executive/auto_stop.h",
 		"executive/auto_null.h",
-		"executive/teleop.h"
+		"executive/teleop.h",
+		"executive/auto_forward.h",
+		"executive/auto_distance.h"
 	],
 	deps=[":executive",":posedge_trigger_debounce",":posedge_toggle",":motion_profile"]
 )
@@ -642,6 +646,28 @@ cc_test(
 		":test"
 	],
 	timeout="short"
+)
+
+cc_test(
+	name="auto_forward_test",
+	srcs=["executive/auto_forward.cpp","executive/auto_forward.h"],
+	copts=["-DAUTO_FORWARD_TEST"],
+	deps=[
+		":executive",":executive_impl",
+		":test"
+	],
+	timeout = "short"
+)
+
+cc_test(
+	name="auto_distance_test",
+	srcs=["executive/auto_distance.cpp","executive/auto_distance.h"],
+	copts=["-DAUTO_DISTANCE_TEST"],
+	deps=[
+		":executive",":executive_impl",
+		":test"
+        ],
+        timeout = "short"
 )
 
 cc_library(
