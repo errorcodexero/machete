@@ -1,12 +1,13 @@
 HIGH PRIORITY for BunnyBots:
-	- Gun
-	- Bunny manipulator
+	- Gun - burst firing
+	- Bunny manipulator - written, but needs real ios and to be tested
+	- Logging
 
 
 NOT AS HIGH PRIORITY for BunnyBots:
 	- Fix talon srx initialization: separate address for cans and access for them in the talon_srx_controls array
 	- Autonomous
-	- Log Analysis - Nick
+	- Log Analysis
 	- Laptop configuration
 		-ssh config:
 			-Fix the "rm ~/.ssh/known_hosts" problem
@@ -26,8 +27,6 @@ NICE THINGS TO HAVE:
 LOG LIST:
 	-RIO Time			10chars 
 	-RIO mode			4chars
-	-Collector Mode			4chars
-	-Climber Mode			4chars
 	-OI inputs (panel)		50chars
 	-PDP currents			120chars
 	-Robot Outputs			130chars
