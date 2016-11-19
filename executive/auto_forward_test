@@ -7,10 +7,7 @@ g++ -Wall -Werror -std=c++14 -DAUTO_FORWARD_TEST \
 	executive.cpp\
 	../control/nop.cpp\
 	../util/pwm.cpp\
-	auto_stop.cpp \
 	teleop.cpp \
-	delay.cpp \
-	auto_null.cpp \
 	../control/toplevel.cpp \
 	../util/fixVictor.cpp \
 	../util/posedge_trigger.cpp \
@@ -33,4 +30,4 @@ g++ -Wall -Werror -std=c++14 -DAUTO_FORWARD_TEST \
 	../util/posedge_toggle.cpp \
 	../util/posedge_trigger_debounce.cpp \
 	../util/motion_profile.cpp \
-	-o auto_forward 2>&1 && ./auto_forward 2>&1
+	-o auto_forward 2>&1 && ./auto_forward

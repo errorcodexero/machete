@@ -4,10 +4,15 @@
 
 using namespace std;
 
-Executive Auto_forward::nextmode(Next_mode_info info){
-	if(!info.autonomous) return Exectutive{Teleop()};
-	if(info.since_switch > 3) return Exectutive{Auto_stop()};
-	return Exectutive{Auto_forward()};
+Executive Auto_forward::next_mode(Next_mode_info info){
+	if(!info.autonomous) return Executive{Teleop()};
+	if(info.since_switch > 3) return Executive{Auto_stop()};
+	return Executive{Auto_forward()};
 }
 
-Toplevel::Goal
+
+Toplevel::Goal Auto_forward::run(Run_info){
+	return {};
+}
+
+bool Auto_forward::operator==(Auto_forward const&)const{ return true; };
