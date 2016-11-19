@@ -11,14 +11,14 @@ Panel::Panel():
 	in_use(0),
 	grabber_open(false),
 	grabber_close(false),
-	rev_gun(false),
+	prep(false),
 	shoot(false),
 	arm_pos(false),
-	auto_switch(0)
+	auto_select(0)
 {}
 
 #define BUTTONS \
-	X(grabber_open) X(grabber_close) X(rev_gun) X(shoot)
+	X(grabber_open) X(grabber_close) X(prep) X(shoot)
 
 #define TWO_POS_SWITCHES \
 	X(arm_pos)
@@ -26,7 +26,7 @@ Panel::Panel():
 #define THREE_POS_SWITCHES \
 
 #define TEN_POS_SWITCHES \
-	X(auto_switch)
+	X(auto_select)
 
 #define DIALS 
 
@@ -78,7 +78,7 @@ Panel interpret(Joystick_data d){
 	}
 	{
 		Volt auto_mode=d.axis[0];
-		p.auto_switch=interpret_10_turn_pot(auto_mode);
+		p.auto_select=interpret_10_turn_pot(auto_mode);
 	}
 	/*p.lock_climber = d.button[0];
 	p.tilt_auto = d.button[1];

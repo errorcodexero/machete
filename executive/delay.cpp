@@ -9,7 +9,7 @@ using Mode=Executive;
 
 Executive auto_mode_convert(Next_mode_info info){
 	if (info.panel.in_use) {
-		switch(info.panel.auto_switch){ 
+		switch(info.panel.auto_select){ 
 			case 1: 
 			case 2:
 			case 3:

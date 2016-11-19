@@ -14,11 +14,11 @@ struct Teleop : Executive_impl<Teleop> {
 		Countdown_timer timer;
 	};
 
-	enum class Winch_mode{AUTO_DOWN,MANUAL,AUTO_UP};
+	enum class Arm_mode{DOWN,UP};
 	
 	#define TELEOP_ITEMS(X)\
 		X(SINGLE_ARG(std::array<Nudge,NUDGES>),nudges) \
-		X(Winch_mode, winch_mode) 
+		X(Arm_mode, arm_mode) 
 
 	STRUCT_MEMBERS(TELEOP_ITEMS)
 

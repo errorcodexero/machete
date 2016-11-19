@@ -10,7 +10,11 @@ struct Arm{
 	
 	typedef Goal Output;
 
-	struct Input{};
+	struct Input{
+		bool enabled;
+		Input();
+		Input(bool);
+	};
 
 	enum class Status_detail{DOWN,GOING_DOWN,GOING_UP,UP};
 	

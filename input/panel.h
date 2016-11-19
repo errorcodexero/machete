@@ -9,13 +9,13 @@ struct Panel{
 	//Buttons:
 	bool grabber_open;
 	bool grabber_close;
-	bool rev_gun;
+	bool prep;
 	bool shoot;
 	//2 position swicthes:
 	bool arm_pos;
 	//3 position switches: 
 	//10 position switches:
-	int auto_switch;//0-9
+	int auto_select;//0-9
 	//dials
 	
 	Panel();
