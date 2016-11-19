@@ -83,32 +83,22 @@ Panel interpret(Joystick_data d){
 		p.auto_select=interpret_10_turn_pot(auto_mode);
 	}
 	{//two position switches
-		/*
-		p.lock_climber = d.button[0];
-		p.tilt_auto = d.button[1];
-		p.sides_auto = d.button[2];
-		p.front_auto = d.button[3];
-		*/
+		p.arm_pos = d.button[0];//TODO: assumed value
 	}
 	{//buttons
 		#define X(button) p.button = false;
 		BUTTONS
 		#undef X
-		/*
+		
 		#define AXIS_RANGE(axis, last, curr, next, var, val) if (axis > curr-(curr-last)/2 && axis < curr+(next-curr)/2) var = val;
 		float op = d.axis[2];
-		static const float DEFAULT=-1, COLLECTOR_UP=-.8, COLLECTOR_DOWN=-.62, SHOOT_HIGH=-.45, COLLECT=-.29, SHOOT_LOW=-.11, SHOOT_PREP=.09, DRAWBRIDGE=.33, CHEVAL=.62, LEARN=1;
-		AXIS_RANGE(op, DEFAULT, COLLECTOR_UP, COLLECTOR_DOWN, p.collector_up, 1)
-		else AXIS_RANGE(op, COLLECTOR_UP, COLLECTOR_DOWN, SHOOT_HIGH, p.collector_down, 1)
-		else AXIS_RANGE(op, COLLECTOR_DOWN, SHOOT_HIGH, COLLECT, p.shoot_high, 1)
-		else AXIS_RANGE(op, SHOOT_HIGH, COLLECT, SHOOT_LOW, p.collect, 1)
-		else AXIS_RANGE(op, COLLECT, SHOOT_LOW, SHOOT_PREP, p.shoot_low, 1)
-		else AXIS_RANGE(op, SHOOT_LOW, SHOOT_PREP, DRAWBRIDGE, p.shoot_prep, 1)
-		else AXIS_RANGE(op, SHOOT_PREP, DRAWBRIDGE, CHEVAL, p.drawbridge, 1)
-		else AXIS_RANGE(op, DRAWBRIDGE, CHEVAL, LEARN, p.cheval, 1)
-		else AXIS_RANGE(op, CHEVAL, LEARN, 1.38, p.learn, 1)
+		static const float DEFAULT=-1, GRABBER_OPEN=-.5, GRABBER_CLOSE=0, PREP=.5, SHOOT=.1;//TODO: assumed values
+		AXIS_RANGE(op, DEFAULT, GRABBER_OPEN, GRABBER_CLOSE, p.grabber_open, 1)
+		else AXIS_RANGE(op, GRABBER_OPEN, GRABBER_CLOSE, PREP, p.grabber_close, 1)
+		else AXIS_RANGE(op, GRABBER_CLOSE, PREP, SHOOT, p.prep, 1)
+		else AXIS_RANGE(op, PREP, SHOOT, 1.38, p.shoot, 1)
 		#undef AXIS_RANGE
-		*/
+		
 	}
 	return p;
 }
