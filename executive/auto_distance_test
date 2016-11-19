@@ -1,0 +1,34 @@
+g++ -Wall -Werror -std=c++14 -DAUTO_DISTANCE_TEST \
+	test.cpp\
+	../util/type.cpp\
+	executive.cpp\
+	../input/panel.cpp\
+	../input/util.cpp\
+	../control/nop.cpp\
+	../util/pwm.cpp\
+	auto_distance.cpp \
+	teleop.cpp \
+	delay.cpp \
+	auto_null.cpp \
+	../control/toplevel.cpp \
+	../util/fixVictor.cpp \
+	../util/posedge_trigger.cpp \
+	../util/negedge_trigger.cpp \
+	../util/countup_timer.cpp \
+	../control/pump.cpp \
+	../util/point.cpp \
+	../control/drivebase.cpp \
+	../util/interface.cpp \
+	../util/jag_interface.cpp \
+	../util/driver_station_interface.cpp \
+	../util/util.cpp \
+	../util/countdown_timer.cpp\
+	../control/motor_check.cpp\
+	../util/input.cpp\
+	../util/output.cpp\
+	../control/tote_sensors.cpp\
+	../util/debounce.cpp \
+	../util/posedge_toggle.cpp \
+	../util/posedge_trigger_debounce.cpp \
+	../util/motion_profile.cpp \
+	-o barrelracer 2>&1 && ./barrelracer 2>&1
