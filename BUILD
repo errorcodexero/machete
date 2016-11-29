@@ -616,7 +616,8 @@ cc_library(
 		"executive/auto_null.cpp",
 		"executive/teleop.cpp",
 		"executive/auto_forward.cpp",
-		"executive/auto_distance.cpp"
+		"executive/auto_distance.cpp",
+		"executive/auto_bunnygrab.cpp"
 	],
 	hdrs=[
 		"executive/delay.h",
@@ -624,7 +625,8 @@ cc_library(
 		"executive/auto_null.h",
 		"executive/teleop.h",
 		"executive/auto_forward.h",
-		"executive/auto_distance.h"
+		"executive/auto_distance.h",
+		"executive/auto_bunnygrab.h"
 	],
 	deps=[":executive",":posedge_trigger_debounce",":posedge_toggle",":motion_profile"]
 )
@@ -646,6 +648,16 @@ cc_test(
 		":test"
 	],
 	timeout="short"
+)
+cc_test(
+	name="auto_bunnygrab_test",
+	srcs=["executive/auto_bunnygrab.cpp","executive/auto_bunnygrab.h"],
+	copts=["-DAUTO_BUNNYGRAB_TEST"],
+	deps=[
+		":executive",":executive_impl",
+		":test"
+	],
+	timeout = "short"
 )
 
 cc_test(
