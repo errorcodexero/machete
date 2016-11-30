@@ -1,5 +1,7 @@
 #include "arm.h"
 
+using namespace std;
+
 static const int ARM_PWM = 5;
 static const float ARM_POWER = .8;
 
@@ -29,7 +31,7 @@ std::set<Arm::Status_detail> examples(Arm::Status_detail*){
 }
 
 std::ostream& operator<<(std::ostream& o,Arm::Goal g){
-	#define X(name) if(g==Arm::Goal::name) return o<<"Arm::Goal("#name")";
+	#define X(name) if(g==Arm::Goal::name) return o<<""#name;
 	X(DOWN) X(UP)
 	#undef X
 	assert(0);
@@ -63,6 +65,9 @@ bool operator!=(Arm::Input a, Arm::Input b){ return !(a==b); }
 
 bool operator==(Arm::Estimator,Arm::Estimator){ return 1; }
 bool operator!=(Arm::Estimator a, Arm::Estimator b){ return !(a==b); }
+ostream& operator<<(ostream& o, Arm::Estimator a){
+	return o<<"Estimator(last:"<<a.last<<" state_timer:"<<a.state_timer<<")";
+}
 
 bool operator==(Arm,Arm){ return 1; }
 bool operator!=(Arm a, Arm b){ return !(a==b); }
@@ -90,25 +95,27 @@ Arm::Output Arm::Output_applicator::operator()(Robot_outputs const& r)const{
 void Arm::Estimator::update(Time time,Arm::Input input,Arm::Output output){
 	switch(output){
 		case Arm::Output::UP:
-			if(state_timer.done() || last == Status::UP) {
-				last = Status::UP;
-			} else if(last == Status::GOING_UP){
+			if(last == Status::GOING_UP){
 				state_timer.update(time,input.enabled);
-			} else { 
+			} else if(last != Status::UP){ 
 				const Time UP_TIME = 1.0;//seconds. assumed
 				last = Status::GOING_UP;
 				state_timer.set(UP_TIME);
 			}
+			if(state_timer.done() || last == Status::UP) {
+				last = Status::UP;
+			}
 			break;
 		case Arm::Output::DOWN:
-			if(state_timer.done() || last == Status::DOWN) { 
-				last = Status::DOWN;
-			} else if(last == Status::GOING_DOWN){
+			if(last == Status::GOING_DOWN){
 				state_timer.update(time,input.enabled);
-			} else { 
+			} else if(last != Status::DOWN){ 
 				const Time DOWN_TIME = 1.0;//seconds, assumed
 				last = Status::GOING_DOWN;
 				state_timer.set(DOWN_TIME);
+			}
+			if(state_timer.done() || last == Status::DOWN) { 
+				last = Status::DOWN;
 			}
 			break;
 		default:
@@ -143,7 +150,43 @@ bool ready(Arm::Status status,Arm::Goal goal){
 #ifdef ARM_TEST
 #include "formal.h"
 int main(){
-	Arm a;
-	tester(a);
+	{
+		Arm a;
+		tester(a);
+	}
+	{
+		Arm a;
+		Arm::Goal goal = Arm::Goal::UP;
+
+		const bool ENABLED = true;	
+		for(Time t: range(100)){
+			Arm::Status_detail status = a.estimator.get();
+			Arm::Output out = control(status,goal);
+
+			cout<<"t:"<<t<<"\tgoal:"<<goal<<"\tstatus:"<<status<<"\n";
+
+			a.estimator.update(t,Arm::Input{ENABLED},out);
+			if(ready(status,goal)){
+				cout<<"Goal "<<goal<<" reached. Finishing\n";
+				break;
+			}
+		}
+
+		goal = Arm::Goal::DOWN;
+		
+		for(Time t: range(100)){
+			Arm::Status_detail status = a.estimator.get();
+			Arm::Output out = control(status,goal);
+
+			cout<<"t:"<<t<<"\tgoal:"<<goal<<"\tstatus:"<<status<<"\n";
+
+			a.estimator.update(t,Arm::Input{ENABLED},out);
+			if(ready(status,goal)){
+				cout<<"Goal "<<goal<<" reached. Finishing\n";
+				break;
+			}
+
+		}
+	}
 }
 #endif
