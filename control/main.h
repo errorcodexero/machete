@@ -16,7 +16,7 @@
 #include "../executive/executive.h"
 
 struct Main{
-	#define MODES X(TELEOP)\
+	/*#define MODES X(TELEOP)\
 		X(DELAY) X(AUTO_NULL) X(AUTO_REACH) X(AUTO_STATIC) \
 		X(AUTO_STOP) X(AUTO_STATICTWO) X(AUTO_TEST) \
 		X(AUTO_PORTCULLIS) X(AUTO_PORTCULLIS_DONE) \
@@ -35,26 +35,27 @@ struct Main{
 		MODES
 		#undef X
 	};
-	Mode mode;
+	Mode mode;*/
 	Executive mode_;
 
-	Motion_profile motion_profile;
+	/*Motion_profile motion_profile;
 	Countdown_timer in_br_range;
 	Nav2 nav2;
+	*/
 	Force_interface force;
 	Perf_tracker perf;
 	Toplevel toplevel;
-	bool topready;
+	/*bool topready;
 	bool simtest;
 	bool set_initial_encoders;
 	unsigned int br_step;//starts at lap 0 and increases by one every time it reaches a new node
 	std::pair<int,int> initial_encoders;//first is left, second is right
 	Robot_inputs in_i;
-
+	*/
 	Countup_timer since_switch,since_auto_start;
 
 	Posedge_trigger autonomous_start;
-
+	/*
 	enum Nudges{FORWARD,BACKWARD,CLOCKWISE,COUNTERCLOCKWISE,NUDGES};	
 	struct Nudge{
 		Posedge_trigger trigger;
@@ -103,16 +104,16 @@ struct Main{
 	Shoot_steps shoot_step;
 
 	Posedge_toggle controller_closed_loop;
-	
+	*/
 	Log log;
-
-	Toplevel::Goal teleop(Robot_inputs const&,Joystick_data const&,Joystick_data const&,Panel const&,Toplevel::Status_detail const&);
-
+	
+	//Toplevel::Goal teleop(Robot_inputs const&,Joystick_data const&,Joystick_data const&,Panel const&,Toplevel::Status_detail const&);
+	
 	Main();
 	Robot_outputs operator()(Robot_inputs,std::ostream& = std::cerr);
 };
 
-std::ostream& operator<<(std::ostream&,Main::Mode);
+//std::ostream& operator<<(std::ostream&,Main::Mode);
 
 bool operator==(Main const&,Main const&);
 bool operator!=(Main const&,Main const&);

@@ -20,7 +20,7 @@ ofstream myfile2;
 static int print_count=0;
 #define SLOW_PRINT (print_count%10==0)
 
-ostream& operator<<(ostream& o,Main::Mode a){
+/*ostream& operator<<(ostream& o,Main::Mode a){
 	#define X(NAME) if(a==Main::Mode::NAME) return o<<""#NAME;
 	MODES
 	#undef X
@@ -32,21 +32,21 @@ static const string NAVLOG2="navlog2.txt";
 #else
 static const string NAVLOG2="/home/lvuser/navlogs/navlog2.txt";
 #endif
-
+*/
 //TODO: at some point, might want to make this whatever is right to start autonomous mode.
 Main::Main():
-	mode(Mode::TELEOP),
+	//mode(Mode::TELEOP),
 	mode_(Executive{Teleop()}),
-	motion_profile(0.0,.01),
-	in_br_range(),
+	/*motion_profile(0.0,.01),
+	in_br_range(),*/
 	autonomous_start(0)
 {
-	in_br_range.set(2.0);
+	/*in_br_range.set(2.0);
 	set_initial_encoders = true;
 	initial_encoders = make_pair(0,0);
 	br_step=0;
 	myfile2.open(NAVLOG2);
-	myfile2 << "test start" << endl;
+	myfile2 << "test start" << endl;*/
 }
 
 
@@ -393,7 +393,7 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 	//if(SLOW_PRINT) cout<<"panel:"<<panel<<"\n";
 	//cout << "Goals: " << motion_profile.goal << " Current: " << ticks_to_inches(toplevel_status.drive.ticks.first/*in.digital_io.encoder[0]*/) << endl;
 	
-	if(SLOW_PRINT) cout<<"br_step:"<<br_step<<"\n";
+	//if(SLOW_PRINT) cout<<"br_step:"<<br_step<<"\n";
 	
 	bool autonomous_start_now=autonomous_start(in.robot_mode.autonomous && in.robot_mode.enabled);
 	since_auto_start.update(in.now,autonomous_start_now);
@@ -699,7 +699,7 @@ bool operator!=(Main const& a,Main const& b){
 
 ostream& operator<<(ostream& o,Main const& m){
 	o<<"Main(";
-	o<<" "<<m.mode;
+	//o<<" "<<m.mode;
 	o<<" "<<m.force;
 	o<<" "<<m.perf;
 	o<<" "<<m.toplevel;
@@ -783,7 +783,7 @@ void update_pos(Pt &current_pos, Robot_outputs out, const Time INCREMENT){
 	current_pos+={x_diff,y_diff,theta_diff};
 }
 
-void test_autonomous(Main::Mode mode){
+/*void test_autonomous(Main::Mode mode){
 	Main m;
 
 	m.mode=mode;
@@ -826,7 +826,7 @@ void test_modes(){
 	}
 }
 
-
+*/
 void test_next_mode(){
 	//Main::Mode next_mode(Main::Mode m,bool autonomous,bool autonomous_start,Toplevel::Status_detail /*status*/,Time since_switch, Panel panel,unsigned int navindex,vector<Nav2::NavS> NavV,int & stepcounter,Nav2::aturn Aturn){
 	/*vector<Main::Mode> MODE_LIST{
@@ -850,7 +850,7 @@ void test_next_mode(){
 
 int main(){
 	//test_next_mode();
-	test_modes();
+	//test_modes();
 }
 
 #endif
