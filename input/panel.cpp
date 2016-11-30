@@ -65,6 +65,7 @@ float axis_to_percent(double a){
 }
 
 bool set_button(const Volt AXIS_VALUE, const Volt LOWER_VALUE, const Volt TESTING_VALUE, const Volt UPPER_VALUE){
+	assert(LOWER_VALUE < TESTING_VALUE && TESTING_VALUE < UPPER_VALUE);
 	float lower_tolerance = (TESTING_VALUE - LOWER_VALUE)/2;
 	float upper_tolerance = (UPPER_VALUE - TESTING_VALUE)/2;
 	float min = TESTING_VALUE - lower_tolerance;
@@ -100,7 +101,7 @@ Panel interpret(Joystick_data d){
 		#undef X
 		
 		const Volt AXIS_VALUE = d.axis[2];
-		static const Volt DEFAULT=-1, GRABBER_OPEN=-.5, GRABBER_CLOSE=0, PREP=.5, SHOOT=.1, ARTIFICIAL_MAX = 1.38;//TODO: assumed value, also recalculate the artifical maxs
+		static const Volt DEFAULT=-1, GRABBER_OPEN=-.5, GRABBER_CLOSE=0, PREP=.5, SHOOT=1, ARTIFICIAL_MAX = 1.38;//TODO: assumed value, also recalculate the artifical maxs
 		p.grabber_open = set_button(AXIS_VALUE, DEFAULT, GRABBER_OPEN, GRABBER_CLOSE);
 		p.grabber_close = set_button(AXIS_VALUE, GRABBER_OPEN, GRABBER_CLOSE, PREP);
 		p.prep = set_button(AXIS_VALUE, GRABBER_CLOSE, PREP, SHOOT);
