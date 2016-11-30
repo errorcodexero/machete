@@ -36,6 +36,10 @@ bool operator!=(const Grabber::Estimator a,const Grabber::Estimator b){
 	return !(a==b);
 }
 
+ostream& operator<<(ostream& o, const Grabber::Estimator a){
+	return o<<"Estimator(last:"<<a.last<<" open_timer:"<<a.open_timer<<")";
+}
+
 ostream& operator<<(ostream& o,const Grabber::Input a){
 	return o<<" Input( closed:"<<a.closed<<" enabled:"<<a.enabled<<")";
 }
@@ -86,17 +90,18 @@ void Grabber::Estimator::update(Time time,Input input,Output output){
 	switch(output){
 		case Grabber::Output::OPEN:
 			if(last == Grabber::Status_detail::OPENING){
-				open_timer.update(time,input.enabled);//change true to enabled ?
-			} else if(open_timer.done()){
-				 last = Grabber::Status_detail::OPEN;
-			} else {
+				open_timer.update(time,input.enabled);
+			} else if(last != Grabber::Status_detail::OPEN){
 				const Time OPEN_TIME = .2;//assumed
 				open_timer.set(OPEN_TIME);
 				last = Status_detail::OPENING;
 			}
+			if(open_timer.done()){
+				 last = Grabber::Status_detail::OPEN;
+			}
 			break;
 		case Grabber::Output::CLOSE:
-			if(input.closed) last  =  Grabber::Status_detail::CLOSED;
+			if(input.closed) last = Grabber::Status_detail::CLOSED;
 			else last = Grabber::Status_detail::CLOSING;
 			break;
 		default:
@@ -149,7 +154,44 @@ bool ready(Grabber::Status status,Grabber::Goal goal){
 #include "formal.h"
 
 int main(){
-	Grabber g;
-	tester(g);
+	{
+		Grabber g;
+		tester(g);
+	}
+	{
+		Grabber g;
+		Grabber::Goal goal = Grabber::Goal::CLOSE;
+		const bool ENABLED = true;
+		const Time CLOSE_TIME = 5;//seconds - the amount of time before the simulated hall effect reads that it's closed
+		for(Time t: range(1000)){
+			bool closed = t >= CLOSE_TIME;
+			Grabber::Status_detail status = g.estimator.get();
+			Grabber::Output out = control(status,goal);
+			
+			cout<<"t:"<<t<<"\tgoal:"<<goal<<"\tstatus:"<<status<<"\n";
+			
+			g.estimator.update(t,Grabber::Input{closed,ENABLED},out);
+			if(ready(status,goal)){
+				cout<<"Goal "<<goal<<" reached. Finishing.\n";
+				break;
+			}
+		}
+
+		goal = Grabber::Goal::OPEN;
+
+		for(Time t: range(1000)){
+			bool closed = g.estimator.get() == Grabber::Status_detail::CLOSED;
+			Grabber::Status_detail status = g.estimator.get();
+			Grabber::Output out = control(status,goal);
+			
+			cout<<"t:"<<t<<"\tgoal:"<<goal<<"\tstatus:"<<status<<"\n";
+			
+			g.estimator.update(t,Grabber::Input{closed,ENABLED},out);
+			if(ready(status,goal)){
+				cout<<"Goal "<<goal<<" reached. Finishing.\n";
+				break;
+			}
+		}
+	}
 }
 #endif
