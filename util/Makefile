@@ -12,6 +12,7 @@ SRC = \
 	interface.cpp\
 	jag_interface.cpp\
 	meta.cpp\
+	motion_profile.cpp\
 	nav2.cpp\
 	nav.cpp\
 	negedge_trigger.cpp\
@@ -22,14 +23,15 @@ SRC = \
 	posedge_toggle.cpp\
 	posedge_trigger.cpp\
 	posedge_trigger_debounce.cpp\
+	pwm.cpp\
 	settable_toggle.cpp\
 	string_utils.cpp\
 	tagger.cpp\
-	util.cpp
-
+	type.cpp\
+	util.cpp\
+	visitable.cpp
 
 OBJS = $(SRC:.cpp=.o)
-
 
 util.a: $(OBJS)
 	$(AR) r $@ $(OBJS)

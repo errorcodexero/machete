@@ -15,5 +15,5 @@ sabre::
 	(cd roborio ; make WPILIB=$(WPILIB))
 
 clean::
-	rm */*.o */*.a
+	rm -f */*.o */*.a
 
