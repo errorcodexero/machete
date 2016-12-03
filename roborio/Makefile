@@ -4,7 +4,6 @@ LDFLAGS = -L$(WPILIB)/cpp/current/lib
 
 MYLIBS = \
 	../executive/executive.a\
-	../modes/modes.a\
 	../control/control.a\
 	../input/input.a\
 	../util/util.a
