@@ -7,8 +7,8 @@
 
 using namespace std;
 
-static const unsigned int AUTO_SELECT_AXIS = 0, GUN_AXIS = 1;
-static const unsigned int SHOOT_LOC = 5, OPEN_LOC = 6, CLOSE_LOC = 11, PREP_LOC = 7, ARM_UP_DOWN_LOC = 10;  
+static const unsigned int AUTO_SELECT_AXIS=0, GUN_AXIS=1;
+static const unsigned int SHOOT_LOC=0, PREP_LOC=1, OPEN_LOC=2, CLOSE_LOC=3, ARM_UP_DOWN_LOC=10;
 
 #define BUTTONS \
 	X(grabber_open) X(grabber_close) X(prep) X(shoot)
