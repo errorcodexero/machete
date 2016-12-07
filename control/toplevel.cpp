@@ -154,9 +154,9 @@ Toplevel::Status::Status():
 	drive(
 		{Motor_check::Status::OK_,Motor_check::Status::OK_},
 		false,
-		Drivebase::Piston::FULL//,
-		/*{0.0,0.0},
-		{0.0,0.0}*/
+		Drivebase::Piston::FULL,
+		{0.0,0.0,0.0},
+		{0,0,0}
 	),
 	pump(Pump::Status::NOT_FULL),
 	gun(Gun::Status::OFF),

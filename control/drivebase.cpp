@@ -46,15 +46,16 @@ double ticks_to_inches(const int ticks){
 
 #define L_ENCODER_PORTS 0,1
 #define R_ENCODER_PORTS 2,3
-#define C_ENCODER_PORTS 4,5//doesn't exist?
+#define C_ENCODER_PORTS 4,5
 #define L_ENCODER_LOC 0
 #define R_ENCODER_LOC 1
+#define C_ENCODER_LOC 2
 
 Robot_inputs Drivebase::Input_reader::operator()(Robot_inputs all,Input in)const{
 	for(unsigned i=0;i<MOTORS;i++){
 		all.current[pdb_location((Motor)i)]=in.current[i];
 	}
-	/*auto set=[&](unsigned index,Digital_in value){
+	auto set=[&](unsigned index,Digital_in value){
 		all.digital_io.in[index]=value;
 	};
 	auto encoder=[&](unsigned a,unsigned b,Encoder_info e){
@@ -64,15 +65,16 @@ Robot_inputs Drivebase::Input_reader::operator()(Robot_inputs all,Input in)const
 	encoder(L_ENCODER_PORTS,in.left);
 	encoder(R_ENCODER_PORTS,in.right);
 	encoder(C_ENCODER_PORTS,in.center);
-	all.digital_io.encoder[L_ENCODER_LOC] = in.ticks.first;
-	all.digital_io.encoder[R_ENCODER_LOC] = in.ticks.second;*/
+	all.digital_io.encoder[L_ENCODER_LOC] = in.ticks.l;
+	all.digital_io.encoder[R_ENCODER_LOC] = in.ticks.r;
+	all.digital_io.encoder[C_ENCODER_LOC] = in.ticks.c;
 	return all;
 }
 
 Drivebase::Input Drivebase::Input_reader::operator()(Robot_inputs const& in)const{
-	/*auto encoder_info=[&](unsigned a, unsigned b){
+	auto encoder_info=[&](unsigned a, unsigned b){
 		return make_pair(in.digital_io.in[a],in.digital_io.in[b]);
-	};*/
+	};
 	return Drivebase::Input{
 		[&](){
 			array<double,Drivebase::MOTORS> r;
@@ -82,10 +84,10 @@ Drivebase::Input Drivebase::Input_reader::operator()(Robot_inputs const& in)cons
 			}
 			return r;
 		}(),
-		/*encoder_info(L_ENCODER_PORTS),
+		encoder_info(L_ENCODER_PORTS),
 		encoder_info(R_ENCODER_PORTS),
 		encoder_info(C_ENCODER_PORTS),
-		{encoderconv(in.digital_io.encoder[L_ENCODER_LOC]),encoderconv(in.digital_io.encoder[R_ENCODER_LOC])}*/
+		{encoderconv(in.digital_io.encoder[L_ENCODER_LOC]),encoderconv(in.digital_io.encoder[R_ENCODER_LOC]),encoderconv(in.digital_io.encoder[C_ENCODER_LOC])}
 	};
 }
 
@@ -96,9 +98,15 @@ float range(const Robot_inputs in){
 	return inches;
 }
 
+IMPL_STRUCT(Drivebase::Encoder_ticks::Encoder_ticks,ENCODER_TICKS)
+IMPL_STRUCT(Drivebase::Speeds::Speeds,SPEEDS_ITEMS)
+
 IMPL_STRUCT(Drivebase::Status::Status,DRIVEBASE_STATUS)
 IMPL_STRUCT(Drivebase::Input::Input,DRIVEBASE_INPUT)
 IMPL_STRUCT(Drivebase::Output::Output,DRIVEBASE_OUTPUT)
+
+CMP_OPS(Drivebase::Encoder_ticks,ENCODER_TICKS)
+CMP_OPS(Drivebase::Speeds,SPEEDS_ITEMS)
 
 CMP_OPS(Drivebase::Input,DRIVEBASE_INPUT)
 
@@ -112,9 +120,9 @@ set<Drivebase::Status> examples(Drivebase::Status*){
 		}
 		,
 		false,
-		Drivebase::Piston::FULL//,
-		//{0.0,0.0},
-		//{0.0,0.0}
+		Drivebase::Piston::FULL,
+		{0.0,0.0,0.0},
+		{0,0,0}
 	}};
 }
 
@@ -148,20 +156,18 @@ set<Drivebase::Output> examples(Drivebase::Output*){
 }
 
 set<Drivebase::Input> examples(Drivebase::Input*){
-	/*auto d=Digital_in::_0;
-	auto p=make_pair(d,d);*/
+	auto d=Digital_in::_0;
+	auto p=make_pair(d,d);
 	return {Drivebase::Input{
-		{0,0,0}//,p,p,p,{0,0}
+		{0,0,0,0,0,0},p,p,p,{0,0,0}
 	}};
 }
-Drivebase::Estimator::Estimator(){
+Drivebase::Estimator::Estimator():last_ticks(0,0,0),speeds(0.0,0.0,0.0){
 	stall = false;
 	piston_last = false;
 	piston = Drivebase::Piston::EMPTYING;
 	timer.set(.05);
 	piston_timer.set(0);
-	//last_ticks = {0,0};
-	//speeds = {0.0,0.0};
 }
 
 Drivebase::Status_detail Drivebase::Estimator::get()const{
@@ -170,7 +176,7 @@ Drivebase::Status_detail Drivebase::Estimator::get()const{
 		a[i]=motor_check[i].get();
 	}
 	
-	return Status{a,stall,piston/*,speeds,last_ticks*/};
+	return Status{a,stall,piston,speeds,last_ticks};
 }
 
 ostream& operator<<(ostream& o,Drivebase::Piston a){
@@ -211,10 +217,11 @@ double mean(std::array<double, 6ul> a){
 }
 void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output out){\
 	timer.update(now,true);
-	/*static const double POLL_TIME = .05;//seconds
+	static const double POLL_TIME = .05;//seconds
 	if(timer.done()){
-		speeds.first = ticks_to_inches((last_ticks.first-in.ticks.first)/POLL_TIME);
-		speeds.second = ticks_to_inches((last_ticks.second-in.ticks.second)/POLL_TIME);
+		speeds.l = ticks_to_inches((last_ticks.l-in.ticks.l)/POLL_TIME);
+		speeds.r = ticks_to_inches((last_ticks.r-in.ticks.r)/POLL_TIME);
+		speeds.c = ticks_to_inches((last_ticks.c-in.ticks.c)/POLL_TIME);
 		last_ticks = in.ticks;
 		timer.set(POLL_TIME);
 	}
@@ -225,8 +232,7 @@ void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output
 		auto current=in.current[i];
 		auto set_power_level=get_output(out,m);
 		motor_check[i].update(now,current,set_power_level);
-		
-	}*/
+	}
 	if(out.piston==piston_last){
 		piston_timer.update(now,true);//use enabled?
 		if(piston_timer.done()){
@@ -258,10 +264,12 @@ Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drive
 
 	robot.solenoid[PISTON_LOC] = b.piston;
 
-	/*robot.digital_io[0]=Digital_out::encoder(0,1);
+	robot.digital_io[0]=Digital_out::encoder(0,1);
 	robot.digital_io[1]=Digital_out::encoder(0,0);
 	robot.digital_io[2]=Digital_out::encoder(1,1);
-	robot.digital_io[3]=Digital_out::encoder(1,0);*/
+	robot.digital_io[3]=Digital_out::encoder(1,0);
+	robot.digital_io[4]=Digital_out::encoder(0,1);
+	robot.digital_io[5]=Digital_out::encoder(0,0);
 	return robot;
 }
 
