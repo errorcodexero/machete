@@ -1,19 +1,73 @@
 #
-# Makefile for building the SABRE repository.  This is used by jenkins to
-# do periodic builds
+# Makefile for running style checks, unit tests and cross-compiling the
+#   FRCUserProgram to be loaded on the robot.
 #
 
-WPILIB=/usr/local/wpilib
+OBJDIR := obj
+CXX := arm-frc-linux-gnueabi-g++
+WPILIB := /usr/local/wpilib/cpp/current
+CXXSRC := $(wildcard */*.cpp)
+SRCDIRS := $(sort $(dir $(CXXSRC)))
+space := $(eval) $(eval)
+VPATH := $(subst $(space),:,$(SRCDIRS))
+CXXOBJ := $(addprefix $(OBJDIR)/,$(patsubst %.cpp,%.o,$(CXXSRC)))
+CXXFLAGS := -Wall -Wextra -Werror -O2 -g -std=c++14 -I$(WPILIB)/include -fmessage-length=0
+LDFLAGS := -L$(WPILIB)/lib/
 
-all: sabre
+.PHONY: default
+default: check_style test build
 
-sabre::
-	(cd util ; make)
-	(cd input ; make)
-	(cd control ; make)
-	(cd executive ; make)
-	(cd roborio ; make WPILIB=$(WPILIB))
+.PHONY: all
+all: clean check_style test build
 
-clean::
-	rm -f */*.o */*.a
+.PHONY: check_style check
+check_style check:
+	@echo "=== make check_style ==="
+	./check_style
 
+.PHONY: test
+test:
+	@echo "=== make test ==="
+	bazel test --run_under='valgrind --error-exitcode=1' \
+	  --cxxopt=-std=c++14 --cxxopt=-Wall --cxxopt=-Werror \
+	  --test_verbose_timeout_warnings ...
+
+.PHONY: build
+build:	FRCUserProgram | whatamidoing
+
+# A little hack to display the build target name before we build it.
+.PHONY: whatamidoing
+whatamidoing:
+	@echo "=== make FRCUserProgram ==="
+
+FRCUserProgram: $(CXXOBJ)
+	$(CXX) -o $@ $(CXXOBJ) $(LDFLAGS) -lwpi
+
+$(OBJDIR):
+	mkdir -p $(sort $(dir $(CXXOBJ)))
+
+$(OBJDIR)/%.o: %.cpp | $(OBJDIR)
+	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
+
+.PHONY: clean
+clean:
+	@echo "=== make clean ==="
+	bazel clean
+	$(RM) -rf FRCUserProgram $(OBJDIR) f1.tmp
+
+# for Makefile debugging
+.PHONY: verbose
+verbose:
+	@echo "=== make verbose ==="
+	@echo ''
+	@echo OBJDIR = \'$(OBJDIR)\'
+	@echo ''
+	@echo CXXSRC = \'$(CXXSRC)\'
+	@echo ''
+	@echo CXXOBJ = \'$(CXXOBJ)\'
+	@echo ''
+	@echo SRCDIRS = \'$(SRCDIRS)\'
+	@echo ''
+	@echo VPATH = \'$(VPATH)\'
+	@echo ''
+	

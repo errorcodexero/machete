@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+# Scan source files for certain style conventions
+
+import os,sys
+from optparse import OptionParser
+from glob import glob
+import os,sys
+import commands
+
+#any(a) => int->[a]->[(int,a)]
+def enumerate_from(i,a):
+	r=[]
+	at=0
+	while at<len(a):
+		r.append((i,a[at]))
+		i+=1
+		at+=1
+	return r
+
+#str->bool
+def start_good(s):
+	for c in s:
+		if c.isdigit() or c.isalpha() or c in '#{}\t/*)->': return 1
+		if c==' ': return 0
+		print 'nyi \"%s\"'%c
+		raise
+	return 1
+
+#any(a) => [a]->[(a,a)]
+def adjacent_pairs(a):
+	r=[]
+	i=0
+	while i+1<len(a):
+		r.append((a[i],a[i+1]))
+		i+=1
+	return r
+
+def type_name_ok(s):
+	return s[0].isupper() or s in ['sockaddr_in','dirent','js_event','addrinfo','sigaction','sockaddr_storage']
+
+def rm_line_comment(s):
+	out=''
+	for (a,b) in adjacent_pairs(s):
+		if a=='/' and b=='/':
+			return out
+		out+=a
+	return out
+
+def decl_ok(s):
+	sp=rm_line_comment(s).split()
+	for (a,b) in adjacent_pairs(sp):
+		if a in ['struct','class'] or (a=='enum' and b!='class'):
+			if not type_name_ok(b):
+				return 0
+	return 1
+
+#str->[str(error)]
+def check_file(contents):
+	lines=contents.splitlines()
+	r=[]
+	for line_num,s in enumerate_from(1,lines):
+		if not start_good(s):
+			r.append((line_num,'starts w/ space',s))
+		if not decl_ok(s):
+			r.append((line_num,'type names',s))
+	return r
+
+#str->int
+def check_header(filename):
+	lines=file(filename).read().splitlines()
+	for line in lines:
+		if line.startswith('using namespace'):
+			print 'Error: "using namespace" in header file',filename
+			return 1
+
+#returns int
+def check_style(verbose):
+	cppfiles=commands.getoutput("find -name \*.cpp").splitlines()
+	hfiles=commands.getoutput("find -name \*.h").splitlines()
+	for filename in cppfiles+hfiles:
+		if verbose: print filename
+		errors=check_file(file(filename).read())
+		if len(errors):
+			if not verbose: print filename
+			for e in errors: print '\t',e
+			return 1
+	if any(map(check_header,hfiles)):
+		return 1
+	return 0
+
+if __name__=='__main__':
+	p=OptionParser()
+	p.add_option('--verbose',action='store_true',help="Show progress")
+	p.add_option('-v',action='store_true')
+	options,args=p.parse_args()
+	assert len(args)==0
+	verbose=options.verbose or options.v
+	if check_style(verbose): sys.exit(1)
