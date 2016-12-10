@@ -126,12 +126,12 @@ Grabber::Output control(Grabber::Status /*status*/, Grabber::Goal goal){
 }
 
 Robot_outputs Grabber::Output_applicator::operator()(Robot_outputs r,Output out)const{
-	r.solenoid[PISTON_LOC] = out == Grabber::Output::CLOSE; 
+	r.solenoid[PISTON_LOC] = out == Grabber::Output::OPEN; 
 	return r;
 }
 
 Grabber::Output Grabber::Output_applicator::operator()(Robot_outputs r)const{
-	return r.solenoid[PISTON_LOC] ? Grabber::Output::CLOSE : Grabber::Output::OPEN;
+	return r.solenoid[PISTON_LOC] ? Grabber::Output::OPEN : Grabber::Output::CLOSE;
 }
 
 Robot_inputs Grabber::Input_reader::operator()(Robot_inputs r,Input in)const{
