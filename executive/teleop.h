@@ -17,6 +17,7 @@ struct Teleop : Executive_impl<Teleop> {
 	#define TELEOP_ITEMS(X)\
 		X(SINGLE_ARG(std::array<Nudge,NUDGES>),nudges) \
 		X(Arm::Goal,arm_goal)\
+		X(Grabber::Goal,grabber_goal)\
 		X(Posedge_toggle,gun_prep) 
 
 	STRUCT_MEMBERS(TELEOP_ITEMS)

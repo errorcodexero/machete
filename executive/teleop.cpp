@@ -43,7 +43,8 @@ Executive Teleop::next_mode(Next_mode_info info) {
 }
 
 Teleop::Teleop(){
-	arm_goal = Arm::Goal::DOWN;
+	arm_goal=Arm::Goal::DOWN;
+	grabber_goal=Grabber::Goal::CLOSE;
 }
 
 IMPL_STRUCT(Teleop::Teleop,TELEOP_ITEMS)
@@ -82,9 +83,8 @@ Toplevel::Goal Teleop::run(Run_info info) {
 		//cout<<"\nDrive encoders: "<<info.toplevel_status<<"\n";
 	}
 
-	gun_prep.update(info.panel.prep);
-
 	if (info.panel.in_use) {
+		gun_prep.update(info.panel.prep);	
 		goals.gun=[&]{
 			if(gun_prep.get()) {
 				if (info.panel.shoot) return Gun::Goal::SHOOT;
@@ -98,6 +98,13 @@ Toplevel::Goal Teleop::run(Run_info info) {
 			return Arm::Goal::DOWN;
 		}();
 		goals.arm=arm_goal;
+
+		grabber_goal=[&]{
+			if(info.panel.grabber_open) return Grabber::Goal::OPEN;
+			if(info.panel.grabber_close) return Grabber::Goal::CLOSE;
+			return grabber_goal;
+		}();
+		goals.grabber=grabber_goal;
 	} else {
 		goals.gun=[&]{
 			if(info.gunner_joystick.axis[Gamepad_axis::LTRIGGER]>.9){
@@ -113,6 +120,13 @@ Toplevel::Goal Teleop::run(Run_info info) {
 			return arm_goal;
 		}();
 		goals.arm=arm_goal;
+
+		grabber_goal=[&]{
+			if(info.gunner_joystick.button[Gamepad_button::B]) return Grabber::Goal::OPEN;
+			if(info.gunner_joystick.button[Gamepad_button::X]) return Grabber::Goal::CLOSE;
+			return grabber_goal;
+		}();
+		goals.grabber=grabber_goal;
 	}
 	return goals;
 }
