@@ -9,6 +9,5 @@ SRC = \
 
 OBJS = $(SRC:.cpp=.o)
 
-
 input.a: $(OBJS)
 	$(AR) r $@ $(OBJS)

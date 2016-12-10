@@ -8,9 +8,9 @@ Executive Auto_distance::next_mode(Next_mode_info info){
 	
 	Drivebase::Encoder_ticks encoder_differences={
 		#define X(ENCODER) info.status.drive.ticks.ENCODER - initial_encoders.ENCODER
-		X(left),
-		X(right),
-		X(center)
+		X(l),
+		X(r),
+		X(c)
 	};
 	
 	const double TARGET_DISTANCE = 5.0*12.0;//inches
@@ -18,9 +18,9 @@ Executive Auto_distance::next_mode(Next_mode_info info){
 	
 	motion_profile.set_goal(TARGET_DISTANCE);
 	
-	cout<<"\nencoder_differences:"<<encoder_differences<<"   left(inches):"<<ticks_to_inches(encoder_differences.left)<<"   target(inches):"<<TARGET_DISTANCE<<"\n";
+	cout<<"\nencoder_differences:"<<encoder_differences<<"   left(inches):"<<ticks_to_inches(encoder_differences.l)<<"   target(inches):"<<TARGET_DISTANCE<<"\n";
 	
-	if(ticks_to_inches(encoder_differences.left) >= TARGET_DISTANCE-TOLERANCE && ticks_to_inches(encoder_differences.left) <= TARGET_DISTANCE+TOLERANCE){
+	if(ticks_to_inches(encoder_differences.l) >= TARGET_DISTANCE-TOLERANCE && ticks_to_inches(encoder_differences.l) <= TARGET_DISTANCE+TOLERANCE){
 		in_range.update(info.in.now,info.in.robot_mode.enabled);
 	}
 	else{
@@ -35,7 +35,7 @@ Executive Auto_distance::next_mode(Next_mode_info info){
 
 Toplevel::Goal Auto_distance::run(Run_info info){
 	Toplevel::Goal goals;
-	double power = -motion_profile.target_speed(ticks_to_inches(info.toplevel_status.drive.ticks.left));//assuming that the left and right encoder values are similar enough
+	double power = -motion_profile.target_speed(ticks_to_inches(info.toplevel_status.drive.ticks.l));//assuming that the left and right encoder values are similar enough
 	goals.drive.y = power;
 	return goals;
 }
