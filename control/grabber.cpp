@@ -3,7 +3,7 @@
 using namespace std;
 
 #define HALL_EFFECT_LOC 7 //sensor not on robot
-#define PISTON_LOC 6 //not a real value
+#define PISTON_LOC 6 
 
 Grabber::Input::Input():closed(false),enabled(false){}
 Grabber::Input::Input(bool a,bool b):closed(a),enabled(b){}
