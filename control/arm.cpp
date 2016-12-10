@@ -2,9 +2,6 @@
 
 using namespace std;
 
-static const int ARM_PWM = 5;
-static const float ARM_POWER = .8;
-
 #define PISTON_1_LOC 2 //not real number
 #define PISTON_2_LOC 3 //not real number
 

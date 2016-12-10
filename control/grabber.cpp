@@ -2,15 +2,16 @@
 
 using namespace std;
 
-#define HALL_EFFECT_LOC 7 //not a real value
-#define PISTON_LOC 1 //not a real value
+#define HALL_EFFECT_LOC 7 //sensor not on robot
+#define PISTON_LOC 6 //not a real value
 
 Grabber::Input::Input():closed(false),enabled(false){}
 Grabber::Input::Input(bool a,bool b):closed(a),enabled(b){}
 
 Grabber::Estimator::Estimator():last(Grabber::Status_detail::OPEN){
-	const Time OPEN_TIME = .2;
+	const Time OPEN_TIME = .2, CLOSE_TIME = .2;
 	open_timer.set(OPEN_TIME);
+	close_timer.set(CLOSE_TIME);
 }
 
 bool operator==(const Grabber::Input a,const Grabber::Input b){
@@ -101,8 +102,18 @@ void Grabber::Estimator::update(Time time,Input input,Output output){
 			}
 			break;
 		case Grabber::Output::CLOSE:
-			if(input.closed) last = Grabber::Status_detail::CLOSED;
-			else last = Grabber::Status_detail::CLOSING;
+			if(last == Grabber::Status_detail::CLOSING){
+				close_timer.update(time,input.enabled);
+			} else if(last != Grabber::Status_detail::CLOSED){
+				const Time CLOSE_TIME = .2;//assumed
+				close_timer.set(CLOSE_TIME);
+				last = Status_detail::CLOSING;
+			}
+			if(close_timer.done()){
+				last = Grabber::Status_detail::CLOSED;
+			}
+			//if(input.closed) last = Grabber::Status_detail::CLOSED;
+			//else last = Grabber::Status_detail::CLOSING;
 			break;
 		default:
 			assert(0);
