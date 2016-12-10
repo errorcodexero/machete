@@ -5,7 +5,11 @@
 
 OBJDIR := obj
 CXX := arm-frc-linux-gnueabi-g++
+ifeq ($(OS),Windows_NT)
+WPILIB := $(USERPROFILE)/wpilib/cpp/current
+else
 WPILIB := /usr/local/wpilib/cpp/current
+endif
 CXXSRC := $(wildcard */*.cpp)
 SRCDIRS := $(sort $(dir $(CXXSRC)))
 space := $(eval) $(eval)
@@ -33,12 +37,9 @@ test:
 	  --test_verbose_timeout_warnings ...
 
 .PHONY: build
-build:	FRCUserProgram | whatamidoing
-
-# A little hack to display the build target name before we build it.
-.PHONY: whatamidoing
-whatamidoing:
+build:
 	@echo "=== make FRCUserProgram ==="
+	@$(MAKE) FRCUserProgram
 
 FRCUserProgram: $(CXXOBJ)
 	$(CXX) -o $@ $(CXXOBJ) $(LDFLAGS) -lwpi
@@ -52,8 +53,8 @@ $(OBJDIR)/%.o: %.cpp | $(OBJDIR)
 .PHONY: clean
 clean:
 	@echo "=== make clean ==="
-	bazel clean
-	$(RM) -rf FRCUserProgram $(OBJDIR) f1.tmp
+	-bazel clean
+	-$(RM) -rf FRCUserProgram $(OBJDIR) f1.tmp
 
 # for Makefile debugging
 .PHONY: verbose
