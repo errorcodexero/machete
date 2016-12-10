@@ -105,7 +105,7 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 	
 	Toplevel::Status_detail toplevel_status=toplevel.estimator.get();
 		
-	//if(SLOW_PRINT) cout<<"panel:"<<panel<<"\n";
+	if(SLOW_PRINT) cout<<"panel:"<<panel<<"\n";
 	//cout << "Goals: " << motion_profile.goal << " Current: " << ticks_to_inches(toplevel_status.drive.ticks.first/*in.digital_io.encoder[0]*/) << endl;
 	
 	//if(SLOW_PRINT) cout<<"br_step:"<<br_step<<"\n";
