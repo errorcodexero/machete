@@ -70,8 +70,8 @@ struct Talon_srx_output{
 	static Talon_srx_output closed_loop(double);
 };
 
-enum Panel_outputs{SPUN_UP, BOULDER, PANEL_OUTPUTS};
-enum class Panel_output_ports{SPUN_UP=11, BOULDER=10};
+enum Panel_outputs{SHOOT_READY, PANEL_OUTPUTS};
+enum class Panel_output_ports{SHOOT_READY=1};
 struct Panel_output {
 	int port;
 	bool value;

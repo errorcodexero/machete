@@ -34,6 +34,7 @@ struct Grabber{
 	struct Estimator{
 		Status_detail last;	
 		Countdown_timer open_timer;
+		Countdown_timer close_timer;
 	
 		void update(Time,Input,Output);
 		Status_detail get()const;

@@ -105,7 +105,7 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 	
 	Toplevel::Status_detail toplevel_status=toplevel.estimator.get();
 		
-	//if(SLOW_PRINT) cout<<"panel:"<<panel<<"\n";
+	if(SLOW_PRINT) cout<<"panel:"<<panel<<"\n";
 	//cout << "Goals: " << motion_profile.goal << " Current: " << ticks_to_inches(toplevel_status.drive.ticks.first/*in.digital_io.encoder[0]*/) << endl;
 	
 	//if(SLOW_PRINT) cout<<"br_step:"<<br_step<<"\n";
@@ -133,6 +133,11 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 		
 	Toplevel::Output r_out=control(toplevel_status,goals); 
 	auto r=toplevel.output_applicator(Robot_outputs{},r_out);
+	
+	r.panel_output[Panel_outputs::SHOOT_READY] = Panel_output(
+		static_cast<int>(Panel_output_ports::SHOOT_READY),
+		goals.gun!=Gun::Goal::OFF && ready(toplevel_status.gun,goals.gun)
+	);
 	
 	r=force(r);
 	auto input=toplevel.input_reader(in);

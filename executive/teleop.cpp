@@ -43,7 +43,8 @@ Executive Teleop::next_mode(Next_mode_info info) {
 }
 
 Teleop::Teleop(){
-	arm_mode = Arm_mode::DOWN;
+	arm_goal=Arm::Goal::DOWN;
+	grabber_goal=Grabber::Goal::CLOSE;
 }
 
 IMPL_STRUCT(Teleop::Teleop,TELEOP_ITEMS)
@@ -79,32 +80,55 @@ Toplevel::Goal Teleop::run(Run_info info) {
 			else if (!nudges[Nudges::COUNTERCLOCKWISE].timer.done()) return -ROTATE_NUDGE_POWER;
 			return -set_drive_speed(info.main_joystick.axis[Gamepad_axis::RIGHTX],boost,slow);
 		}());
-		cout<<"\nDrive encoders: "<<info.toplevel_status<<"\n";
+		//cout<<"\nDrive encoders: "<<info.toplevel_status<<"\n";
 	}
 
-	goals.gun=[&]{
-		if(info.gunner_joystick.axis[Gamepad_axis::LTRIGGER]>.9){
-			if(info.gunner_joystick.axis[Gamepad_axis::RTRIGGER]>.9) return Gun::Goal::SHOOT;
-			else return Gun::Goal::REV;
-		}
-		else return Gun::Goal::OFF;
-	}();
-
-	goals.arm=[&]{
-		arm_mode = [&]{
-			if(info.gunner_joystick.button[Gamepad_button::Y]) return Arm_mode::UP;
-			if(info.gunner_joystick.button[Gamepad_button::A]) return Arm_mode::DOWN;
-			return arm_mode;
+	if (info.panel.in_use) {
+		gun_prep.update(info.panel.prep);	
+		goals.gun=[&]{
+			if(gun_prep.get()) {
+				if (info.panel.shoot) return Gun::Goal::SHOOT;
+				return Gun::Goal::REV;
+			}
+			return Gun::Goal::OFF;
 		}();
-		switch(arm_mode){
-			case Arm_mode::DOWN:
-				return Arm::Goal::DOWN;
-			case Arm_mode::UP:
-				return Arm::Goal::UP;
-			default:
-				assert(0);		
-		}
-	}();
+
+		arm_goal=[&]{
+			if(info.panel.arm_pos) return Arm::Goal::UP;
+			return Arm::Goal::DOWN;
+		}();
+		goals.arm=arm_goal;
+
+		grabber_goal=[&]{
+			if(info.panel.grabber_open) return Grabber::Goal::OPEN;
+			if(info.panel.grabber_close) return Grabber::Goal::CLOSE;
+			return grabber_goal;
+		}();
+		goals.grabber=grabber_goal;
+	} else {
+		goals.gun=[&]{
+			if(info.gunner_joystick.axis[Gamepad_axis::LTRIGGER]>.9){
+				if(info.gunner_joystick.axis[Gamepad_axis::RTRIGGER]>.9) return Gun::Goal::SHOOT;
+				return Gun::Goal::REV;
+			}
+			return Gun::Goal::OFF;
+		}();
+
+		arm_goal=[&]{
+			if(info.gunner_joystick.button[Gamepad_button::Y]) return Arm::Goal::UP;
+			if(info.gunner_joystick.button[Gamepad_button::A]) return Arm::Goal::DOWN;
+			return arm_goal;
+		}();
+		goals.arm=arm_goal;
+
+		grabber_goal=[&]{
+			if(info.gunner_joystick.button[Gamepad_button::B]) return Grabber::Goal::OPEN;
+			if(info.gunner_joystick.button[Gamepad_button::X]) return Grabber::Goal::CLOSE;
+			return grabber_goal;
+		}();
+		goals.grabber=grabber_goal;
+	}
+	cout<<info.toplevel_status.grabber<<"\n"<<info.toplevel_status.arm<<"\n";
 	return goals;
 }
 
