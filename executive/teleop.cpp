@@ -128,6 +128,7 @@ Toplevel::Goal Teleop::run(Run_info info) {
 		}();
 		goals.grabber=grabber_goal;
 	}
+	cout<<info.toplevel_status.grabber<<"\n"<<info.toplevel_status.arm<<"\n";
 	return goals;
 }
 
