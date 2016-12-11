@@ -162,7 +162,7 @@ set<Drivebase::Input> examples(Drivebase::Input*){
 	}};
 }
 
-Drivebase::Estimator::Estimator():last({{},false,Drivebase::Piston::EMPTY,{0,0,0},{0,0,0}}){
+Drivebase::Estimator::Estimator():motor_check(),last({{{}},false,Drivebase::Piston::EMPTY,{0,0,0},{0,0,0}}){
 	timer.set(.05);
 	piston_timer.set(0);
 }
