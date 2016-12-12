@@ -7,11 +7,11 @@
 
 #define AUTO_DISTANCE_ITEMS(X)\
 	X(Motion_profile,motion_profile)\
-	X(Drivebase::Encoder_ticks,initial_encoders)
+	X(Drivebase::Encoder_ticks,initial_encoders) \
+	X(Countdown_timer,in_range) 
 
 struct Auto_distance: public Executive_impl<Auto_distance>{
 	#define AUTO_DISTANCE_STRAIGHTAWAY_ITEMS(X)\
-		X(Countdown_timer,in_range)\
 		AUTO_DISTANCE_ITEMS(X)
 	STRUCT_MEMBERS(AUTO_DISTANCE_STRAIGHTAWAY_ITEMS)
 	

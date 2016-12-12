@@ -6,7 +6,8 @@ using namespace std;
 
 Executive Auto_bunnygrab::next_mode(Next_mode_info info){
 	if(!info.autonomous) return Executive{Teleop()};
-	if(info.since_switch > 3) return Executive{Auto_stop()};
+	const Time DRIVE_TIME = 3;//seconds
+	if(info.since_switch > DRIVE_TIME) return Executive{Auto_stop()};
 	return Executive{Auto_bunnygrab()};
 }
 
