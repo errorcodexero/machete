@@ -6,8 +6,6 @@
 
 using namespace std;
 
-
-
 // talon locations are -1
 #define R_MOTOR_LOC_1 0
 #define R_MOTOR_LOC_2 1

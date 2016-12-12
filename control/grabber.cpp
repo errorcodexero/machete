@@ -93,7 +93,7 @@ void Grabber::Estimator::update(Time time,Input input,Output output){
 			if(last == Grabber::Status_detail::OPENING){
 				open_timer.update(time,input.enabled);
 			} else if(last != Grabber::Status_detail::OPEN){
-				const Time OPEN_TIME = .2;//assumed
+				const Time OPEN_TIME = .2;//seconds .tested 
 				open_timer.set(OPEN_TIME);
 				last = Status_detail::OPENING;
 			}
@@ -105,7 +105,7 @@ void Grabber::Estimator::update(Time time,Input input,Output output){
 			if(last == Grabber::Status_detail::CLOSING){
 				close_timer.update(time,input.enabled);
 			} else if(last != Grabber::Status_detail::CLOSED){
-				const Time CLOSE_TIME = .2;//assumed
+				const Time CLOSE_TIME = .2;//seconds tested
 				close_timer.set(CLOSE_TIME);
 				last = Status_detail::CLOSING;
 			}

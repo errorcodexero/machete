@@ -92,7 +92,7 @@ void Arm::Estimator::update(Time time,Arm::Input input,Arm::Output output){
 			if(last == Status::GOING_UP){
 				state_timer.update(time,input.enabled);
 			} else if(last != Status::UP){ 
-				const Time UP_TIME = 1.0;//seconds. assumed
+				const Time UP_TIME = 1.0;//seconds. tested
 				last = Status::GOING_UP;
 				state_timer.set(UP_TIME);
 			}
@@ -104,7 +104,7 @@ void Arm::Estimator::update(Time time,Arm::Input input,Arm::Output output){
 			if(last == Status::GOING_DOWN){
 				state_timer.update(time,input.enabled);
 			} else if(last != Status::DOWN){ 
-				const Time DOWN_TIME = 1.0;//seconds, assumed
+				const Time DOWN_TIME = 5.0;//seconds. tested
 				last = Status::GOING_DOWN;
 				state_timer.set(DOWN_TIME);
 			}
