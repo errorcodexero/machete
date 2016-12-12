@@ -4,7 +4,7 @@ using namespace std;
 
 #define GUN_ADDRESS 0
 #define POWER_ADDRESS 4
-#define GUN_POWER .5
+#define GUN_POWER -.3
 #define REV_TIME 5
 
 std::ostream& operator<<(std::ostream& o,Gun::Goal g){

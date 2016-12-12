@@ -267,8 +267,8 @@ Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drive
 	robot.digital_io[1]=Digital_out::encoder(0,0);
 	robot.digital_io[2]=Digital_out::encoder(1,1);
 	robot.digital_io[3]=Digital_out::encoder(1,0);
-	robot.digital_io[4]=Digital_out::encoder(0,1);
-	robot.digital_io[5]=Digital_out::encoder(0,0);
+	robot.digital_io[4]=Digital_out::encoder(2,1);
+	robot.digital_io[5]=Digital_out::encoder(2,0);
 	return robot;
 }
 
