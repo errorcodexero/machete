@@ -14,7 +14,7 @@ Executive Auto_forward::next_mode(Next_mode_info info){
 
 Toplevel::Goal Auto_forward::run(Run_info){
 	Toplevel::Goal goals;
-	static const double SPEED = .45;
+	static const double SPEED = -.45;
 	goals.drive.y = SPEED;
 	return goals;
 }
