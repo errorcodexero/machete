@@ -80,7 +80,7 @@ Toplevel::Goal Teleop::run(Run_info info) {
 			else if (!nudges[Nudges::COUNTERCLOCKWISE].timer.done()) return -ROTATE_NUDGE_POWER;
 			return -set_drive_speed(info.main_joystick.axis[Gamepad_axis::RIGHTX],boost,slow);
 		}());
-		//cout<<"\nDrive encoders: "<<info.toplevel_status<<"\n";
+		cout<<"\nDrive encoders: "<<info.toplevel_status.drive<<"\n";
 	}
 
 	if (info.panel.in_use) {
