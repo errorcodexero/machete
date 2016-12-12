@@ -215,6 +215,7 @@ void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output
 	static const double POLL_TIME = .05;//seconds
 	if(timer.done()){
 		last.ticks = in.ticks;
+		last.ticks.l = -last.ticks.l;//because encoder is reversed
 		last.speeds.l = ticks_to_inches((last.ticks.l-in.ticks.l)/POLL_TIME);
 		last.speeds.r = ticks_to_inches((last.ticks.r-in.ticks.r)/POLL_TIME);
 		last.speeds.c = ticks_to_inches((last.ticks.c-in.ticks.c)/POLL_TIME);
@@ -261,12 +262,20 @@ Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drive
 
 	robot.solenoid[PISTON_LOC] = b.piston;
 
-	robot.digital_io[0]=Digital_out::encoder(0,1);
+	auto set_encoder=[&](unsigned int a, unsigned int b,unsigned int loc){
+		robot.digital_io[a] = Digital_out::encoder(loc,1);
+		robot.digital_io[b] = Digital_out::encoder(loc,0);
+	};
+	
+	set_encoder(L_ENCODER_PORTS,L_ENCODER_LOC);
+	set_encoder(R_ENCODER_PORTS,R_ENCODER_LOC);
+	set_encoder(C_ENCODER_PORTS,C_ENCODER_LOC);
+	/*robot.digital_io[0]=Digital_out::encoder(0,1);
 	robot.digital_io[1]=Digital_out::encoder(0,0);
 	robot.digital_io[2]=Digital_out::encoder(1,1);
 	robot.digital_io[3]=Digital_out::encoder(1,0);
 	robot.digital_io[4]=Digital_out::encoder(2,1);
-	robot.digital_io[5]=Digital_out::encoder(2,0);
+	robot.digital_io[5]=Digital_out::encoder(2,0);*/
 	return robot;
 }
 
