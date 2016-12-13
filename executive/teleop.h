@@ -14,12 +14,14 @@ struct Teleop : Executive_impl<Teleop> {
 		Countdown_timer timer;
 	};
 
+	enum class Active_gun_mode{SINGLE,BURST,OTHER};
+
 	#define TELEOP_ITEMS(X)\
 		X(SINGLE_ARG(std::array<Nudge,NUDGES>),nudges) \
 		X(Arm::Goal,arm_goal)\
 		X(Grabber::Goal,grabber_goal)\
-		X(Posedge_toggle,gun_prep) 
-
+		X(Posedge_toggle,gun_prep)\
+		X(Active_gun_mode,active_gun_mode)
 	STRUCT_MEMBERS(TELEOP_ITEMS)
 
 	Executive next_mode(Next_mode_info);

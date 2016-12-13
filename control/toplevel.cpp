@@ -159,7 +159,7 @@ Toplevel::Status::Status():
 		{0,0,0}
 	),
 	pump(Pump::Status::NOT_FULL),
-	gun(Gun::Status::OFF),
+	gun({Gun::Status::Rev_mode::OFF,0}),
 	winch(Winch::Status::DOWN),
 	grabber(Grabber::Status::OPEN),
 	arm(Arm::Status::DOWN)

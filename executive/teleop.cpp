@@ -45,6 +45,7 @@ Executive Teleop::next_mode(Next_mode_info info) {
 Teleop::Teleop(){
 	arm_goal=Arm::Goal::DOWN;
 	grabber_goal=Grabber::Goal::CLOSE;
+	active_gun_mode=Active_gun_mode::OTHER;
 }
 
 IMPL_STRUCT(Teleop::Teleop,TELEOP_ITEMS)
@@ -83,13 +84,30 @@ Toplevel::Goal Teleop::run(Run_info info) {
 	}
 
 	if (info.panel.in_use) {
-		gun_prep.update(info.panel.prep);	
+		const int BURST_SHOTS=3,SINGLE_SHOTS=1;
+		gun_prep.update(info.panel.prep);
+		if(active_gun_mode==Active_gun_mode::SINGLE && info.toplevel_status.gun.shots_fired>=SINGLE_SHOTS) active_gun_mode=Active_gun_mode::OTHER;
+		if(active_gun_mode==Active_gun_mode::BURST && info.toplevel_status.gun.shots_fired>=BURST_SHOTS) active_gun_mode=Active_gun_mode::OTHER;
 		goals.gun=[&]{
 			if(gun_prep.get()) {
-				if (info.panel.shoot) return Gun::Goal::SHOOT;
-				return Gun::Goal::REV;
+				if (info.panel.shoot) {
+					switch(info.panel.gun_mode){
+						case Panel::Gun_mode::CONTINUOUS:
+							return Gun::Goal::shoot();
+						case Panel::Gun_mode::SINGLE:
+							active_gun_mode=Active_gun_mode::SINGLE;
+							break;
+						case Panel::Gun_mode::BURST:
+							active_gun_mode=Active_gun_mode::BURST;
+							break;
+						default: assert(0);
+					}
+				}
+				if (active_gun_mode==Active_gun_mode::SINGLE) return Gun::Goal::numbered_shoot(SINGLE_SHOTS);	
+				if (active_gun_mode==Active_gun_mode::BURST) return Gun::Goal::numbered_shoot(BURST_SHOTS);
+				return Gun::Goal::rev();
 			}
-			return Gun::Goal::OFF;
+			return Gun::Goal::off();
 		}();
 
 		arm_goal=[&]{
@@ -107,10 +125,10 @@ Toplevel::Goal Teleop::run(Run_info info) {
 	} else {
 		goals.gun=[&]{
 			if(info.gunner_joystick.axis[Gamepad_axis::LTRIGGER]>.9){
-				if(info.gunner_joystick.axis[Gamepad_axis::RTRIGGER]>.9) return Gun::Goal::SHOOT;
-				return Gun::Goal::REV;
+				if(info.gunner_joystick.axis[Gamepad_axis::RTRIGGER]>.9) return Gun::Goal::shoot();
+				return Gun::Goal::rev();
 			}
-			return Gun::Goal::OFF;
+			return Gun::Goal::off();
 		}();
 
 		arm_goal=[&]{

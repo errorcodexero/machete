@@ -136,7 +136,7 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 	
 	r.panel_output[Panel_outputs::SHOOT_READY] = Panel_output(
 		static_cast<int>(Panel_output_ports::SHOOT_READY),
-		goals.gun!=Gun::Goal::OFF && ready(toplevel_status.gun,goals.gun)
+		goals.gun.mode()!=Gun::Goal::Mode::OFF && ready(toplevel_status.gun,goals.gun)
 	);
 	
 	r=force(r);

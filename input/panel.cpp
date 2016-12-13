@@ -114,10 +114,10 @@ Panel interpret(Joystick_data d){
 	}
 	{//three position switches
 		Volt gun_mode = d.axis[GUN_AXIS];
-		static const Volt SINGLE = -1, BURST = 0, CONTINUOUS = 1;
+		static const Volt SINGLE = -1, CONTINUOUS = 0, BURST = 1;
 		p.gun_mode = [&]{
-			if(at_value(gun_mode,SINGLE,BURST,CONTINUOUS)) return Panel::Gun_mode::BURST;
-			if(at_value(gun_mode,BURST,CONTINUOUS,ARTIFICIAL_MAX)) return Panel::Gun_mode::CONTINUOUS;
+			if(at_value(gun_mode,SINGLE,CONTINUOUS,BURST)) return Panel::Gun_mode::CONTINUOUS;
+			if(at_value(gun_mode,CONTINUOUS,BURST,ARTIFICIAL_MAX)) return Panel::Gun_mode::BURST;
 			return Panel::Gun_mode::SINGLE;	
 		}();
 	
