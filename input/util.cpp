@@ -62,12 +62,6 @@ POV_section pov_section(int x){
 }
 
 unsigned interpret_10_turn_pot(Volt v){
-	/*array<Volt,10> limits={//for software development laptop use
-		
-		
-		
-	};*/
-	
 	array<Volt,10> limits={//for red and gold driverstation use
 		-1.00,
 		-0.75,
@@ -81,7 +75,7 @@ unsigned interpret_10_turn_pot(Volt v){
 		1.00
 	};
 	for(unsigned i=0;i<10;i++){
-		if(v<(limits[i] + 0.05)) return (i!=9) ? (i+1) : 0;
+		if(v<(limits[i] + 0.05)) return (i!=0) ? (10-i) : 0;
 	}
 	return 9;
 }

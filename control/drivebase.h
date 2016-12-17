@@ -12,14 +12,19 @@ struct Drivebase{
 	enum Motor{LEFT1,LEFT2,RIGHT1,RIGHT2,CENTER1,CENTER2,MOTORS};
 
 	typedef std::pair<Digital_in,Digital_in> Encoder_info;
-	typedef std::pair<int,int> Encoder_ticks;
+	
+	#define ENCODER_TICKS(X) \
+		X(int,l) \
+		X(int,r) \
+		X(int,c)
+	DECLARE_STRUCT(Encoder_ticks,ENCODER_TICKS)
 
 	#define DRIVEBASE_INPUT(X) \
-		X(SINGLE_ARG(std::array<double,MOTORS>),current)
-		//X(Encoder_info,left)
-		//X(Encoder_info,right)
-		//X(Encoder_info,center)
-		//X(Encoder_ticks,ticks)// first is left, seconds is right
+		X(SINGLE_ARG(std::array<double,MOTORS>),current) \
+		X(Encoder_info,left) \
+		X(Encoder_info,right) \
+		X(Encoder_info,center) \
+		X(Encoder_ticks,ticks)
 	DECLARE_STRUCT(Input,DRIVEBASE_INPUT)
 
 	struct Input_reader{
@@ -42,28 +47,27 @@ struct Drivebase{
 		#undef X
 	};
 
-
-	typedef std::pair<double,double> Speeds;
+	#define SPEEDS_ITEMS(X) \
+		X(double,l) \
+		X(double,r) \
+		X(double,c)
+	DECLARE_STRUCT(Speeds,SPEEDS_ITEMS)
 
 	#define DRIVEBASE_STATUS(X) \
 		X(SINGLE_ARG(std::array<Motor_check::Status,MOTORS>),motor)\
 		X(bool,stall) \
-		X(Piston,piston)
-		//X(Speeds,speeds) 
-		//X(Encoder_ticks,ticks)  //first is left, second is right
+		X(Piston,piston) \
+		X(Speeds,speeds) \
+		X(Encoder_ticks,ticks)
 	DECLARE_STRUCT(Status,DRIVEBASE_STATUS)
 
 	typedef Status Status_detail;
 
 	struct Estimator{
 		std::array<Motor_check,MOTORS> motor_check;
-		bool stall;
-		bool piston_last;
+		Status_detail last;
 		Countdown_timer timer;
 		Countdown_timer piston_timer;
-		Piston piston;
-		//std::pair<int,int> last_ticks;
-		//std::pair<double,double> speeds;//inches per second
 		void update(Time,Input,Output);
 		Status_detail get()const;
 		Estimator();
@@ -82,9 +86,17 @@ struct Drivebase{
 	};
 };
 
+bool operator==(Drivebase::Encoder_ticks const&,Drivebase::Encoder_ticks const&);
+bool operator!=(Drivebase::Encoder_ticks const&,Drivebase::Encoder_ticks const&);
+bool operator<(Drivebase::Encoder_ticks const&,Drivebase::Encoder_ticks const&);
+std::ostream& operator<<(std::ostream&,Drivebase::Encoder_ticks const&);
+
 double ticks_to_inches(const int);
 
 int encoderconv(Maybe_inline<Encoder_output>);
+
+CMP1(Drivebase::Encoder_ticks)
+CMP1(Drivebase::Speeds)
 
 std::ostream& operator<<(std::ostream&,Drivebase::Piston);
 

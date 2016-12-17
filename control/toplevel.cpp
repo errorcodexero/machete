@@ -154,12 +154,12 @@ Toplevel::Status::Status():
 	drive(
 		{Motor_check::Status::OK_,Motor_check::Status::OK_},
 		false,
-		Drivebase::Piston::FULL//,
-		/*{0.0,0.0},
-		{0.0,0.0}*/
+		Drivebase::Piston::FULL,
+		{0.0,0.0,0.0},
+		{0,0,0}
 	),
 	pump(Pump::Status::NOT_FULL),
-	gun(Gun::Status::OFF),
+	gun({Gun::Status::Rev_mode::OFF,0}),
 	winch(Winch::Status::DOWN),
 	grabber(Grabber::Status::OPEN),
 	arm(Arm::Status::DOWN)

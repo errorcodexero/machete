@@ -2,6 +2,9 @@
 
 #include "teleop.h" 
 #include "auto_null.h"
+#include "auto_distance.h"
+#include "auto_forward.h"
+#include "auto_bunnygrab.h"
 
 using namespace std;
 
@@ -11,8 +14,11 @@ Executive auto_mode_convert(Next_mode_info info){
 	if (info.panel.in_use) {
 		switch(info.panel.auto_select){ 
 			case 1: 
+				return Executive{Auto_forward{}};
 			case 2:
+				return Executive{Auto_distance{{0,0,0}}};
 			case 3:
+				return Executive{Auto_bunnygrab{}};
 			case 4:
 			case 5:
 			case 6:

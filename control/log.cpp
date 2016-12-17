@@ -215,6 +215,16 @@ void visit(Func f,Drivebase::Piston const& a){
 }
 
 template<typename Func>
+void visit(Func f,Drivebase::Encoder_ticks const& a){
+	f.terminal(a);
+}
+
+template <typename Func>
+void visit(Func f,Drivebase::Speeds const& a){
+	f.terminal(a);
+}
+
+template<typename Func>
 void visit(Func f,Drivebase::Status const& r){
 	DRIVEBASE_STATUS(VISIT_2ND)
 }

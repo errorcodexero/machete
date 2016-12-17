@@ -2,11 +2,7 @@
 
 using namespace std;
 
-static const int ARM_PWM = 5;
-static const float ARM_POWER = .8;
-
-#define PISTON_1_LOC 2 //not real number
-#define PISTON_2_LOC 3 //not real number
+#define PISTON_LOC 5 
 
 Arm::Input::Input():enabled(false){}
 Arm::Input::Input(bool a):enabled(a){}
@@ -82,14 +78,12 @@ Robot_inputs Arm::Input_reader::operator()(Robot_inputs r, Arm::Input in) const{
 }
 
 Robot_outputs Arm::Output_applicator::operator()(Robot_outputs r, Arm::Output o)const{
-	r.solenoid[PISTON_1_LOC] = o == Arm::Output::UP;
-	r.solenoid[PISTON_2_LOC] = o == Arm::Output::UP;
+	r.solenoid[PISTON_LOC] = o == Arm::Output::UP;
 	return r;
 }
 
 Arm::Output Arm::Output_applicator::operator()(Robot_outputs const& r)const{
-	assert(r.solenoid[PISTON_1_LOC] == r.solenoid[PISTON_2_LOC]);
-	return r.solenoid[PISTON_1_LOC] ? Output::UP : Output::DOWN;
+	return r.solenoid[PISTON_LOC] ? Output::UP : Output::DOWN;
 }
 
 void Arm::Estimator::update(Time time,Arm::Input input,Arm::Output output){
@@ -98,7 +92,7 @@ void Arm::Estimator::update(Time time,Arm::Input input,Arm::Output output){
 			if(last == Status::GOING_UP){
 				state_timer.update(time,input.enabled);
 			} else if(last != Status::UP){ 
-				const Time UP_TIME = 1.0;//seconds. assumed
+				const Time UP_TIME = 1.0;//seconds. tested
 				last = Status::GOING_UP;
 				state_timer.set(UP_TIME);
 			}
@@ -110,7 +104,7 @@ void Arm::Estimator::update(Time time,Arm::Input input,Arm::Output output){
 			if(last == Status::GOING_DOWN){
 				state_timer.update(time,input.enabled);
 			} else if(last != Status::DOWN){ 
-				const Time DOWN_TIME = 1.0;//seconds, assumed
+				const Time DOWN_TIME = 2.5;//seconds. tested
 				last = Status::GOING_DOWN;
 				state_timer.set(DOWN_TIME);
 			}

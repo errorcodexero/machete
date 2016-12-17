@@ -12,9 +12,9 @@
 #define TOPLEVEL_ITEMS \
 	X(Drivebase,drive,)\
 	X(Pump,pump,Pump::Goal::AUTO)\
-	X(Gun,gun,Gun::Goal::OFF)\
+	X(Gun,gun,Gun::Goal::off())\
 	X(Winch,winch,Winch::Goal::STOP) \
-	X(Grabber,grabber,Grabber::Goal::OPEN)  \
+	X(Grabber,grabber,Grabber::Goal::CLOSE)  \
 	X(Arm,arm,Arm::Goal::DOWN)
 
 class Toplevel{

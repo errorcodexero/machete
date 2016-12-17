@@ -6,15 +6,50 @@
 #include "../util/countdown_timer.h"
 
 struct Gun {
-	enum class Goal{OFF,REV,SHOOT};
+	struct Goal {
+		public:
+		#define GUN_GOAL_MODES \
+			X(OFF) \
+			X(REV) \
+			X(SHOOT) \
+			X(NUMBERED_SHOOT)
+		#define X(name) name,
+		enum class Mode{GUN_GOAL_MODES};
+		#undef X
 
-	typedef Goal Output;
+		private:
+		Mode mode_;
+		int to_shoot_;
+
+		public:
+		Goal();
+
+		Mode mode()const;
+		int to_shoot()const;
+
+		static Goal off();
+		static Goal rev();
+		static Goal shoot();
+		static Goal numbered_shoot(int);
+	};
+
+	enum class Output{OFF,REV,SHOOT};
 
 	struct Input{
 		bool enabled;
 	};
 
-	enum class Status_detail{OFF,REVVING,REVVED};
+	struct Status_detail {
+		#define REV_MODES \
+			X(OFF) \
+			X(REVVING) \
+			X(REVVED)
+		#define X(name) name,
+		enum class Rev_mode{REV_MODES};
+		#undef X
+		Rev_mode mode;
+		int shots_fired;
+	};
 
 	typedef Status_detail Status;
 
@@ -30,7 +65,9 @@ struct Gun {
 	
 	struct Estimator{
 		Status_detail last;
-		Countdown_timer timer;
+		Output last_output;
+		Countdown_timer rev_timer;
+		Countdown_timer shot_timer;
 		
 		void update(Time,Input,Output);
 		Status_detail get()const;
@@ -49,9 +86,15 @@ std::ostream& operator<<(std::ostream&,Gun::Status_detail);
 std::ostream& operator<<(std::ostream&,Gun::Estimator);
 std::ostream& operator<<(std::ostream&,Gun);
 
+bool operator<(Gun::Goal,Gun::Goal);
+
 bool operator==(Gun::Input,Gun::Input);
 bool operator!=(Gun::Input,Gun::Input);
 bool operator<(Gun::Input,Gun::Input);
+
+bool operator==(Gun::Status_detail,Gun::Status_detail);
+bool operator!=(Gun::Status_detail,Gun::Status_detail);
+bool operator<(Gun::Status_detail,Gun::Status_detail);
 
 bool operator==(Gun::Input_reader,Gun::Input_reader);
 bool operator<(Gun::Input_reader,Gun::Input_reader);
