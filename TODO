@@ -1,11 +1,9 @@
 HIGH PRIORITY for BunnyBots:
-	- Finish gun controls and modes
 	- Logging
 
 
 NOT AS HIGH PRIORITY for BunnyBots:
 	- Fix talon srx initialization: separate address for cans and access for them in the talon_srx_controls array
-	- Autonomous
 	- Log Analysis
 	- Laptop configuration
 		-ssh config:
