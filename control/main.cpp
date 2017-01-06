@@ -105,7 +105,7 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 	
 	Toplevel::Status_detail toplevel_status=toplevel.estimator.get();
 		
-	if(SLOW_PRINT) cout<<"panel:"<<panel<<"\n";
+	//if(SLOW_PRINT) cout<<"panel:"<<panel<<"\n";
 	//cout << "Goals: " << motion_profile.goal << " Current: " << ticks_to_inches(toplevel_status.drive.ticks.first/*in.digital_io.encoder[0]*/) << endl;
 	
 	//if(SLOW_PRINT) cout<<"br_step:"<<br_step<<"\n";
@@ -125,7 +125,7 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 	goals = mode_.run(Run_info{in,main_joystick,gunner_joystick,panel,toplevel_status});
 	
 	auto next=mode_.next_mode(Next_mode_info{in.robot_mode.autonomous,autonomous_start_now,toplevel_status,since_switch.elapsed(),panel,in});
-	if(SLOW_PRINT) cout<<"mode_: "<<mode_<<"\n";
+	//if(SLOW_PRINT) cout<<"mode_: "<<mode_<<"\n";
 	//next_mode(mode,in.robot_mode.autonomous,autonomous_start_now,toplevel_status,since_switch.elapsed(),panel,topready,in,initial_encoders,br_step,set_initial_encoders,motion_profile,in_br_range);
 	
 	since_switch.update(in.now,mode_/*mode*/!=next);
