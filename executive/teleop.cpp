@@ -123,14 +123,23 @@ Toplevel::Goal Teleop::run(Run_info info) {
 		}();
 		goals.grabber=grabber_goal;
 	} else {
+		const int BURST_SHOTS=3,SINGLE_SHOTS=1;
+		if(active_gun_mode==Active_gun_mode::BURST && info.toplevel_status.gun.shots_fired>=BURST_SHOTS) active_gun_mode=Active_gun_mode::OTHER;
+		if(active_gun_mode==Active_gun_mode::SINGLE && info.toplevel_status.gun.shots_fired>=SINGLE_SHOTS) active_gun_mode=Active_gun_mode::OTHER;
+
+		if(info.gunner_joystick.button[Gamepad_button::LB]) active_gun_mode=Active_gun_mode::BURST;
+		if(info.gunner_joystick.button[Gamepad_button::RB]) active_gun_mode=Active_gun_mode::SINGLE;
+
 		goals.gun=[&]{
 			if(info.gunner_joystick.axis[Gamepad_axis::LTRIGGER]>.9){
+				if(active_gun_mode==Active_gun_mode::SINGLE) return Gun::Goal::numbered_shoot(1);
+				if(active_gun_mode==Active_gun_mode::BURST) return Gun::Goal::numbered_shoot(5);
 				if(info.gunner_joystick.axis[Gamepad_axis::RTRIGGER]>.9) return Gun::Goal::shoot();
 				return Gun::Goal::rev();
 			}
 			return Gun::Goal::off();
 		}();
-
+	
 		arm_goal=[&]{
 			if(info.gunner_joystick.button[Gamepad_button::Y]) return Arm::Goal::UP;
 			if(info.gunner_joystick.button[Gamepad_button::A]) return Arm::Goal::DOWN;

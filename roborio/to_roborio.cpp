@@ -512,7 +512,7 @@ public:
 			cout<<"in: "<<in<<"\n";
 			cout<<"main: "<<main<<"\n";
 			cout<<"out: "<<out<<"\n";
-			//cout<<"talon_srx_controls: "<<talon_srx_controls<<"\n";
+			//cout<<"talon_srx_controls: "<<talon_srx_controls<<"\n";//Do not add back in. crashes
 			cout<<"CLEAR_SCREEN\n";
 		}
 		int x=set_outputs(out,in.robot_mode.enabled);

@@ -27,8 +27,8 @@ Gunner:
  Y          - Arm all the way up
  Start      - 
  Back       - 
- RB         - 
- LB         - 
+ RB         - Single shot
+ LB         - Burst shot
  RT         - Shoot
  LT         - Rev
  L_Joy:
