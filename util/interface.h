@@ -188,6 +188,7 @@ typedef double Rad; //radians, clockwise
 struct Robot_inputs{
 	Robot_mode robot_mode;
 	Time now;//time since boot.
+	bool ds_connected;
 
 	static const unsigned JOYSTICKS=3; //limitation of FRC coms was 4, now highter
 	Checked_array<Joystick_data,JOYSTICKS> joystick;

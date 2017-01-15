@@ -234,6 +234,7 @@ class To_crio
 	//Gyro *gyro;
 	PowerDistributionPanel *power;
 	Compressor *compressor;
+	DriverStation *driver_station;
 public:
 	To_crio():error_code(0),skipped(0)//,gyro(NULL)
 	{
@@ -300,6 +301,9 @@ public:
 			error_code|=512;
 		}
 		
+		driver_station=&DriverStation::GetInstance();
+		if(!driver_station) error_code|=1024;
+
 		//Slave
 		
 		cout<<"Initialization Complete."<<endl<<flush;
@@ -317,6 +321,10 @@ public:
 		return error;
 	}
 
+	bool read_ds_connected(){
+		return driver_station->IsDSAttached();
+	}
+
 	pair<Robot_inputs,int> read(Robot_mode robot_mode){
 		int error_code=0;
 		Robot_inputs r;
@@ -325,7 +333,8 @@ public:
 		error_code|=read_joysticks(r);
 		error_code|=read_analog(r);
 		//error_code|=read_driver_station(r.driver_station);
-		r.current = read_currents();
+		r.current=read_currents();
+		r.ds_connected=read_ds_connected();
 		return make_pair(r,error_code);
 	}
 	//PowerDistributionPanel power;
@@ -500,12 +509,12 @@ public:
 		static int print_num=0;
 		Robot_outputs out=main(in);
 		const int PRINT_SPEED=10;
-		if((print_num%PRINT_SPEED)==0){
-			//cout<<"in: "<<in<<"\n";
-			//cout<<"main: "<<main<<"\n";
-			//cout<<"out: "<<out<<"\n";
+		if(in.ds_connected && (print_num%PRINT_SPEED)==0){
+			cout<<"in: "<<in<<"\n";
+			cout<<"main: "<<main<<"\n";
+			cout<<"out: "<<out<<"\n";
 			//cout<<"talon_srx_controls: "<<talon_srx_controls<<"\n";//Do not add back in. crashes
-			//cout<<"CLEAR_SCREEN\n";
+			cout<<"CLEAR_SCREEN\n";
 		}
 		int x=set_outputs(out,in.robot_mode.enabled);
 		if(x) cout<<"x was:"<<x<<"\n";
