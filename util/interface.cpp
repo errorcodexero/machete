@@ -72,7 +72,10 @@ CAN_out::CAN_out():type_(Type::UNUSED){}
 
 CAN_out::Type CAN_out::type()const{ return type_; }
 
-int CAN_out::address()const{ return address_; }
+Talon_srx_output CAN_out::talon_srx_output()const{
+	assert(type_ == Type::TALON_SRX);
+	return talon_srx_output_; 
+}
 
 CAN_out CAN_out::unused(){
 	CAN_out a;
@@ -94,7 +97,32 @@ ostream& operator<<(ostream& o,CAN_out::Type a){
 }
 
 ostream& operator<<(ostream& o,CAN_out a){
-	return o<<"CAN_out(type:"<<a.type()<<" address:"<<a.address()<<")";
+	o<<"CAN_out(";
+	o<<"type:"<<a.type();
+	if(a.type() == CAN_out::Type::TALON_SRX) o<<" talon_srx_output:"<<a.talon_srx_output();
+	return o<<")";
+}
+
+bool operator==(CAN_out a,CAN_out b){
+	if(a.type() != b.type()) return false;
+	if(a.type() == CAN_out::Type::TALON_SRX){
+		if(a.talon_srx_output() != b.talon_srx_output()) return false;
+	}
+	return true;
+}
+
+bool operator!=(CAN_out a,CAN_out b){
+	if(a.type() < b.type()) return true;
+	if(b.type() < a.type()) return false;
+	if(a.type() == CAN_out::Type::TALON_SRX){
+		if(a.talon_srx_output() < b.talon_srx_output()) return true;
+		if(b.talon_srx_output() < a.talon_srx_output()) return false;
+	}
+	return false;
+}
+
+bool operator<(CAN_out a,CAN_out b){
+	return !(a==b);
 }
 
 Panel_output::Panel_output(int p, bool v) {
@@ -298,6 +326,9 @@ Robot_outputs::Robot_outputs():pump_auto(1){
 	for(unsigned i=0;i<SOLENOIDS;i++){
 		solenoid[i]=0;
 	}
+	for(unsigned i = 0; i < CAN_IOS; i++){
+		can[i] = CAN_out();
+	}
 	for(unsigned i=0;i<RELAYS;i++){
 		relay[i]=Relay_output::_00;
 	}
@@ -329,6 +360,11 @@ bool operator==(Robot_outputs a,Robot_outputs b){
 			return 0;
 		}
 	}
+	for(unsigned int i=0;i<Robot_outputs::CAN_IOS; i++){
+		if(a.can[i]!=b.can[i]){
+			return false;
+		}
+	}
 	/*for(unsigned i=0;i<Robot_outputs::CAN_JAGUARS;i++){
 		if(a.jaguar[i]!=b.jaguar[i]){
 			return 0;
@@ -341,7 +377,7 @@ bool operator!=(Robot_outputs a,Robot_outputs b){
 	return !(a==b);
 }
 
-bool operator<(Robot_outputs a,Robot_outputs b){
+bool operator<(Robot_outputs a,Robot_outputs b){//TODO: is this done correctly?
 	for(unsigned i=0;i<Robot_outputs::PWMS;i++){
 		if(a.pwm[i]<b.pwm[i]) return 1;
 		if(b.pwm[i]<a.pwm[i]) return 0;
@@ -367,6 +403,11 @@ bool operator<(Robot_outputs a,Robot_outputs b){
 	for(unsigned i=0;i<Robot_outputs::TALON_SRX_OUTPUTS;i++){
 		if(a.talon_srx[i]<b.talon_srx[i])return 1;
 		if(b.talon_srx[i]<a.talon_srx[i])return 0;
+	}
+	
+	for(unsigned i=0;i<Robot_outputs::CAN_IOS;i++){
+		if(a.can[i]<b.can[i])return 1;
+		if(b.can[i]<a.can[i])return 0;
 	}
 	
 	/*for(unsigned i=0;i<Robot_outputs::CAN_JAGUARS;i++){
@@ -402,6 +443,10 @@ ostream& operator<<(ostream& o,Robot_outputs a){
 	o<<" talon_srx:";
 	for(unsigned i=0;i<a.Robot_outputs::TALON_SRX_OUTPUTS;i++){
 		o<<a.talon_srx[i];
+	}
+	o<<" can:";
+	for(unsigned i=0;i<a.Robot_outputs::CAN_IOS;i++){
+		o<<a.can[i];
 	}
 	o<<" panel_output:";
 	for(unsigned i=0;i<Panel_outputs::PANEL_OUTPUTS;i++){
@@ -718,6 +763,7 @@ int main(){
 	cout<<Joystick_data()<<"\n";
 	cout<<Jaguar_output()<<"\n";
 	cout<<Talon_srx_output()<<"\n";
+	cout<<CAN_out()<<"\n";
 	cout<<Jaguar_output::speedOut(10)<<"\n";
 	cout<<Jaguar_output::voltageOut(1.0)<<"\n";
 	for(auto a:digital_ins()){

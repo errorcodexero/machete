@@ -37,25 +37,6 @@ class Digital_out{
 	static Digital_out encoder(int encoder_index,bool input_a);
 };
 
-class CAN_out{//TODO: finish and implement
-	public:
-	enum class Type{UNUSED,TALON_SRX};
-	
-	private:
-	Type type_;
-	int address_;
-	//TODO: add in Talon_srx_output
-	
-	public:
-	CAN_out();
-	
-	Type type()const;
-	int address()const;
-		
-	static CAN_out unused();
-	static CAN_out talon_srx();
-};
-
 struct PID_values{
 	float p,i,d,f;
 	PID_values();
@@ -87,6 +68,25 @@ struct Talon_srx_output{
 
 	static Talon_srx_output voltage(double);
 	static Talon_srx_output closed_loop(double);
+};
+
+
+class CAN_out{//TODO: finish and implement
+	public:
+	enum class Type{UNUSED,TALON_SRX};
+	
+	private:
+	Type type_;
+	Talon_srx_output talon_srx_output_;
+	
+	public:
+	CAN_out();
+	
+	Type type()const;
+	Talon_srx_output talon_srx_output()const;
+		
+	static CAN_out unused();
+	static CAN_out talon_srx();
 };
 
 enum Panel_outputs{SHOOT_READY, PANEL_OUTPUTS};

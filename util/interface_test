@@ -1,4 +1,4 @@
-g++ -DINTERFACE_TEST -std=c++0x interface.cpp \
+g++ -DINTERFACE_TEST -std=c++14 interface.cpp \
 	jag_interface.cpp \
 	driver_station_interface.cpp \
 	util.cpp \
