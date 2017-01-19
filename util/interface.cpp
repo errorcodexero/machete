@@ -68,6 +68,35 @@ Digital_out Digital_out::encoder(int encoder_index,bool input_a){
 	return r;
 }
 
+CAN_out::CAN_out():type_(Type::UNUSED){}
+
+CAN_out::Type CAN_out::type()const{ return type_; }
+
+int CAN_out::address()const{ return address_; }
+
+CAN_out CAN_out::unused(){
+	CAN_out a;
+	a.type_ = Type::UNUSED;
+	return a;
+}
+
+CAN_out CAN_out::talon_srx(){
+	CAN_out a;
+	a.type_ = Type::TALON_SRX;
+	return a;
+}
+
+ostream& operator<<(ostream& o,CAN_out::Type a){
+	#define X(TYPE) if(a == CAN_out::Type::TYPE) return o<<""#TYPE;
+	X(UNUSED) X(TALON_SRX)
+	#undef X
+	assert(0);
+}
+
+ostream& operator<<(ostream& o,CAN_out a){
+	return o<<"CAN_out(type:"<<a.type()<<" address:"<<a.address()<<")";
+}
+
 Panel_output::Panel_output(int p, bool v) {
 	port = p;
 	value = v;

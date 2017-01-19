@@ -37,6 +37,25 @@ class Digital_out{
 	static Digital_out encoder(int encoder_index,bool input_a);
 };
 
+class CAN_out{//TODO: finish and implement
+	public:
+	enum class Type{UNUSED,TALON_SRX};
+	
+	private:
+	Type type_;
+	int address_;
+	//TODO: add in Talon_srx_output
+	
+	public:
+	CAN_out();
+	
+	Type type()const;
+	int address()const;
+		
+	static CAN_out unused();
+	static CAN_out talon_srx();
+};
+
 struct PID_values{
 	float p,i,d,f;
 	PID_values();
@@ -110,6 +129,9 @@ struct Robot_outputs{
 	
 	static const unsigned TALON_SRX_OUTPUTS=4;//FIXME: talon initializaitons
 	Checked_array<Talon_srx_output, TALON_SRX_OUTPUTS> talon_srx;
+
+	static const unsigned CAN_IOS = 4;//FIXME: change to the correct value
+	Checked_array<CAN_out,CAN_IOS> can;
 	
 	static const unsigned CAN_JAGUARS=0;
 	Checked_array<Jaguar_output,CAN_JAGUARS> jaguar;
