@@ -109,12 +109,12 @@ Talon_srx_input Talon_srx_control::get(){
 
 Talon_srx_controls::Talon_srx_controls():init_(false){}
 
-void Talon_srx_controls::init(Checked_array<CAN_out,Robot_outputs::CAN_IOS> can){
+void Talon_srx_controls::init(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS> can){
 	if(!init_){
 		{
 			unsigned int addresses_index = 0;
 			for(unsigned int i = 0; i < talons.size(); i++){
-				if(can[i].type() == CAN_out::Type::TALON_SRX){
+				if(can[i].type() == CAN_io_type::TALON_SRX){
 					addresses[addresses_index] = i;
 					addresses_index++;
 				}
@@ -127,7 +127,7 @@ void Talon_srx_controls::init(Checked_array<CAN_out,Robot_outputs::CAN_IOS> can)
 	}
 }
 
-void Talon_srx_controls::set(Checked_array<CAN_out,Robot_outputs::CAN_IOS> const& can,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const& enable){
+void Talon_srx_controls::set(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS> const& can,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const& enable){
 	assert(init_);
 	for(unsigned int i=0; i<talons.size(); i++){
 		talons[i].set(can[addresses[i]].talon_srx_output(),enable[i]);

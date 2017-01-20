@@ -68,44 +68,94 @@ Digital_out Digital_out::encoder(int encoder_index,bool input_a){
 	return r;
 }
 
-CAN_out::CAN_out():type_(Type::UNUSED){}
+CAN_in::CAN_in():type_(CAN_io_type::UNUSED){}
 
-CAN_out::Type CAN_out::type()const{ return type_; }
+CAN_io_type CAN_in::type()const{ return type_; }
 
-Talon_srx_output CAN_out::talon_srx_output()const{
-	assert(type_ == Type::TALON_SRX);
-	return talon_srx_output_; 
+Talon_srx_input CAN_in::talon_srx_input()const{
+	assert(type_ == CAN_io_type::TALON_SRX);
+	return talon_srx_input_; 
 }
 
-CAN_out CAN_out::unused(){
-	CAN_out a;
-	a.type_ = Type::UNUSED;
+CAN_in CAN_in::unused(){
+	CAN_in a;
+	a.type_ = CAN_io_type::UNUSED;
 	return a;
 }
 
-CAN_out CAN_out::talon_srx(){
-	CAN_out a;
-	a.type_ = Type::TALON_SRX;
+CAN_in CAN_in::talon_srx(){
+	CAN_in a;
+	a.type_ = CAN_io_type::TALON_SRX;
 	return a;
 }
 
-ostream& operator<<(ostream& o,CAN_out::Type a){
-	#define X(TYPE) if(a == CAN_out::Type::TYPE) return o<<""#TYPE;
+ostream& operator<<(ostream& o,CAN_io_type a){
+	#define X(TYPE) if(a == CAN_io_type::TYPE) return o<<""#TYPE;
 	X(UNUSED) X(TALON_SRX)
 	#undef X
 	assert(0);
 }
 
+ostream& operator<<(ostream& o,CAN_in a){
+	o<<"CAN_in(";
+	o<<"type:"<<a.type();
+	if(a.type() == CAN_io_type::TALON_SRX) o<<" talon_srx_input:"<<a.talon_srx_input();
+	return o<<")";
+}
+
+bool operator==(CAN_in a,CAN_in b){
+	if(a.type() != b.type()) return false;
+	if(a.type() == CAN_io_type::TALON_SRX){
+		if(a.talon_srx_input() != b.talon_srx_input()) return false;
+	}
+	return true;
+}
+
+bool operator!=(CAN_in a,CAN_in b){
+	if(a.type() < b.type()) return true;
+	if(b.type() < a.type()) return false;
+	if(a.type() == CAN_io_type::TALON_SRX){
+		if(a.talon_srx_input() < b.talon_srx_input()) return true;
+		if(b.talon_srx_input() < a.talon_srx_input()) return false;
+	}
+	return false;
+}
+
+bool operator<(CAN_in a,CAN_in b){
+	return !(a==b);
+}
+
+CAN_out::CAN_out():type_(CAN_io_type::UNUSED){}
+
+CAN_io_type CAN_out::type()const{ return type_; }
+
+Talon_srx_output CAN_out::talon_srx_output()const{
+	assert(type_ == CAN_io_type::TALON_SRX);
+	return talon_srx_output_; 
+}
+
+CAN_out CAN_out::unused(){
+	CAN_out a;
+	a.type_ = CAN_io_type::UNUSED;
+	return a;
+}
+
+CAN_out CAN_out::talon_srx(){
+	CAN_out a;
+	a.type_ = CAN_io_type::TALON_SRX;
+	return a;
+}
+
 ostream& operator<<(ostream& o,CAN_out a){
 	o<<"CAN_out(";
 	o<<"type:"<<a.type();
-	if(a.type() == CAN_out::Type::TALON_SRX) o<<" talon_srx_output:"<<a.talon_srx_output();
+	if(a.type() == CAN_io_type::TALON_SRX) o<<" talon_srx_output:"<<a.talon_srx_output();
 	return o<<")";
 }
 
 bool operator==(CAN_out a,CAN_out b){
 	if(a.type() != b.type()) return false;
-	if(a.type() == CAN_out::Type::TALON_SRX){
+	if(a.type() == CAN_io_type::TALON_SRX){
 		if(a.talon_srx_output() != b.talon_srx_output()) return false;
 	}
 	return true;
@@ -114,7 +164,7 @@ bool operator==(CAN_out a,CAN_out b){
 bool operator!=(CAN_out a,CAN_out b){
 	if(a.type() < b.type()) return true;
 	if(b.type() < a.type()) return false;
-	if(a.type() == CAN_out::Type::TALON_SRX){
+	if(a.type() == CAN_io_type::TALON_SRX){
 		if(a.talon_srx_output() < b.talon_srx_output()) return true;
 		if(b.talon_srx_output() < a.talon_srx_output()) return false;
 	}
@@ -326,7 +376,7 @@ Robot_outputs::Robot_outputs():pump_auto(1){
 	for(unsigned i=0;i<SOLENOIDS;i++){
 		solenoid[i]=0;
 	}
-	for(unsigned i = 0; i < CAN_IOS; i++){
+	for(unsigned i = 0; i < CAN_OUTPUTS; i++){
 		can[i] = CAN_out();
 	}
 	for(unsigned i=0;i<RELAYS;i++){
@@ -360,7 +410,7 @@ bool operator==(Robot_outputs a,Robot_outputs b){
 			return 0;
 		}
 	}
-	for(unsigned int i=0;i<Robot_outputs::CAN_IOS; i++){
+	for(unsigned int i=0;i<Robot_outputs::CAN_OUTPUTS; i++){
 		if(a.can[i]!=b.can[i]){
 			return false;
 		}
@@ -405,7 +455,7 @@ bool operator<(Robot_outputs a,Robot_outputs b){//TODO: is this done correctly?
 		if(b.talon_srx[i]<a.talon_srx[i])return 0;
 	}
 	
-	for(unsigned i=0;i<Robot_outputs::CAN_IOS;i++){
+	for(unsigned i=0;i<Robot_outputs::CAN_OUTPUTS;i++){
 		if(a.can[i]<b.can[i])return 1;
 		if(b.can[i]<a.can[i])return 0;
 	}
@@ -445,7 +495,7 @@ ostream& operator<<(ostream& o,Robot_outputs a){
 		o<<a.talon_srx[i];
 	}
 	o<<" can:";
-	for(unsigned i=0;i<a.Robot_outputs::CAN_IOS;i++){
+	for(unsigned i=0;i<a.Robot_outputs::CAN_OUTPUTS;i++){
 		o<<a.can[i];
 	}
 	o<<" panel_output:";
@@ -696,6 +746,11 @@ bool operator==(Robot_inputs a,Robot_inputs b){
 			return 0;
 		}
 	}
+	for(unsigned i = 0; i < Robot_inputs::CAN_INPUTS; i++){
+		if(a.can[i]!=b.can[i]){
+			return false;
+		}
+	}
 	for(unsigned i=0; i<Robot_inputs::CURRENT;i++){
 		if(a.current[i]!=b.current[i]){
 			return 0;
@@ -744,7 +799,11 @@ ostream& operator<<(ostream& o,Robot_inputs a){
 	}
 	o<<" talon_srx:";
 	for(unsigned i=0;i<Robot_inputs::TALON_SRX_INPUTS;i++){
-		o<<a.talon_srx[i];
+		o<<" "<<a.talon_srx[i];
+	}
+	o<<" can:";
+	for(unsigned i = 0; i < Robot_inputs::CAN_INPUTS; i++){
+		o<<" "<<a.can[i];
 	}
 	/*o<<" jaguar:";
 	for(unsigned i=0;i<Robot_outputs::CAN_JAGUARS;i++){

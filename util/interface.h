@@ -70,19 +70,32 @@ struct Talon_srx_output{
 	static Talon_srx_output closed_loop(double);
 };
 
+enum class CAN_io_type{UNUSED,TALON_SRX};
+
+class CAN_in{//TODO: finish and implement
+	private:
+	CAN_io_type type_;
+	Talon_srx_input talon_srx_input_;
+
+	public:
+	CAN_in();
+
+	CAN_io_type type()const;
+	Talon_srx_input talon_srx_input()const;
+
+	static CAN_in unused();
+	static CAN_in talon_srx();
+};
 
 class CAN_out{//TODO: finish and implement
-	public:
-	enum class Type{UNUSED,TALON_SRX};
-	
 	private:
-	Type type_;
+	CAN_io_type type_;
 	Talon_srx_output talon_srx_output_;
 	
 	public:
 	CAN_out();
 	
-	Type type()const;
+	CAN_io_type type()const;
 	Talon_srx_output talon_srx_output()const;
 		
 	static CAN_out unused();
@@ -130,8 +143,8 @@ struct Robot_outputs{
 	static const unsigned TALON_SRX_OUTPUTS=4;//FIXME: talon initializaitons
 	Checked_array<Talon_srx_output, TALON_SRX_OUTPUTS> talon_srx;
 
-	static const unsigned CAN_IOS = 4;//FIXME: change to the correct value
-	Checked_array<CAN_out,CAN_IOS> can;
+	static const unsigned CAN_OUTPUTS = 4;//FIXME: change to the correct value
+	Checked_array<CAN_out,CAN_OUTPUTS> can;
 	
 	static const unsigned CAN_JAGUARS=0;
 	Checked_array<Jaguar_output,CAN_JAGUARS> jaguar;
@@ -224,6 +237,9 @@ struct Robot_inputs{
 	static const unsigned TALON_SRX_INPUTS=1;
 	Checked_array<Talon_srx_input, TALON_SRX_INPUTS> talon_srx;
 	
+	static const unsigned CAN_INPUTS=1;
+	Checked_array<CAN_in,CAN_INPUTS> can;
+
 	Checked_array<Jaguar_input,Robot_outputs::CAN_JAGUARS> jaguar;
 	Driver_station_input driver_station;
 	Rad orientation;

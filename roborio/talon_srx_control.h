@@ -46,8 +46,8 @@ class Talon_srx_controls{
 	std::array<unsigned int,Robot_outputs::TALON_SRX_OUTPUTS> addresses;//needs to be the same size as talons
 
 	public:
-	void init(Checked_array<CAN_out,Robot_outputs::CAN_IOS>);//TODO: look at length of array 
-	void set(Checked_array<CAN_out,Robot_outputs::CAN_IOS> const&,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const&);
+	void init(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS>);//TODO: look at length of array 
+	void set(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS> const&,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const&);
 	//void set(Checked_array<Talon_srx_output,Robot_outputs::TALON_SRX_OUTPUTS> const&,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const&);
 	std::array<Talon_srx_input,Robot_inputs::TALON_SRX_INPUTS> get();
 	
