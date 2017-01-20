@@ -34,6 +34,7 @@ class Talon_srx_control{
 	
 	void init(int CANBusAddress);
 	void set(Talon_srx_output, bool);
+	void set(CAN_out, bool);
 	Talon_srx_input get();
 	friend std::ostream& operator<<(std::ostream&,Talon_srx_control);
 };
@@ -42,10 +43,12 @@ class Talon_srx_controls{
 	private:
 	std::array<Talon_srx_control,Robot_outputs::TALON_SRX_OUTPUTS> talons;
 	bool init_;
+	std::array<unsigned int,Robot_outputs::TALON_SRX_OUTPUTS> addresses;//needs to be the same size as talons
 
 	public:
-	void init();
-	void set(Checked_array<Talon_srx_output,Robot_outputs::TALON_SRX_OUTPUTS> const&,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const&);
+	void init(Checked_array<CAN_out,Robot_outputs::CAN_IOS>);//TODO: look at length of array 
+	void set(Checked_array<CAN_out,Robot_outputs::CAN_IOS> const&,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const&);
+	//void set(Checked_array<Talon_srx_output,Robot_outputs::TALON_SRX_OUTPUTS> const&,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const&);
 	std::array<Talon_srx_input,Robot_inputs::TALON_SRX_INPUTS> get();
 	
 	Talon_srx_controls();

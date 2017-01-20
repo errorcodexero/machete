@@ -109,24 +109,40 @@ Talon_srx_input Talon_srx_control::get(){
 
 Talon_srx_controls::Talon_srx_controls():init_(false){}
 
-void Talon_srx_controls::init(){
+void Talon_srx_controls::init(Checked_array<CAN_out,Robot_outputs::CAN_IOS> can){
 	if(!init_){
+		{
+			unsigned int addresses_index = 0;
+			for(unsigned int i = 0; i < talons.size(); i++){
+				if(can[i].type() == CAN_out::Type::TALON_SRX){
+					addresses[addresses_index] = i;
+					addresses_index++;
+				}
+			}
+		}
 		for(unsigned int i=0; i<talons.size(); i++){
-			talons[i].init(i+1);//2016 h-drive bunnybot, talons start at device ID 1
+			talons[i].init(addresses[i]);
 		}
 		init_=true;
 	}
 }
 
-void Talon_srx_controls::set(Checked_array<Talon_srx_output,Robot_outputs::TALON_SRX_OUTPUTS> const& a,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const& enable){
-	init();
+void Talon_srx_controls::set(Checked_array<CAN_out,Robot_outputs::CAN_IOS> const& can,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const& enable){
+	assert(init_);
 	for(unsigned int i=0; i<talons.size(); i++){
-		talons[i].set(a[i],enable[i]);
+		talons[i].set(can[addresses[i]].talon_srx_output(),enable[i]);
 	}
 }
 
+/*void Talon_srx_controls::set(Checked_array<Talon_srx_output,Robot_outputs::TALON_SRX_OUTPUTS> const& a,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const& enable){
+	init(a);
+	for(unsigned int i=0; i<talons.size(); i++){
+		talons[i].set(a[i],enable[i]);
+	}
+}*/
+
 array<Talon_srx_input,Robot_inputs::TALON_SRX_INPUTS> Talon_srx_controls::get(){
-	init();
+	assert(init_);
 	
 	array<Talon_srx_input,Robot_inputs::TALON_SRX_INPUTS> inputs;
 	for(unsigned int i=0; i<Robot_inputs::TALON_SRX_INPUTS; i++){
