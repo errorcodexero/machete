@@ -63,12 +63,72 @@ struct Talon_srx_output{
 	double speed;
 	enum class Mode{VOLTAGE,SPEED};
 	Mode mode;
+	unsigned int address;
 
-	Talon_srx_output():power_level(0),speed(0),mode(Talon_srx_output::Mode::VOLTAGE){}
+	Talon_srx_output():power_level(0),speed(0),mode(Talon_srx_output::Mode::VOLTAGE),address(0){}
 
 	static Talon_srx_output voltage(double);
 	static Talon_srx_output closed_loop(double);
 };
+
+template<typename Talon_io>
+class Talon_srx_wrapper{
+	public:
+	static const unsigned TALON_SRXS=4;//FIXME: talon initializaitons
+	static const unsigned CAN_PORTS = 63;//TODO: is this the right number?
+	
+	private:
+	Checked_array<Talon_io, TALON_SRXS> talon_srxs;
+	
+	public:
+	Talon_io& operator[](size_t i){
+		assert(i < TALON_SRXS);
+		return talon_srxs[i];
+	}
+
+	Talon_io* get_at_address(size_t address){
+		assert(address <= CAN_PORTS);
+		for(unsigned int i = 0; i < CAN_PORTS; i++){
+			if(talon_srxs[i].address == address) return &talon_srxs[i];
+		}
+		return nullptr;
+	}
+
+	Talon_srx_wrapper(){
+		for(unsigned i = 0; i < TALON_SRXS; i++){
+			talon_srxs[i] = Talon_io();
+		}
+	}
+};
+
+/*class Talon_srx_outputs{
+	public:
+	static const unsigned TALON_SRX_OUTPUTS=4;//FIXME: talon initializaitons
+	static const unsigned CAN_PORTS = 63;//TODO: is this the right number?
+	
+	private:
+	Checked_array<Talon_srx_output, TALON_SRX_OUTPUTS> talon_srxs;
+	
+	public:
+	Talon_srx_output& operator[](size_t i){
+		assert(i < TALON_SRX_OUTPUTS);
+		return talon_srxs[i];
+	}
+
+	Talon_srx_output* get_at_address(size_t address){
+		assert(address <= CAN_PORTS);
+		for(unsigned int i = 0; i < CAN_PORTS; i++){
+			if(talon_srxs[i].address == address) return &talon_srxs[i];
+		}
+		return nullptr;
+	}
+
+	Talon_srx_outputs(){
+		for(unsigned i = 0; i < TALON_SRX_OUTPUTS; i++){
+			talon_srxs[i] = Talon_srx_output();
+		}
+	}
+};*/
 
 enum class CAN_io_type{UNUSED,TALON_SRX};
 
@@ -140,8 +200,10 @@ struct Robot_outputs{
 	static const unsigned DIGITAL_IOS=10;//there are really 14 on the cRIO and the roboRIO headers say 26.
 	Checked_array<Digital_out,DIGITAL_IOS> digital_io;
 	
-	static const unsigned TALON_SRX_OUTPUTS=4;//FIXME: talon initializaitons
-	Checked_array<Talon_srx_output, TALON_SRX_OUTPUTS> talon_srx;
+	//static const unsigned TALON_SRX_OUTPUTS=4;//FIXME: talon initializaitons
+	//Checked_array<Talon_srx_output, TALON_SRX_OUTPUTS> talon_srx;
+
+	Talon_srx_wrapper<Talon_srx_output> talon_srx;
 
 	static const unsigned CAN_OUTPUTS = 4;//FIXME: change to the correct value
 	Checked_array<CAN_out,CAN_OUTPUTS> can;
@@ -234,8 +296,10 @@ struct Robot_inputs{
 	static const unsigned ANALOG_INPUTS=4;
 	Checked_array<Volt,ANALOG_INPUTS> analog;
 
-	static const unsigned TALON_SRX_INPUTS=1;
-	Checked_array<Talon_srx_input, TALON_SRX_INPUTS> talon_srx;
+	//static const unsigned TALON_SRX_INPUTS=1;
+	//Checked_array<Talon_srx_input, TALON_SRX_INPUTS> talon_srx;
+
+	Talon_srx_wrapper<Talon_srx_input> talon_srx;
 	
 	static const unsigned CAN_INPUTS=1;
 	Checked_array<CAN_in,CAN_INPUTS> can;

@@ -21,6 +21,10 @@ bool operator==(PID_values const& a,PID_values const& b){
 	return 1;
 }
 
+bool operator!=(PID_values const& a,PID_values const& b){
+	return !(a==b);
+}
+
 bool operator<(PID_values const& a,PID_values const& b){
 	#define X(NAME) if(a.NAME<b.NAME) return 1; if(b.NAME<a.NAME) return 0;
 	PID_ITEMS
@@ -239,6 +243,7 @@ std::ostream& operator<<(std::ostream& o, Talon_srx_output a){
 	o<<" pid:"<<a.pid;
 	if(a.mode==Talon_srx_output::Mode::VOLTAGE) o<<" power_level:"<<a.power_level;
 	else if(a.mode==Talon_srx_output::Mode::SPEED) o<<" speed:"<<a.speed;
+	o<<" address:"<<a.address;
 	return o<<")";
 }
 
@@ -330,9 +335,15 @@ bool operator<(Talon_srx_input a, Talon_srx_input b){
 
 bool operator==(Talon_srx_output a,Talon_srx_output b){
 	if(a.mode!=b.mode) return false;
-	if(a.mode==Talon_srx_output::Mode::VOLTAGE) return a.power_level==b.power_level;
-	if(a.mode==Talon_srx_output::Mode::SPEED) return a.speed==b.speed;
-	return false;
+	if(a.mode==Talon_srx_output::Mode::VOLTAGE){
+		if(a.power_level!=b.power_level) return false;
+	}
+	if(a.mode==Talon_srx_output::Mode::SPEED){
+		if(a.pid!=b.pid) return false;
+		if(a.speed!=b.speed) return false;
+	}
+	if(a.address!=b.address) return false;
+	return true;
 }
 
 bool operator!=(Talon_srx_output a,Talon_srx_output b){
@@ -341,9 +352,14 @@ bool operator!=(Talon_srx_output a,Talon_srx_output b){
 
 bool operator<(Talon_srx_output a, Talon_srx_output b){
 	if(a.mode!=b.mode) return a.mode<b.mode;
-	if(a.mode==Talon_srx_output::Mode::VOLTAGE) return a.power_level<b.power_level;
-	if(a.mode==Talon_srx_output::Mode::SPEED) return a.speed<b.speed;
-	return false;
+	if(a.mode==Talon_srx_output::Mode::VOLTAGE){
+		if(a.power_level>=b.power_level) return false;
+	}
+	if(a.mode==Talon_srx_output::Mode::SPEED){
+		if(a.speed>=b.speed) return false;
+	}
+	if(a.address>=b.address) return false;
+	return true;
 }
 
 bool operator==(Digital_out a, Digital_out b){
@@ -405,16 +421,13 @@ bool operator==(Robot_outputs a,Robot_outputs b){
 			return 0;
 		}
 	}
-	for(unsigned int i=0;i<Robot_outputs::TALON_SRX_OUTPUTS; i++){
-		if(a.talon_srx[i]!=b.talon_srx[i]){
+	if(a.talon_srx!=b.talon_srx) return 0;
+	for(unsigned int i=0;i<Robot_outputs::CAN_OUTPUTS; i++){
+		if(a.can[i]!=b.can[i]){
 			return 0;
 		}
 	}
-	for(unsigned int i=0;i<Robot_outputs::CAN_OUTPUTS; i++){
-		if(a.can[i]!=b.can[i]){
-			return false;
-		}
-	}
+	if(a.talon_srx != b.talon_srx) return 0;
 	/*for(unsigned i=0;i<Robot_outputs::CAN_JAGUARS;i++){
 		if(a.jaguar[i]!=b.jaguar[i]){
 			return 0;
@@ -450,10 +463,8 @@ bool operator<(Robot_outputs a,Robot_outputs b){//TODO: is this done correctly?
 		if(b1<a1) return 0;
 	}
 	
-	for(unsigned i=0;i<Robot_outputs::TALON_SRX_OUTPUTS;i++){
-		if(a.talon_srx[i]<b.talon_srx[i])return 1;
-		if(b.talon_srx[i]<a.talon_srx[i])return 0;
-	}
+	if(a.talon_srx < b.talon_srx) return true;
+	if(b.talon_srx < a.talon_srx) return false;
 	
 	for(unsigned i=0;i<Robot_outputs::CAN_OUTPUTS;i++){
 		if(a.can[i]<b.can[i])return 1;
@@ -491,9 +502,7 @@ ostream& operator<<(ostream& o,Robot_outputs a){
 		terse(o,a.digital_io[i]);
 	}
 	o<<" talon_srx:";
-	for(unsigned i=0;i<a.Robot_outputs::TALON_SRX_OUTPUTS;i++){
-		o<<a.talon_srx[i];
-	}
+	o<<a.talon_srx;
 	o<<" can:";
 	for(unsigned i=0;i<a.Robot_outputs::CAN_OUTPUTS;i++){
 		o<<a.can[i];
@@ -741,11 +750,7 @@ bool operator==(Robot_inputs a,Robot_inputs b){
 			return 0;
 		}
 	}*/
-	for(unsigned i=0;i<Robot_inputs::TALON_SRX_INPUTS;i++){
-		if(a.talon_srx[i]!=b.talon_srx[i]){
-			return 0;
-		}
-	}
+	if(a.talon_srx!=b.talon_srx) return 0;
 	for(unsigned i = 0; i < Robot_inputs::CAN_INPUTS; i++){
 		if(a.can[i]!=b.can[i]){
 			return false;
@@ -798,9 +803,7 @@ ostream& operator<<(ostream& o,Robot_inputs a){
 		o<<(i)<<" "<<a.analog[i]<<' ';
 	}
 	o<<" talon_srx:";
-	for(unsigned i=0;i<Robot_inputs::TALON_SRX_INPUTS;i++){
-		o<<" "<<a.talon_srx[i];
-	}
+	o<<a.talon_srx;
 	o<<" can:";
 	for(unsigned i = 0; i < Robot_inputs::CAN_INPUTS; i++){
 		o<<" "<<a.can[i];
