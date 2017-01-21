@@ -12,6 +12,9 @@ Executive Auto_distance::next_mode(Next_mode_info info){
 		X(r),
 		X(c)
 	};
+
+	encoder_differences.l *= -1;
+	
 	
 	const double TARGET_DISTANCE = 5.0*12.0;//inches
 	const double TOLERANCE = 6.0;//inches

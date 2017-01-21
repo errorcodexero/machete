@@ -34,8 +34,8 @@ int encoderconv(Maybe_inline<Encoder_output> encoder){
 }
 
 double ticks_to_inches(const int ticks){
-	const unsigned int TICKS_PER_REVOLUTION=100;
-	const double WHEEL_DIAMETER=7.4;//inches
+	const unsigned int TICKS_PER_REVOLUTION=500;
+	const double WHEEL_DIAMETER=6;//inches
 	const double WHEEL_CIRCUMFERENCE=WHEEL_DIAMETER*PI;//inches
 	const double INCHES_PER_TICK=WHEEL_CIRCUMFERENCE/(double)TICKS_PER_REVOLUTION;//0.25 vs 0.251327
 	return ticks*INCHES_PER_TICK;
@@ -254,9 +254,9 @@ void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output
 
 Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drivebase::Output b)const{
 	//cout<<"\nOutputs: "<<b<<"\n";
-	robot.talon_srx[R_MOTOR_LOC_1].power_level = b.r;
+	//robot.talon_srx[R_MOTOR_LOC_1].power_level = b.r;
 	robot.talon_srx[R_MOTOR_LOC_2].power_level = b.r;
-	robot.talon_srx[L_MOTOR_LOC_1].power_level = b.l;
+	//robot.talon_srx[L_MOTOR_LOC_1].power_level = b.l;
 	robot.talon_srx[L_MOTOR_LOC_2].power_level = b.l;
 	robot.pwm[C_MOTOR_LOC]=pwm_convert(b.c);
 
@@ -282,8 +282,8 @@ Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drive
 Drivebase::Output Drivebase::Output_applicator::operator()(Robot_outputs robot)const{
 	//assuming both motors on the same side are set to the same value//FIXME ?
 	return Drivebase::Output{	
-		robot.talon_srx[L_MOTOR_LOC_1].power_level,
-		robot.talon_srx[R_MOTOR_LOC_1].power_level,
+		robot.talon_srx[L_MOTOR_LOC_2].power_level,
+		robot.talon_srx[R_MOTOR_LOC_2].power_level,
 		from_pwm(robot.pwm[C_MOTOR_LOC]),
 		robot.solenoid[PISTON_LOC]
 	};
