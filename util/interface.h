@@ -46,6 +46,7 @@ bool operator==(PID_values const&,PID_values const&);
 bool operator<(PID_values const&,PID_values const&);
 
 struct Talon_srx_input{
+	unsigned address;
 	int encoder_position;
 	bool fwd_limit_switch;
 	bool rev_limit_switch;
@@ -53,19 +54,18 @@ struct Talon_srx_input{
 	bool b;
 	int velocity;
 	double current;
-	Talon_srx_input():encoder_position(0),fwd_limit_switch(0),rev_limit_switch(0),a(0),b(0),velocity(0),current(0){}
+	Talon_srx_input():address(0),encoder_position(0),fwd_limit_switch(0),rev_limit_switch(0),a(0),b(0),velocity(0),current(0){}
 };
 
-
 struct Talon_srx_output{
+	unsigned address;
 	PID_values pid;
 	double power_level;
 	double speed;
 	enum class Mode{VOLTAGE,SPEED};
 	Mode mode;
-	unsigned int address;
 
-	Talon_srx_output():power_level(0),speed(0),mode(Talon_srx_output::Mode::VOLTAGE),address(0){}
+	Talon_srx_output():address(0),power_level(0),speed(0),mode(Talon_srx_output::Mode::VOLTAGE){}
 
 	static Talon_srx_output voltage(double);
 	static Talon_srx_output closed_loop(double);
@@ -75,7 +75,7 @@ template<typename Talon_io>
 class Talon_srx_wrapper{
 	public:
 	static const unsigned TALON_SRXS=4;//FIXME: talon initializaitons
-	static const unsigned CAN_PORTS = 63;//TODO: is this the right number?
+	static const unsigned CAN_PORTS=63;//TODO: is this the right number?
 	
 	private:
 	Checked_array<Talon_io, TALON_SRXS> talon_srxs;
@@ -100,6 +100,11 @@ class Talon_srx_wrapper{
 		}
 	}
 };
+
+template<typename T>
+bool operator!=(Talon_srx_wrapper<T>,Talon_srx_wrapper<T>);
+template<typename T>
+std::ostream& operator<<(std::ostream&,Talon_srx_wrapper<T>);
 
 /*class Talon_srx_outputs{
 	public:
@@ -203,6 +208,7 @@ struct Robot_outputs{
 	//static const unsigned TALON_SRX_OUTPUTS=4;//FIXME: talon initializaitons
 	//Checked_array<Talon_srx_output, TALON_SRX_OUTPUTS> talon_srx;
 
+	static const unsigned TALON_SRXS=Talon_srx_wrapper<Talon_srx_output>::TALON_SRXS;
 	Talon_srx_wrapper<Talon_srx_output> talon_srx;
 
 	static const unsigned CAN_OUTPUTS = 4;//FIXME: change to the correct value

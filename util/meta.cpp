@@ -131,7 +131,7 @@ set<Robot_output> differences(Robot_outputs const& a,Robot_outputs const& b){
 	CHECK_NUMBERED(SOLENOID,Solenoid_id,solenoid)
 	CHECK_NUMBERED(RELAY,Relay_id,relay)
 	CHECK_NUMBERED(DIGITAL_IO,Digital_io_id,digital_io)
-	CHECK_NUMBERED(TALON_SRX_OUTPUT,Talon_srx_id,talon_srx)
+	CHECK_NUMBERED(TALON_SRX,Talon_srx_id,talon_srx)
 	#undef CHECK_NUMBERED
 
 	#define X(A,B,C) if(a.C!=b.C) r|=Robot_output{B{}};

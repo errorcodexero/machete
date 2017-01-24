@@ -13,7 +13,7 @@ Input::Input(Type t,unsigned i):type_(t),index_(i){}
 	X(digital_io,DIGITAL_IO,Robot_outputs::DIGITAL_IOS)\
 	X(encoder,ENCODER,Digital_inputs::ENCODERS)\
 	X(analog,ANALOG,Robot_inputs::ANALOG_INPUTS)\
-	X(talon_srx,TALON_SRX,Talon_srx_wrapper<Talon_srx_input>::TALON_SRX_INPUTS)\
+	X(talon_srx,TALON_SRX,Talon_srx_wrapper<Talon_srx_input>::TALON_SRXS)\
 	X(current,CURRENT,Robot_inputs::CURRENT)
 //	X(can_jaguar,CAN_JAGUAR,Robot_outputs::CAN_JAGUARS)
 

@@ -89,6 +89,11 @@ void visit(Func f,Talon_srx_input const& a){
 }
 
 template<typename Func>
+void visit(Func f,Talon_srx_wrapper<Talon_srx_input> const& a){
+	f.terminal(a);
+}
+
+template<typename Func>
 void visit(Func f,Digital_in a){
 	f.terminal(a);
 }
@@ -129,6 +134,11 @@ template<typename Func>
 void visit(Func f,Talon_srx_output const& r){
 	#define TALON_SRX_OUTPUTS(X) X(power_level)
 	TALON_SRX_OUTPUTS(VISIT)
+}
+
+template<typename Func>
+void visit(Func f,Talon_srx_wrapper<Talon_srx_output> const& a){
+	f.terminal(a);
 }
 
 template<typename Func>

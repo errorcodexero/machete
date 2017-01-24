@@ -72,6 +72,18 @@ Digital_out Digital_out::encoder(int encoder_index,bool input_a){
 	return r;
 }
 
+template<typename T>
+bool operator!=(Talon_srx_wrapper<T> a,Talon_srx_wrapper<T> b){
+	for(unsigned i=0; i<a.TALONS_SRXS; i++) if(a[i]!=b[i]) return false;
+	return true;
+}
+
+template<typename T>
+ostream& operator<<(ostream& o,Talon_srx_wrapper<T> a){
+	for(unsigned i=0; i<a.TALONS_SRX; i++) o<<a[i].address<<"("<<a[i]<<")";
+	return o;
+}
+
 CAN_in::CAN_in():type_(CAN_io_type::UNUSED){}
 
 CAN_io_type CAN_in::type()const{ return type_; }
