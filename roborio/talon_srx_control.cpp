@@ -107,12 +107,14 @@ Talon_srx_input Talon_srx_control::get(){
 	return in;
 }
 
+const std::array<unsigned,Robot_outputs::TALON_SRXS> Talon_srx_controls::ADDRESSES = {1,2,3,4};
+
 Talon_srx_controls::Talon_srx_controls():init_(false){}
 
 void Talon_srx_controls::init(){
 	if(!init_){
 		for(unsigned int i = 0; i < talons.size(); i++){
-			talons[i].init(addresses[i]);
+			talons[i].init(ADDRESSES[i]);
 		}
 	}
 }
@@ -137,8 +139,8 @@ void Talon_srx_controls::init(){
 
 void Talon_srx_controls::set(Talon_srx_wrapper<Talon_srx_output> const& a,Checked_array<bool,Robot_outputs::TALON_SRXS> const& enable){
 	assert(init_);
-	for(unsigned int i = 0; i < talons.size(); i++){
-		talons[i].set(a[i],enable[i]);//TODO: look at this
+	for(unsigned int i = 0; i < Robot_outputs::TALON_SRXS; i++){
+		talons[i].set(a.get_at_address(ADDRESSES[i]),enable[i]);//TODO: look at this
 	}
 }
 

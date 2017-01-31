@@ -95,7 +95,15 @@ class Talon_srx_wrapper{
 		for(unsigned int i = 0; i < CAN_PORTS; i++){
 			if(talon_srxs[i].address == address) return &talon_srxs[i];
 		}
-		return nullptr;
+		assert(0);//return nullptr;
+	}
+
+	Talon_io get_at_address(size_t address)const{
+		assert(address <= CAN_PORTS);
+		for(unsigned int i = 0; i < CAN_PORTS; i++){
+			if(talon_srxs[i].address == address) return talon_srxs[i];
+		}
+		assert(0);
 	}
 
 	Talon_srx_wrapper(){

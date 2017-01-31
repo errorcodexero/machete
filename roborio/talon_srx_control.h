@@ -43,7 +43,7 @@ class Talon_srx_controls{
 	private:
 	std::array<Talon_srx_control,Robot_outputs::TALON_SRXS> talons;
 	bool init_;
-	Checked_array<unsigned int,Robot_outputs::TALON_SRXS> addresses;
+	static const std::array<unsigned,Robot_outputs::TALON_SRXS> ADDRESSES;
 
 	public:
 	void init(); 
