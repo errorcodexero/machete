@@ -43,15 +43,15 @@ class Talon_srx_controls{
 	private:
 	std::array<Talon_srx_control,Robot_outputs::TALON_SRXS> talons;
 	bool init_;
-	//std::array<unsigned int,Robot_outputs::TALON_SRXS> addresses;//needs to be the same size as talons
+	Checked_array<unsigned int,Robot_outputs::TALON_SRXS> addresses;
 
 	public:
-	void init(Checked_array<unsigned int,Robot_outputs::CAN_OUTPUTS>);//TODO: look at length of array 
-	void set(Checked_array<Talon_srx_wrapper<Talon_srx_output>,Robot_outputs::TALON_SRXS> const&,Checked_array<bool,Robot_outputs::TALON_SRXS> const&);
+	void init(); 
+	void set(Talon_srx_wrapper<Talon_srx_output> const&,Checked_array<bool,Robot_outputs::TALON_SRXS> const&);
 	//void init(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS>);//TODO: look at length of array 
 	//void set(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS> const&,Checked_array<bool,Robot_outputs::TALON_SRXS> const&);
 	//void set(Checked_array<Talon_srx_output,Robot_outputs::TALON_SRXS> const&,Checked_array<bool,Robot_outputs::TALON_SRXS> const&);
-	std::array<Talon_srx_input,Robot_inputs::TALON_SRXS> get();
+	Talon_srx_wrapper<Talon_srx_input> get();
 	
 	Talon_srx_controls();
 	friend std::ostream& operator<<(std::ostream&,Talon_srx_controls const&);

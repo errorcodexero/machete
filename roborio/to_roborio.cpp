@@ -437,7 +437,7 @@ public:
 				enable_all[i]=true;
 			}
 			//talon_srx_controls.set(out.talon_srx,enable_all); 
-			talon_srx_controls.set(out.can,enable_all); 
+			talon_srx_controls.set(out.talon_srx,enable_all); 
 		}
 		{
 			/*DriverStation *ds=DriverStation::GetInstance();

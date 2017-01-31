@@ -109,10 +109,10 @@ Talon_srx_input Talon_srx_control::get(){
 
 Talon_srx_controls::Talon_srx_controls():init_(false){}
 
-void Talon_srx_controls::init(Checked_array<unsigned int, Robot_outputs::TALON_SRXS>){
+void Talon_srx_controls::init(){
 	if(!init_){
 		for(unsigned int i = 0; i < talons.size(); i++){
-			talons[i].init(i);//TODO: look at this
+			talons[i].init(addresses[i]);
 		}
 	}
 }
@@ -135,10 +135,10 @@ void Talon_srx_controls::init(Checked_array<unsigned int, Robot_outputs::TALON_S
 	}
 }*/
 
-void Talon_srx_controls::set(Checked_array<Talon_srx_wrapper<Talon_srx_output>,Robot_outputs::TALON_SRXS> const& a,Checked_array<bool,Robot_outputs::TALON_SRXS> const& enable){
+void Talon_srx_controls::set(Talon_srx_wrapper<Talon_srx_output> const& a,Checked_array<bool,Robot_outputs::TALON_SRXS> const& enable){
 	assert(init_);
 	for(unsigned int i = 0; i < talons.size(); i++){
-		talons[i].set(a[i][i],enable[i]);//TODO: look at this
+		talons[i].set(a[i],enable[i]);//TODO: look at this
 	}
 }
 
@@ -156,12 +156,12 @@ void Talon_srx_controls::set(Checked_array<Talon_srx_wrapper<Talon_srx_output>,R
 	}
 }*/
 
-array<Talon_srx_input,Robot_inputs::TALON_SRXS> Talon_srx_controls::get(){
+Talon_srx_wrapper<Talon_srx_input> Talon_srx_controls::get(){
 	assert(init_);
 	
-	array<Talon_srx_input,Robot_inputs::TALON_SRXS> inputs;
+	Talon_srx_wrapper<Talon_srx_input> inputs;
 	for(unsigned int i=0; i<Robot_inputs::TALON_SRXS; i++){
-		inputs[i]=talons[i].get();
+		inputs[i] = talons[i].get();
 	}
 	return inputs;
 }
