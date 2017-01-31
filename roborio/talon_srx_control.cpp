@@ -109,7 +109,15 @@ Talon_srx_input Talon_srx_control::get(){
 
 Talon_srx_controls::Talon_srx_controls():init_(false){}
 
-void Talon_srx_controls::init(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS> can){
+void Talon_srx_controls::init(Checked_array<unsigned int, Robot_outputs::TALON_SRXS>){
+	if(!init_){
+		for(unsigned int i = 0; i < talons.size(); i++){
+			talons[i].init(i);//TODO: look at this
+		}
+	}
+}
+
+/*void Talon_srx_controls::init(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS> can){
 	if(!init_){
 		{
 			unsigned int addresses_index = 0;
@@ -125,27 +133,34 @@ void Talon_srx_controls::init(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS> 
 		}
 		init_=true;
 	}
+}*/
+
+void Talon_srx_controls::set(Checked_array<Talon_srx_wrapper<Talon_srx_output>,Robot_outputs::TALON_SRXS> const& a,Checked_array<bool,Robot_outputs::TALON_SRXS> const& enable){
+	assert(init_);
+	for(unsigned int i = 0; i < talons.size(); i++){
+		talons[i].set(a[i][i],enable[i]);//TODO: look at this
+	}
 }
 
-void Talon_srx_controls::set(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS> const& can,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const& enable){
+/*void Talon_srx_controls::set(Checked_array<CAN_out,Robot_outputs::CAN_OUTPUTS> const& can,Checked_array<bool,Robot_outputs::TALON_SRXS> const& enable){
 	assert(init_);
 	for(unsigned int i=0; i<talons.size(); i++){
 		talons[i].set(can[addresses[i]].talon_srx_output(),enable[i]);
 	}
-}
+}*/
 
-/*void Talon_srx_controls::set(Checked_array<Talon_srx_output,Robot_outputs::TALON_SRX_OUTPUTS> const& a,Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> const& enable){
+/*void Talon_srx_controls::set(Checked_array<Talon_srx_output,Robot_outputs::TALON_SRXS> const& a,Checked_array<bool,Robot_outputs::TALON_SRXS> const& enable){
 	init(a);
 	for(unsigned int i=0; i<talons.size(); i++){
 		talons[i].set(a[i],enable[i]);
 	}
 }*/
 
-array<Talon_srx_input,Robot_inputs::TALON_SRX_INPUTS> Talon_srx_controls::get(){
+array<Talon_srx_input,Robot_inputs::TALON_SRXS> Talon_srx_controls::get(){
 	assert(init_);
 	
-	array<Talon_srx_input,Robot_inputs::TALON_SRX_INPUTS> inputs;
-	for(unsigned int i=0; i<Robot_inputs::TALON_SRX_INPUTS; i++){
+	array<Talon_srx_input,Robot_inputs::TALON_SRXS> inputs;
+	for(unsigned int i=0; i<Robot_inputs::TALON_SRXS; i++){
 		inputs[i]=talons[i].get();
 	}
 	return inputs;

@@ -81,6 +81,10 @@ class Talon_srx_wrapper{
 	Checked_array<Talon_io, TALON_SRXS> talon_srxs;
 	
 	public:
+	Talon_io operator[](size_t i)const{
+		return talon_srxs[i];
+	}
+	
 	Talon_io& operator[](size_t i){
 		assert(i < TALON_SRXS);
 		return talon_srxs[i];
@@ -305,6 +309,7 @@ struct Robot_inputs{
 	//static const unsigned TALON_SRX_INPUTS=1;
 	//Checked_array<Talon_srx_input, TALON_SRX_INPUTS> talon_srx;
 
+	static const unsigned TALON_SRXS = Talon_srx_wrapper<Talon_srx_input>::TALON_SRXS;
 	Talon_srx_wrapper<Talon_srx_input> talon_srx;
 	
 	static const unsigned CAN_INPUTS=1;

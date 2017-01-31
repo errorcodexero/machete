@@ -150,9 +150,8 @@ set<Robot_input> differences(Robot_inputs const& a,Robot_inputs const& b){
 				r|=Robot_input{B{i}};\
 			}\
 		}
-	CHECK_NUMBERED(TALON_SRX_INPUTS,Talon_srx_id,talon_srx)
 	CHECK_NUMBERED(ANALOG_INPUTS,Analog_id,analog)
-	CHECK_NUMBERED(TALON_SRX_INPUTS,Talon_srx_id,talon_srx)
+	CHECK_NUMBERED(TALON_SRXS,Talon_srx_id,talon_srx)
 	CHECK_NUMBERED(CURRENT,Current,current)
 
 	for(unsigned i=0;i<Robot_outputs::DIGITAL_IOS;i++){

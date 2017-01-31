@@ -432,8 +432,8 @@ public:
 		//cout << "d_io: " << digital_io << endl << "o.d.io: " << out.digital_io << endl ;
 
 		{
-			Checked_array<bool,Robot_outputs::TALON_SRX_OUTPUTS> enable_all;
-			for(unsigned int i=0; i<Robot_outputs::TALON_SRX_OUTPUTS; i++){
+			Checked_array<bool,Robot_outputs::TALON_SRXS> enable_all;
+			for(unsigned int i=0; i<Robot_outputs::TALON_SRXS; i++){
 				enable_all[i]=true;
 			}
 			//talon_srx_controls.set(out.talon_srx,enable_all); 

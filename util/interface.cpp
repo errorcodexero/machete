@@ -73,14 +73,31 @@ Digital_out Digital_out::encoder(int encoder_index,bool input_a){
 }
 
 template<typename T>
+bool operator==(Talon_srx_wrapper<T> a,Talon_srx_wrapper<T> b){
+	for(unsigned i=0; i<a.TALON_SRXS; i++){
+		 if(a[i]!=b[i]) return false;
+	}
+	return true;
+}
+
+template<typename T>
 bool operator!=(Talon_srx_wrapper<T> a,Talon_srx_wrapper<T> b){
-	for(unsigned i=0; i<a.TALONS_SRXS; i++) if(a[i]!=b[i]) return false;
+	return !(a==b);
+}
+
+template<typename T>
+bool operator<(Talon_srx_wrapper<T> a,Talon_srx_wrapper<T> b){
+	for(unsigned int i = 0; i < a.TALON_SRXS; i++){
+		if(!(a[i] < b[i])) return false;
+	}
 	return true;
 }
 
 template<typename T>
 ostream& operator<<(ostream& o,Talon_srx_wrapper<T> a){
-	for(unsigned i=0; i<a.TALONS_SRX; i++) o<<a[i].address<<"("<<a[i]<<")";
+	for(unsigned i=0; i<Talon_srx_wrapper<T>::TALON_SRXS; i++){
+		o<<a[i].address<<"("<<a[i]<<")";
+	}
 	return o;
 }
 
@@ -433,13 +450,12 @@ bool operator==(Robot_outputs a,Robot_outputs b){
 			return 0;
 		}
 	}
-	if(a.talon_srx!=b.talon_srx) return 0;
+	if(a.talon_srx != b.talon_srx) return 0;
 	for(unsigned int i=0;i<Robot_outputs::CAN_OUTPUTS; i++){
 		if(a.can[i]!=b.can[i]){
 			return 0;
 		}
 	}
-	if(a.talon_srx != b.talon_srx) return 0;
 	/*for(unsigned i=0;i<Robot_outputs::CAN_JAGUARS;i++){
 		if(a.jaguar[i]!=b.jaguar[i]){
 			return 0;

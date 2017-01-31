@@ -11,7 +11,7 @@
 	X(solenoid,SOLENOID,Robot_outputs::SOLENOIDS)\
 	X(relay,RELAY,Robot_outputs::RELAYS)\
 	X(digital_io,DIGITAL_IO,Robot_outputs::DIGITAL_IOS)\
-	X(talon_srx,TALON_SRX,Robot_outputs::TALON_SRX_OUTPUTS)\
+	X(talon_srx,TALON_SRX,Robot_outputs::TALON_SRXS)\
 	X(driver_station,DRIVER_STATION,Driver_station_output::DIGITAL_OUTPUTS)
 	//X(can_jaguar,CAN_JAGUAR,Robot_outputs::CAN_JAGUARS)
 
