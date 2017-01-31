@@ -107,8 +107,6 @@ Talon_srx_input Talon_srx_control::get(){
 	return in;
 }
 
-const std::array<unsigned,Robot_outputs::TALON_SRXS> Talon_srx_controls::ADDRESSES = {1,2,3,4};
-
 Talon_srx_controls::Talon_srx_controls():init_(false){}
 
 void Talon_srx_controls::init(){

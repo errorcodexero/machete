@@ -7,10 +7,10 @@
 using namespace std;
 
 // talon locations are -1
-#define R_MOTOR_LOC_1 0
-#define R_MOTOR_LOC_2 1
-#define L_MOTOR_LOC_1 2
-#define L_MOTOR_LOC_2 3
+#define R_MOTOR_LOC_1 1
+#define R_MOTOR_LOC_2 2
+#define L_MOTOR_LOC_1 3
+#define L_MOTOR_LOC_2 4
 #define C_MOTOR_LOC 0
 #define PISTON_LOC 0
 
@@ -254,10 +254,10 @@ void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output
 
 Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drivebase::Output b)const{
 	//cout<<"\nOutputs: "<<b<<"\n";
-	robot.talon_srx[R_MOTOR_LOC_1].power_level = b.r;
-	robot.talon_srx[R_MOTOR_LOC_2].power_level = b.r;
-	robot.talon_srx[L_MOTOR_LOC_1].power_level = b.l;
-	robot.talon_srx[L_MOTOR_LOC_2].power_level = b.l;
+	robot.talon_srx.get_at_address(R_MOTOR_LOC_1) -> power_level = b.r;
+	robot.talon_srx.get_at_address(R_MOTOR_LOC_2) -> power_level = b.r;
+	robot.talon_srx.get_at_address(L_MOTOR_LOC_1) -> power_level = b.l;
+	robot.talon_srx.get_at_address(L_MOTOR_LOC_2) -> power_level = b.l;
 	robot.pwm[C_MOTOR_LOC]=pwm_convert(b.c);
 
 	robot.solenoid[PISTON_LOC] = b.piston;
@@ -282,8 +282,8 @@ Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drive
 Drivebase::Output Drivebase::Output_applicator::operator()(Robot_outputs robot)const{
 	//assuming both motors on the same side are set to the same value//FIXME ?
 	return Drivebase::Output{	
-		robot.talon_srx[L_MOTOR_LOC_1].power_level,
-		robot.talon_srx[R_MOTOR_LOC_1].power_level,
+		robot.talon_srx.get_at_address(L_MOTOR_LOC_1) -> power_level,
+		robot.talon_srx.get_at_address(R_MOTOR_LOC_1) -> power_level,
 		from_pwm(robot.pwm[C_MOTOR_LOC]),
 		robot.solenoid[PISTON_LOC]
 	};

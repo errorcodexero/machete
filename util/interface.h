@@ -76,6 +76,7 @@ class Talon_srx_wrapper{
 	public:
 	static const unsigned TALON_SRXS=4;//FIXME: talon initializaitons
 	static const unsigned CAN_PORTS=63;//TODO: is this the right number?
+	static const Checked_array<unsigned,TALON_SRXS> ADDRESSES;
 	
 	private:
 	Checked_array<Talon_io, TALON_SRXS> talon_srxs;
@@ -109,6 +110,7 @@ class Talon_srx_wrapper{
 	Talon_srx_wrapper(){
 		for(unsigned i = 0; i < TALON_SRXS; i++){
 			talon_srxs[i] = Talon_io();
+			talon_srxs[i].address = ADDRESSES[i];
 		}
 	}
 };
@@ -146,7 +148,7 @@ std::ostream& operator<<(std::ostream&,Talon_srx_wrapper<T>);
 		}
 	}
 };*/
-
+/*
 enum class CAN_io_type{UNUSED,TALON_SRX};
 
 class CAN_in{//TODO: finish and implement
@@ -177,7 +179,7 @@ class CAN_out{//TODO: finish and implement
 		
 	static CAN_out unused();
 	static CAN_out talon_srx();
-};
+};*/
 
 enum Panel_outputs{SHOOT_READY, PANEL_OUTPUTS};
 enum class Panel_output_ports{SHOOT_READY=1};
@@ -223,8 +225,8 @@ struct Robot_outputs{
 	static const unsigned TALON_SRXS=Talon_srx_wrapper<Talon_srx_output>::TALON_SRXS;
 	Talon_srx_wrapper<Talon_srx_output> talon_srx;
 
-	static const unsigned CAN_OUTPUTS = 4;//FIXME: change to the correct value
-	Checked_array<CAN_out,CAN_OUTPUTS> can;
+	//static const unsigned CAN_OUTPUTS = 4;//FIXME: change to the correct value
+	//Checked_array<CAN_out,CAN_OUTPUTS> can;
 	
 	static const unsigned CAN_JAGUARS=0;
 	Checked_array<Jaguar_output,CAN_JAGUARS> jaguar;
@@ -320,8 +322,8 @@ struct Robot_inputs{
 	static const unsigned TALON_SRXS = Talon_srx_wrapper<Talon_srx_input>::TALON_SRXS;
 	Talon_srx_wrapper<Talon_srx_input> talon_srx;
 	
-	static const unsigned CAN_INPUTS=1;
-	Checked_array<CAN_in,CAN_INPUTS> can;
+	//static const unsigned CAN_INPUTS=1;
+	//Checked_array<CAN_in,CAN_INPUTS> can;
 
 	Checked_array<Jaguar_input,Robot_outputs::CAN_JAGUARS> jaguar;
 	Driver_station_input driver_station;

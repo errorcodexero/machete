@@ -73,6 +73,9 @@ Digital_out Digital_out::encoder(int encoder_index,bool input_a){
 }
 
 template<typename T>
+const Checked_array<unsigned,Talon_srx_wrapper<T>::TALON_SRXS> Talon_srx_wrapper<T>::ADDRESSES = {1,2,3,4};
+
+template<typename T>
 bool operator==(Talon_srx_wrapper<T> a,Talon_srx_wrapper<T> b){
 	for(unsigned i=0; i<a.TALON_SRXS; i++){
 		 if(a[i]!=b[i]) return false;
@@ -100,7 +103,7 @@ ostream& operator<<(ostream& o,Talon_srx_wrapper<T> a){
 	}
 	return o;
 }
-
+/*
 CAN_in::CAN_in():type_(CAN_io_type::UNUSED){}
 
 CAN_io_type CAN_in::type()const{ return type_; }
@@ -206,7 +209,7 @@ bool operator!=(CAN_out a,CAN_out b){
 
 bool operator<(CAN_out a,CAN_out b){
 	return !(a==b);
-}
+}*/
 
 Panel_output::Panel_output(int p, bool v) {
 	port = p;
@@ -421,9 +424,9 @@ Robot_outputs::Robot_outputs():pump_auto(1){
 	for(unsigned i=0;i<SOLENOIDS;i++){
 		solenoid[i]=0;
 	}
-	for(unsigned i = 0; i < CAN_OUTPUTS; i++){
+	/*for(unsigned i = 0; i < CAN_OUTPUTS; i++){
 		can[i] = CAN_out();
-	}
+	}*/
 	for(unsigned i=0;i<RELAYS;i++){
 		relay[i]=Relay_output::_00;
 	}
@@ -451,11 +454,11 @@ bool operator==(Robot_outputs a,Robot_outputs b){
 		}
 	}
 	if(a.talon_srx != b.talon_srx) return 0;
-	for(unsigned int i=0;i<Robot_outputs::CAN_OUTPUTS; i++){
+	/*for(unsigned int i=0;i<Robot_outputs::CAN_OUTPUTS; i++){
 		if(a.can[i]!=b.can[i]){
 			return 0;
 		}
-	}
+	}*/
 	/*for(unsigned i=0;i<Robot_outputs::CAN_JAGUARS;i++){
 		if(a.jaguar[i]!=b.jaguar[i]){
 			return 0;
@@ -494,10 +497,10 @@ bool operator<(Robot_outputs a,Robot_outputs b){//TODO: is this done correctly?
 	if(a.talon_srx < b.talon_srx) return true;
 	if(b.talon_srx < a.talon_srx) return false;
 	
-	for(unsigned i=0;i<Robot_outputs::CAN_OUTPUTS;i++){
+	/*for(unsigned i=0;i<Robot_outputs::CAN_OUTPUTS;i++){
 		if(a.can[i]<b.can[i])return 1;
 		if(b.can[i]<a.can[i])return 0;
-	}
+	}*/
 	
 	/*for(unsigned i=0;i<Robot_outputs::CAN_JAGUARS;i++){
 		auto a1=a.jaguar[i];
@@ -531,10 +534,10 @@ ostream& operator<<(ostream& o,Robot_outputs a){
 	}
 	o<<" talon_srx:";
 	o<<a.talon_srx;
-	o<<" can:";
+	/*o<<" can:";
 	for(unsigned i=0;i<a.Robot_outputs::CAN_OUTPUTS;i++){
 		o<<a.can[i];
-	}
+	}*/
 	o<<" panel_output:";
 	for(unsigned i=0;i<Panel_outputs::PANEL_OUTPUTS;i++){
 		o<<a.panel_output[i];
@@ -779,11 +782,11 @@ bool operator==(Robot_inputs a,Robot_inputs b){
 		}
 	}*/
 	if(a.talon_srx!=b.talon_srx) return 0;
-	for(unsigned i = 0; i < Robot_inputs::CAN_INPUTS; i++){
+	/*for(unsigned i = 0; i < Robot_inputs::CAN_INPUTS; i++){
 		if(a.can[i]!=b.can[i]){
 			return false;
 		}
-	}
+	}*/
 	for(unsigned i=0; i<Robot_inputs::CURRENT;i++){
 		if(a.current[i]!=b.current[i]){
 			return 0;
@@ -832,10 +835,10 @@ ostream& operator<<(ostream& o,Robot_inputs a){
 	}
 	o<<" talon_srx:";
 	o<<a.talon_srx;
-	o<<" can:";
+	/*o<<" can:";
 	for(unsigned i = 0; i < Robot_inputs::CAN_INPUTS; i++){
 		o<<" "<<a.can[i];
-	}
+	}*/
 	/*o<<" jaguar:";
 	for(unsigned i=0;i<Robot_outputs::CAN_JAGUARS;i++){
 		o<<a.jaguar[i];
@@ -853,7 +856,7 @@ int main(){
 	cout<<Joystick_data()<<"\n";
 	cout<<Jaguar_output()<<"\n";
 	cout<<Talon_srx_output()<<"\n";
-	cout<<CAN_out()<<"\n";
+	//cout<<CAN_out()<<"\n";
 	cout<<Jaguar_output::speedOut(10)<<"\n";
 	cout<<Jaguar_output::voltageOut(1.0)<<"\n";
 	for(auto a:digital_ins()){
