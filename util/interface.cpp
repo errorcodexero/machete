@@ -73,9 +73,6 @@ Digital_out Digital_out::encoder(int encoder_index,bool input_a){
 }
 
 template<typename T>
-const Checked_array<unsigned,Talon_srx_wrapper<T>::TALON_SRXS> Talon_srx_wrapper<T>::ADDRESSES = {1,2,3,4};
-
-template<typename T>
 bool operator==(Talon_srx_wrapper<T> a,Talon_srx_wrapper<T> b){
 	for(unsigned i=0; i<a.TALON_SRXS; i++){
 		 if(a[i]!=b[i]) return false;
@@ -427,8 +424,6 @@ Robot_outputs::Robot_outputs():pump_auto(1){
 	/*for(unsigned i = 0; i < CAN_OUTPUTS; i++){
 		can[i] = CAN_out();
 	}*/
-	talon_srx = Talon_srx_wrapper<Talon_srx_output>();
-	talon_srx.init();
 	for(unsigned i=0;i<RELAYS;i++){
 		relay[i]=Relay_output::_00;
 	}
@@ -751,8 +746,6 @@ Robot_inputs::Robot_inputs():
 		//could make this be NAN instead
 		analog[i]=0;
 	}
-	talon_srx = Talon_srx_wrapper<Talon_srx_input>();
-	talon_srx.init();
 	for(auto& a:current) a=0;
 }
 

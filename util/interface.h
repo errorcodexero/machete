@@ -80,22 +80,18 @@ class Talon_srx_wrapper{
 	
 	private:
 	Checked_array<Talon_io, TALON_SRXS> talon_srxs;
-	bool init_;
 		
 	public:
 	Talon_io operator[](size_t i)const{
-		assert(init_);
 		return talon_srxs[i];
 	}
 	
 	Talon_io& operator[](size_t i){
-		assert(init_);
 		assert(i < TALON_SRXS);
 		return talon_srxs[i];
 	}
 
 	Talon_io& get_at_address(size_t address){
-		assert(init_);
 		assert(address <= CAN_PORTS);
 		for(unsigned int i = 0; i < TALON_SRXS; i++){
 			if(talon_srxs[i].address == address) return talon_srxs[i];
@@ -105,7 +101,6 @@ class Talon_srx_wrapper{
 	}
 
 	Talon_io get_at_address(size_t address)const{
-		assert(init_);
 		assert(address <= CAN_PORTS);
 		for(unsigned int i = 0; i < TALON_SRXS; i++){
 			if(talon_srxs[i].address == address) return talon_srxs[i];
@@ -113,16 +108,17 @@ class Talon_srx_wrapper{
 		assert(0);
 	}
 
-	void init(){
+	Talon_srx_wrapper<Talon_io>(){
 		for(unsigned i = 0; i < TALON_SRXS; i++){
 			talon_srxs[i] = Talon_io();
 			talon_srxs[i].address = ADDRESSES[i];	
+			std::cout<<talon_srxs[i]<<" and "<<ADDRESSES[i]<<std::endl;
 		}
-		init_ = true;
 	}
-
-	Talon_srx_wrapper<Talon_io>():init_(false){}
 };
+
+template<typename T>
+const Checked_array<unsigned,Talon_srx_wrapper<T>::TALON_SRXS> Talon_srx_wrapper<T>::ADDRESSES = {1,2,3,4};
 
 template<typename T>
 bool operator!=(Talon_srx_wrapper<T>,Talon_srx_wrapper<T>);
