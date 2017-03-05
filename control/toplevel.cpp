@@ -410,7 +410,7 @@ pair<double,double> create_pair(double*){
 	return make_pair(0,1);
 }
 
-pair<Talon_srx_input,Talon_srx_input> create_pair(Talon_srx_input*){
+pair<Talon_srx_input,Talon_srx_input> create_pair(Talon_srx_input*,unsigned address){
 	Talon_srx_input a;
 	a.encoder_position=1;
 	a.fwd_limit_switch=1;
@@ -418,7 +418,10 @@ pair<Talon_srx_input,Talon_srx_input> create_pair(Talon_srx_input*){
 	a.a=1;
 	a.b=1;
 	a.velocity=1;
-	return make_pair(Talon_srx_input{},a);
+	a.address = address;
+	Talon_srx_input b;
+	b.address = address;
+	return make_pair(b,a);
 }
 
 pair<Pump::Input,Pump::Input> create_pair(Pump::Input*){
@@ -442,7 +445,7 @@ pair<Robot_inputs,Robot_inputs> create_pair(Robot_inputs*){
 		r.second.analog[i]=p.second;
 	}
 	for(unsigned i=0;i<Robot_inputs::TALON_SRXS;i++){
-		auto p=create_pair((Talon_srx_input*)0);
+		auto p=create_pair((Talon_srx_input*)0,Talon_srx_wrapper<Talon_srx_input>::ADDRESSES[i]);
 		r.first.talon_srx[i]=p.first;
 		r.second.talon_srx[i]=p.second;
 	}
@@ -468,11 +471,13 @@ pair<Digital_out,Digital_out> create_pair(Digital_out*){
 	return make_pair(Digital_out::one(),Digital_out::zero());
 }
 
-pair<Talon_srx_output,Talon_srx_output> create_pair(Talon_srx_output*){
+pair<Talon_srx_output,Talon_srx_output> create_pair(Talon_srx_output*,unsigned address){
 	Talon_srx_output a;
+	a.address = address;
 	a.power_level=0;
 	Talon_srx_output b;
 	b.power_level=1;
+	b.address = address;
 	return make_pair(a,b);
 }
 
@@ -494,7 +499,7 @@ pair<Robot_outputs,Robot_outputs> create_pair(Robot_outputs*){
 		r.second.digital_io[i]=p.second;
 	}
 	for(unsigned i=0;i<Robot_outputs::TALON_SRXS;i++){
-		auto p=create_pair((Talon_srx_output*)0);
+		auto p=create_pair((Talon_srx_output*)0,Talon_srx_wrapper<Talon_srx_output>::ADDRESSES[i]);
 		r.first.talon_srx[i]=p.first;
 		r.second.talon_srx[i]=p.second;
 	}

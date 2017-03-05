@@ -94,8 +94,8 @@ class Talon_srx_wrapper{
 	Talon_io& get_at_address(size_t address){
 		assert(address <= CAN_PORTS);
 		for(unsigned int i = 0; i < TALON_SRXS; i++){
-			if(talon_srxs[i].address == address) return talon_srxs[i];
 			std::cout<<"LINE:"<<__LINE__<<" Talon address:"<<talon_srxs[i].address<<" vs "<<address<<" vs "<<ADDRESSES[i]<<std::endl;
+			if(talon_srxs[i].address == address) return talon_srxs[i];
 		}
 		assert(0);//return nullptr;
 	}
@@ -112,7 +112,6 @@ class Talon_srx_wrapper{
 		for(unsigned i = 0; i < TALON_SRXS; i++){
 			talon_srxs[i] = Talon_io();
 			talon_srxs[i].address = ADDRESSES[i];	
-			std::cout<<talon_srxs[i]<<" and "<<ADDRESSES[i]<<std::endl;
 		}
 	}
 };

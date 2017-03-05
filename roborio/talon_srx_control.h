@@ -34,7 +34,6 @@ class Talon_srx_control{
 	
 	void init(int CANBusAddress);
 	void set(Talon_srx_output, bool);
-	void set(CAN_out, bool);
 	Talon_srx_input get();
 	friend std::ostream& operator<<(std::ostream&,Talon_srx_control);
 };
